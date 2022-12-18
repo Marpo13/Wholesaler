@@ -9,14 +9,15 @@ namespace Wholesaler.Backend.DataAccess.Models
     public class Requirement
     {
         public Guid Id { get; set; }
-        public ICollection<WorkTask> Tasks { get; set; }
         public virtual Client Client { get; set; }
-        public int ClientId { get; set; }
+        public Guid ClientId { get; set; }
 
         public Requirement(Client client)
         {
             Id = Guid.NewGuid();
             Client = client;
         }
+        public Requirement()
+        { }
     }
 }

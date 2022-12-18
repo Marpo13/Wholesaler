@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Wholesaler.Backend.DataAccess.Models
+﻿namespace Wholesaler.Backend.DataAccess.Models
 {
     public class Person
     {
@@ -14,9 +8,7 @@ namespace Wholesaler.Backend.DataAccess.Models
         public string Password { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public virtual WorkTask Task { get; set; }
-        public int TaskId { get; set; }
-
+    
         public Person(Role role, string name, string surname, string login, string password)
         {
             Id = Guid.NewGuid();

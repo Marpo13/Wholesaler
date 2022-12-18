@@ -6,5 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Wholesaler.Frontend.Domain\Wholesaler.Frontend.Domain.csproj" />
+  </ItemGroup>
+
 
 </Project>

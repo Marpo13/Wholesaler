@@ -1,17 +1,19 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wholesaler.Backend.DataAccess.Models;
 
 namespace Wholesaler.Backend.DataAccess.Configurations
 {
-    public class ClientConfiguration : EntityTypeConfiguration<Client>
+    public class ClientConfiguration : IEntityTypeConfiguration<Client>
     {
-        public ClientConfiguration()
+        public void Configure(EntityTypeBuilder<Client> builder)
         {
-            Property(c => c.Name)
-                .IsRequired();
+            builder.Property(c => c.Name)
+                 .IsRequired();
 
-            HasMany(c => c.Requirements)
-                .WithRequired(r => r.Client);
+            builder.HasMany(c => c.Requirements)
+                .WithOne(r => r.Client);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿
+using Wholesaler.Backend.Domain.Entities;
+
 namespace Wholesaler.Backend.Domain
 {
     public interface IUserService
     {
-        void LogByLogin(string username, string password);
+        Person LogByLogin(string username, string password);
     }
 }

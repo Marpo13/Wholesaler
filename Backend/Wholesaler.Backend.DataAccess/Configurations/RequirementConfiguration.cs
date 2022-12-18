@@ -1,18 +1,16 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wholesaler.Backend.DataAccess.Models;
 
 namespace Wholesaler.Backend.DataAccess.Configurations
 {
-    public class RequirementConfiguration : EntityTypeConfiguration<Requirement>
-    {
-        public RequirementConfiguration()
+    public class RequirementConfiguration : IEntityTypeConfiguration<Requirement>
+    {        
+        public void Configure(EntityTypeBuilder<Requirement> builder)
         {
-            HasRequired(r => r.Client)
-                .WithMany(c => c.Requirements)
-                .HasForeignKey(r => r.ClientId);
-
-            HasMany(r => r.Tasks)
-                .WithRequired(t => t.Requirement);
+            builder.HasOne(r => r.Client)
+                 .WithMany(c => c.Requirements)
+                 .HasForeignKey(r => r.ClientId);
         }
     }
 }

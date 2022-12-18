@@ -1,4 +1,6 @@
-﻿using Wholesaler.Backend.Domain.Repositories;
+﻿using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Repositories;
 
 namespace Wholesaler.Backend.Domain
 {
@@ -11,15 +13,17 @@ namespace Wholesaler.Backend.Domain
             _usersRepository = usersRepository;
         }
 
-        public void LogByLogin(string loginFromUser, string passwordFromUser)
+        public Person LogByLogin(string loginFromUser, string passwordFromUser)
         {
-            var personWithLoginFromUser = _usersRepository.GetUser(loginFromUser);
-            
-            if(personWithLoginFromUser.Password == passwordFromUser)
-                Console.WriteLine("Ok");
+            var personWithLoginFromUser = _usersRepository.GetUserOrDefault(loginFromUser);
 
-            else
-                Console.WriteLine("You entered an invalid values.");
+            if (personWithLoginFromUser == null)
+                throw new InvalidDataProvidedException($"There is no person with login: {loginFromUser}.");
+
+            if (personWithLoginFromUser.Password != passwordFromUser)
+                throw new InvalidDataProvidedException("You entered an invalid password.");
+
+            return personWithLoginFromUser;
         }
     }
 }

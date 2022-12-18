@@ -1,29 +1,27 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wholesaler.Backend.DataAccess.Models;
 
 namespace Wholesaler.Backend.DataAccess.Configurations
 {
-    public class PersonConfiguration : EntityTypeConfiguration<Person>
+    public class PersonConfiguration : IEntityTypeConfiguration<Person>
     {
-        public PersonConfiguration()
+        public void Configure(EntityTypeBuilder<Person> builder)
         {
-            Property(p => p.Name)
+            builder.Property(p => p.Name)
+               .IsRequired();
+
+            builder.Property(p => p.Surname)
                 .IsRequired();
 
-            Property(p => p.Surname)
+            builder.Property(p => p.Login)
                 .IsRequired();
 
-            Property(p => p.Login)
+            builder.Property(p => p.Password)
                 .IsRequired();
 
-            Property(p => p.Password)
+            builder.Property(p => p.Role)
                 .IsRequired();
-
-            Property(p => p.Role)
-                .IsRequired();
-
-            HasRequired(p => p.Task)
-                .WithRequiredDependent(t => t.Person);
         }
     }
 }
