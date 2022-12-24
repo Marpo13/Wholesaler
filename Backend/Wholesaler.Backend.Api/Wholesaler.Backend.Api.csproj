@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\Wholesaler.Core.Dto\Wholesaler.Core.Dto.csproj" />
     <ProjectReference Include="..\Wholesaler.Backend.DataAccess\Wholesaler.Backend.DataAccess.csproj" />
     <ProjectReference Include="..\Wholesaler.Backend.Domain\Wholesaler.Backend.Domain.csproj" />
   </ItemGroup>

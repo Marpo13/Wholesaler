@@ -1,4 +1,6 @@
-﻿namespace Wholesaler.Backend.DataAccess.Models
+﻿using Wholesaler.Backend.Domain.Entities;
+
+namespace Wholesaler.Backend.DataAccess.Models
 {
     public class Person
     {

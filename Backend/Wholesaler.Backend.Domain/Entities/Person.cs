@@ -5,6 +5,7 @@
         public Guid Id { get; }
         public string Login { get; }
         public string Password { get; }
+        public Role Role { get; }
 
         public Person(Guid id, string login, string password)
         {

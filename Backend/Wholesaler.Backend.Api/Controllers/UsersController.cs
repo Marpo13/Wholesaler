@@ -3,6 +3,7 @@ using Wholesaler.Backend.DataAccess.Repositories;
 using Wholesaler.Backend.Domain;
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
+using Wholesaler.Core.Dto.ResponseModels;
 
 namespace Wholesaler.Backend.Api.Controllers
 {
@@ -20,13 +21,18 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoginAsync (string login, string password)
+        public async Task<ActionResult<UserDto>> LoginAsync (string login, string password)
         {
             try
             {
-                _service.LogByLogin(login, password);
+                var person = _service.LogByLogin(login, password);
 
-                return Ok();
+                return Ok(new UserDto()
+                {
+                    Id = person.Id,
+                    Login = person.Login,
+                    Role = person.Role.ToString(),
+                });
             }
             catch (Exception ex)
             {
