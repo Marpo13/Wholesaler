@@ -6,12 +6,17 @@
         public string Login { get; }
         public string Password { get; }
         public Role Role { get; }
+        public string Name { get; }
+        public string Surname { get; }
 
-        public Person(Guid id, string login, string password)
+        public Person(Guid id, string login, string password, Role role, string name, string surname)
         {
             Id = id;
             Login = login;
-            Password = password;
+            Password = password;  
+            Role = role;
+            Name = name;
+            Surname = surname;
         }
     }
 }

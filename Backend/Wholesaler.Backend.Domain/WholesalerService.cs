@@ -25,5 +25,18 @@ namespace Wholesaler.Backend.Domain
 
             return personWithLoginFromUser;
         }
+
+        public Guid StartWorkday(Guid userId)
+        {
+            var person = _usersRepository.GetUserOrDefault(userId);
+            if (person == null)
+                throw new InvalidDataProvidedException($"There is no person with id: {userId}");
+            var time = DateTime.Now;
+            var workday = new Workday(time, person);
+
+            var createdWorkday = _usersRepository.AddWorkday(workday);
+
+            return createdWorkday.Id;
+        }
     }
 }

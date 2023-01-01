@@ -6,5 +6,7 @@ namespace Wholesaler.Backend.Domain
     public interface IUserService
     {
         Person LogByLogin(string username, string password);
+
+        Guid StartWorkday(Guid userId);
     }
 }
