@@ -1,10 +1,11 @@
-﻿namespace Wholesaler.Frontend.Domain.ValueObjects
+﻿
+namespace Wholesaler.Frontend.Domain.ValueObjects
 {
-    public class ExecutionResult 
+    public class ExecutionResult
     {
         public bool IsSuccess { get; }
         public string Message { get; }
-   
+
         protected ExecutionResult(
             bool isSuccess,
             string message)
@@ -22,5 +23,5 @@
         {
             return new ExecutionResult(false, message);
         }
-    }    
+    }
 }

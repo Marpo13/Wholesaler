@@ -8,7 +8,7 @@ namespace Wholesaler.Backend.Domain.Repositories
 
         Person? GetUserOrDefault(Guid id);
 
-        Guid AddPerson();
+        Guid AddPerson(Person person);
 
         Workday AddWorkday(Workday workday);
 

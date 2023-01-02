@@ -10,15 +10,6 @@ namespace Wholesaler.Backend.DataAccess.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Requirement> Requirements { get; set; }
-
-        public Client(string name)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-        }
-
-        public Client()
-        { }
+        public virtual ICollection<Requirement> Requirements { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace Wholesaler.Frontend.Presentation.Views
                     var loginResult = await _service.TryLoginWithDataFromUserAsync(login, password);
 
                     if (loginResult.IsSuccess)
-                    {                        
+                    {
                         _state.User = loginResult.Payload;
                         break;
                     }
@@ -41,7 +41,5 @@ namespace Wholesaler.Frontend.Presentation.Views
             }
 
         }
-
-
     }
 }

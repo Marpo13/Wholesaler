@@ -13,8 +13,8 @@ var connection = builder.Configuration.GetConnectionString("DBConnection");
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WholesalerContext>(opt => opt.UseSqlServer(connection));
-builder.Services.AddTransient<IUserService, WholesalerService>();
-builder.Services.AddTransient<IUsersRepository, WholesalerRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUsersRepository, UserRepository>();
 
 var app = builder.Build();
 

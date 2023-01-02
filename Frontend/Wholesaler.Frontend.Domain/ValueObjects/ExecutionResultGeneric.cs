@@ -1,4 +1,6 @@
-﻿namespace Wholesaler.Frontend.Domain.ValueObjects
+﻿
+
+namespace Wholesaler.Frontend.Domain.ValueObjects
 {
     public class ExecutionResultGeneric
     {

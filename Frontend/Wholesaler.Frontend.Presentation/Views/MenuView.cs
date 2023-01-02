@@ -64,7 +64,7 @@ namespace Wholesaler.Frontend.Presentation.Views
                     Console.Clear();
                     Console.WriteLine("Enter your id");
                     var wasIdProvided = Guid.TryParse(Console.ReadLine(), out Guid userId);
-                    if(!wasIdProvided)
+                    if (!wasIdProvided)
                     {
                         Console.WriteLine("You entered an invaild id.");
                         continue;
@@ -171,17 +171,11 @@ namespace Wholesaler.Frontend.Presentation.Views
 
                 else if (pressedKey.Key == ConsoleKey.D2)
                 {
-                    Console.Clear();
-                    continue;
-                }
-
-                else if (pressedKey.Key == ConsoleKey.D3)
-                {
-                    Console.Clear();
-                    continue;
+                    {
+                    }
                 }
             }
-
         }
     }
 }
+

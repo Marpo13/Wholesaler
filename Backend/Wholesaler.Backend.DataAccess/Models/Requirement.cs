@@ -11,13 +11,5 @@ namespace Wholesaler.Backend.DataAccess.Models
         public Guid Id { get; set; }
         public virtual Client Client { get; set; }
         public Guid ClientId { get; set; }
-
-        public Requirement(Client client)
-        {
-            Id = Guid.NewGuid();
-            Client = client;
-        }
-        public Requirement()
-        { }
     }
 }

@@ -4,26 +4,26 @@ using Wholesaler.Backend.Domain.Repositories;
 
 namespace Wholesaler.Backend.Domain
 {
-    public class WholesalerService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUsersRepository _usersRepository;
 
-        public WholesalerService(IUsersRepository usersRepository)
+        public UserService(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
-        public Person LogByLogin(string loginFromUser, string passwordFromUser)
+        public Person Login(string loginFromUser, string passwordFromUser)
         {
-            var personWithLoginFromUser = _usersRepository.GetUserOrDefault(loginFromUser);
+            var user = _usersRepository.GetUserOrDefault(loginFromUser);
 
-            if (personWithLoginFromUser == null)
+            if (user == null)
                 throw new InvalidDataProvidedException($"There is no person with login: {loginFromUser}.");
 
-            if (personWithLoginFromUser.Password != passwordFromUser)
-                throw new InvalidDataProvidedException("You entered an invalid password.");
+            if (user.Password != passwordFromUser)
+                throw new InvalidDataProvidedException("You have entered an invalid password.");
 
-            return personWithLoginFromUser;
+            return user;
         }
 
         public Guid StartWorkday(Guid userId)

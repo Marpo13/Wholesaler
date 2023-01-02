@@ -9,14 +9,13 @@
         public string Name { get; }
         public string Surname { get; }
 
-        public Person(Guid id, string login, string password, Role role, string name, string surname)
+        public Person(string login, string password, Role role, string name, string surname)
         {
-            Id = id;
             Login = login;
-            Password = password;  
+            Password = password;
             Role = role;
             Name = name;
             Surname = surname;
-        }
+        }      
     }
 }
