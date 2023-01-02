@@ -1,17 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Wholesaler.Frontend.DataAccess;
 using Wholesaler.Frontend.Domain;
+using Wholesaler.Frontend.Presentation.Interfaces;
+using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views;
 
-Console.WriteLine("Login: ");
-var login = Console.ReadLine();
-Console.WriteLine("Password: ");
-var password = Console.ReadLine();
-Console.WriteLine("Enter OK to continue.");
-var input = Console.ReadLine();
-
-if(input == "OK")
+var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
 {
-    var verifyLogin = new Login();
-    await verifyLogin.LoginWithDataFromUserAsync(login, password);
-    Console.WriteLine("You are logged in.");
-}
+    services.AddTransient<IUserService, WholesalerClient>();
+    services.AddTransient<ILoginView, LoginView>();
+    services.AddTransient<IMenuView, MenuView>();
+    services.AddSingleton<ApplicationState>();
+    });
+
+var app = host.Build();
+
+var login = ActivatorUtilities.CreateInstance<LoginView>(app.Services);
+await login.Render();
+
+
 

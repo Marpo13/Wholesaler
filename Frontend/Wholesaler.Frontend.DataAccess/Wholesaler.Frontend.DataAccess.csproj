@@ -6,5 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+<ProjectReference Include="..\..\Core\Wholesaler.Core.Dto\Wholesaler.Core.Dto.csproj" />
+<ProjectReference Include="..\..\Core\Wholesaler.Core.Dto\Wholesaler.Core.Dto\Wholesaler.Core.Dto.csproj" />
+<ProjectReference Include="..\Wholesaler.Frontend.Domain\Wholesaler.Frontend.Domain.csproj" />
+  </ItemGroup>
+
 
 </Project>
