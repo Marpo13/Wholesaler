@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wholesaler.Backend.DataAccess.Models
+namespace Wholesaler.Core.Dto.ResponseModels
 {
-    public class Requirement
+    public class UserDto
     {
         public Guid Id { get; set; }
-        public virtual Client Client { get; set; }
-        public Guid ClientId { get; set; }
+        public string Login { get; set; }
+        public string Role { get; set; }
     }
 }

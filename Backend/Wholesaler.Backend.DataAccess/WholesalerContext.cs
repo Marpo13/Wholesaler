@@ -11,8 +11,6 @@ namespace Wholesaler.Backend.DataAccess
         public DbSet<Requirement> Requirements { get; set; }
         public DbSet<Person> People { get; set; }
 
-        public List<Person> getPeople() => People.Local.ToList<Person>();
-
         public WholesalerContext(DbContextOptions<WholesalerContext> options)
         : base(options)
         {

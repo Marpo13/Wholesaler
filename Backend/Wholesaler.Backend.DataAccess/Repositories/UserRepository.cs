@@ -4,10 +4,10 @@ using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
 
 namespace Wholesaler.Backend.DataAccess.Repositories
 {
-    public class WholesalerRepository : IUsersRepository
+    public class UserRepository : IUsersRepository
     {
         private readonly WholesalerContext _context; 
-        public WholesalerRepository(WholesalerContext context)
+        public UserRepository(WholesalerContext context)
         {
             _context = context;
         }
@@ -20,22 +20,22 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             if (user == null)
                 return default;
 
-            return new Person(user.Id, user.Login, user.Password);
+            return new Person(user.Id, user.Login, user.Password,user.Role, user.Name, user.Surname);
         }
         
-        public Guid AddPerson()
+        public Guid AddPerson(Person person)
         {
-            var person = new PersonDb()
+            var personDb = new PersonDb()
             {
-                Id = Guid.NewGuid(),
-                Role = 0,
-                Login = "Basia",
-                Password = "Jabasia",
-                Name = "Barbara",
-                Surname = "Nowak"
+                Id = person.Id,
+                Role = person.Role,
+                Login = person.Login,
+                Password = person.Password,
+                Name = person.Name,
+                Surname = person.Surname
             };
 
-            _context.People.Add(person);           
+            _context.People.Add(personDb);           
             _context.SaveChanges();
 
             return person.Id;

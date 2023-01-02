@@ -5,6 +5,6 @@ namespace Wholesaler.Backend.Domain
 {
     public interface IUserService
     {
-        Person LogByLogin(string username, string password);
+        Person Login(string username, string password);
     }
 }
