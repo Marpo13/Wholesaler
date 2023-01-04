@@ -12,5 +12,7 @@ namespace Wholesaler.Backend.Domain.Repositories
 
         Workday AddWorkday(Workday workday);
 
+        Workday? GetWorkdayOrDefault(Guid id);
+
     }
 }

@@ -2,9 +2,9 @@
 {
     public class Client
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public IReadOnlyList<Requirement> Requirements { get; set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public IReadOnlyList<Requirement> Requirements { get; }
 
         public Client(string name)
         {

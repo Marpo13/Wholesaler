@@ -7,13 +7,13 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 {
     public class UserRepository : IUsersRepository
     {
-        private readonly WholesalerContext _context; 
+        private readonly WholesalerContext _context;
         public UserRepository(WholesalerContext context)
         {
             _context = context;
         }
-        public Person? GetUserOrDefault(string login)        
-        {        
+        public Person? GetUserOrDefault(string login)
+        {
             var user = _context.People
                 .Where(p => p.Login == login)
                 .FirstOrDefault();
@@ -21,7 +21,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             if (user == null)
                 return default;
 
-            return new Person(user.Login, user.Password, user.Role, user.Name, user.Surname);
+            return new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
         }
 
         public Person? GetUserOrDefault(Guid id)
@@ -33,9 +33,11 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             if (user == null)
                 return default;
 
-            return new Person(user.Login, user.Password, user.Role, user.Name, user.Surname);
+            var person = new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
+
+            return person;
         }
-        
+
         public Guid AddPerson(Person person)
         {
             var personDb = new PersonDb()
@@ -48,10 +50,30 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 Surname = person.Surname
             };
 
-            _context.People.Add(personDb);           
+            _context.People.Add(personDb);
             _context.SaveChanges();
 
             return person.Id;
+        }
+
+        public Workday? GetWorkdayOrDefault(Guid personId)
+        {
+            var workdayDb = _context.Workdays
+                            .Where(w => w.PersonId == personId)
+                            .FirstOrDefault();
+            
+            if (workdayDb == null)
+                return default;
+
+            var person = new Person(
+                workdayDb.Person.Id, 
+                workdayDb.Person.Login, 
+                workdayDb.Person.Password, 
+                workdayDb.Person.Role, 
+                workdayDb.Person.Name, 
+                workdayDb.Person.Surname);
+
+            return new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
         }
 
         public Workday AddWorkday(Workday workday)
@@ -64,7 +86,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 Stop = workday.Stop
             };
 
-            var createdWorkday = _context.Workdays.Add(workdayDb);
+            _context.Workdays.Add(workdayDb);
             _context.SaveChanges();
 
             return workday;

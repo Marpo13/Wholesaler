@@ -8,16 +8,22 @@ namespace Wholesaler.Backend.Domain.Entities
 {
     public class Workday
     {
-        public Guid Id { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime? Stop { get; set; }
-        public Person Person {get; set;}
+        public Guid Id { get; }
+        public DateTime Start { get; }
+        public DateTime? Stop { get; }
+        public Person Person {get; }
 
+        public Workday(Guid id, DateTime start, DateTime? stop, Person person)
+        {            
+            Id = id;
+            Start = start; 
+            Stop = stop;
+            Person = person;
+        }
         public Workday(DateTime start, Person person)
         {
             Id = Guid.NewGuid();
             Start = start;
-            Stop = null;
             Person = person;
         }
     }

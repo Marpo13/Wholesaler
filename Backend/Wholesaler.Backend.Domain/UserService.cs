@@ -29,14 +29,30 @@ namespace Wholesaler.Backend.Domain
         public Guid StartWorkday(Guid userId)
         {
             var person = _usersRepository.GetUserOrDefault(userId);
+            var time = DateTime.Now;
+
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");
-            var time = DateTime.Now;
-            var workday = new Workday(time, person);
 
-            var createdWorkday = _usersRepository.AddWorkday(workday);
+            var workday = _usersRepository.GetWorkdayOrDefault(userId);
 
-            return createdWorkday.Id;
+            if (workday == null)
+            {
+                var newWorkday = new Workday(time, person);
+                var createdWorkday = _usersRepository.AddWorkday(newWorkday);
+                return createdWorkday.Id;
+            }
+
+            else
+            {
+                if (workday.Stop == null)
+                    throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {workday.Id}");
+
+                var newWorkday = new Workday(time, person);
+                var createdWorkday = _usersRepository.AddWorkday(newWorkday);
+                return createdWorkday.Id;
+            }           
+            
         }
     }
 }

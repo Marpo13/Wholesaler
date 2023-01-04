@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Domain;
-using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Core.Dto.RequestModels;
 
 namespace Wholesaler.Backend.Api.Controllers
@@ -15,13 +15,22 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             _service = service;
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<Guid>> StartWorkday([FromBody] StartWorkdayRequestModel request)
         {
-            var workdayId = _service.StartWorkday(request.UserId);
+            try
+            {
+                var workdayId = _service.StartWorkday(request.UserId);
+                return workdayId;
+            }
+            catch (Exception ex)
+            {
+                if (ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
 
-            return workdayId;
+                throw;
+            }
         }
     }
 }
