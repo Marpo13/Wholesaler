@@ -54,5 +54,35 @@ namespace Wholesaler.Backend.Domain
             }           
             
         }
+
+        public Guid FinishWorkday(Guid userId)
+        {
+            var person = _usersRepository.GetUserOrDefault(userId);            
+
+            if (person == null)
+                throw new InvalidDataProvidedException($"There is no person with id: {userId}");
+
+            var workday = _usersRepository.GetWorkdayOrDefault(userId);
+
+            if (workday == null)
+            {
+                throw new InvalidDataProvidedException($"There is no started workdays for person with id: {userId}");
+            }
+
+            else
+            {
+                if (workday.Stop == null)
+                {
+                    workday.StopWorkday();
+                    _usersRepository.UpdateWorkday(workday.Id, workday.Stop);
+                }
+                
+                else
+                    throw new InvalidDataProvidedException($"Workday with id {workday.Id} is already ended.");
+
+                return workday.Id;
+            }
+
+        }
     }
 }

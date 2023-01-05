@@ -17,11 +17,30 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
+        [Route("start")]
         public async Task<ActionResult<Guid>> StartWorkday([FromBody] StartWorkdayRequestModel request)
         {
             try
             {
                 var workdayId = _service.StartWorkday(request.UserId);
+                return workdayId;
+            }
+            catch (Exception ex)
+            {
+                if (ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Route("finish")]
+        public async Task<ActionResult<Guid>> FinishWorkday([FromBody] FinishWorkdayRequestModel request)
+        {
+            try
+            {
+                var workdayId = _service.FinishWorkday(request.UserId);
                 return workdayId;
             }
             catch (Exception ex)

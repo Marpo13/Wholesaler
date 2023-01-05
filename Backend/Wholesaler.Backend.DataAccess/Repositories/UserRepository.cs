@@ -60,6 +60,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
         {
             var workdayDb = _context.Workdays
                             .Where(w => w.PersonId == personId)
+                            .Where(w => w.Stop == null)
                             .FirstOrDefault();
             
             if (workdayDb == null)
@@ -92,5 +93,17 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return workday;
         }
 
+        public Guid UpdateWorkday(Guid id, DateTime? stopTime)
+        {
+            var workdayDb = _context.Workdays
+                .Where(w => w.Id == id)
+                .First();
+
+            workdayDb.Stop = stopTime;
+
+            _context.SaveChanges();
+
+            return id;
+        }
     }
 }

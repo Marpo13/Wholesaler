@@ -14,5 +14,7 @@ namespace Wholesaler.Backend.Domain.Repositories
 
         Workday? GetWorkdayOrDefault(Guid id);
 
+        Guid UpdateWorkday(Guid id, DateTime? stopTime);
+
     }
 }

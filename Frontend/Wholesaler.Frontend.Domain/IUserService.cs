@@ -11,5 +11,8 @@ namespace Wholesaler.Frontend.Domain
         Task<ExecutionResult<UserDto>> TryLoginWithDataFromUserAsync(string loginFromUser, string passwordFromUser);
        
         Task<ExecutionResult> StartWorking(Guid userId);
+
+        Task<ExecutionResult> FinishWorking(Guid userId);
+
     }
 }

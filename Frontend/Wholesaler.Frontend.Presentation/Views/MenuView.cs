@@ -78,6 +78,16 @@ namespace Wholesaler.Frontend.Presentation.Views
                 else if (pressedKey.Key == ConsoleKey.D3)
                 {
                     Console.Clear();
+                    Console.WriteLine("Enter your id");
+                    var wasIdProvided = Guid.TryParse(Console.ReadLine(), out Guid userId);
+                    if (!wasIdProvided)
+                    {
+                        Console.WriteLine("You entered an invaild id.");
+                        continue;
+                    }
+                    _service.StartWorking(userId);
+
+                    Console.Clear();
                     continue;
                 }
 
