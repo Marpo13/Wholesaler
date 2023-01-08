@@ -25,27 +25,16 @@ namespace Wholesaler.Frontend.DataAccess
 
                     postRequestMessage.Content = JsonContent.Create(content);
 
-                    try
+                    var postResult = await httpClient.SendAsync(postRequestMessage);
+                    var postContent = await postResult.Content.ReadAsStringAsync();
+
+                    if (postResult.IsSuccessStatusCode)
                     {
-                        var postResult = await httpClient.SendAsync(postRequestMessage);
-
-                        if (postResult.IsSuccessStatusCode)
-                        {
-                            var person = JsonConvert.DeserializeObject<UserDto>(await postResult.Content.ReadAsStringAsync());
-                            return ExecutionResultGeneric<UserDto>.CreateSuccessful(person);
-                        }
-
-                        var resultMessage = JsonConvert.DeserializeObject<string>(await postResult.Content.ReadAsStringAsync());
-                        return ExecutionResultGeneric<UserDto>.CreateFailed(resultMessage);
+                        var person = JsonConvert.DeserializeObject<UserDto>(await postResult.Content.ReadAsStringAsync());
+                        return ExecutionResultGeneric<UserDto>.CreateSuccessful(person);
                     }
 
-                    catch(Exception ex)
-                    {
-                        var dupa = "dupa";
-
-                        throw;
-                    }                   
-
+                    return ExecutionResultGeneric<UserDto>.CreateFailed(postContent);
                 }
             }
         }
@@ -61,29 +50,18 @@ namespace Wholesaler.Frontend.DataAccess
                         UserId = userId,
                     };
 
-                    try
+                    postRequestMessage.Content = JsonContent.Create(content);
+
+                    var postResult = await httpClient2.SendAsync(postRequestMessage);
+                    var postContent = await postResult.Content.ReadAsStringAsync();
+
+                    if (postResult.IsSuccessStatusCode)
                     {
-                        postRequestMessage.Content = JsonContent.Create(content);
-
-                        var postResult = await httpClient2.SendAsync(postRequestMessage);
-                        var postContent = await postResult.Content.ReadAsStringAsync();
-
-                        if (postResult.IsSuccessStatusCode)
-                        {
-                            var workdayId = JsonConvert.DeserializeObject<Guid>(postContent);
-                            return ExecutionResultGeneric<Guid>.CreateSuccessful(workdayId);
-                        }
-
-                        var resultMessage = JsonConvert.DeserializeObject<string>(await postResult.Content.ReadAsStringAsync());
-                        return ExecutionResultGeneric<Guid>.CreateFailed(resultMessage);
+                        var workdayId = JsonConvert.DeserializeObject<Guid>(postContent);
+                        return ExecutionResultGeneric<Guid>.CreateSuccessful(workdayId);
                     }
-                    
-                    catch(Exception ex)
-                    {
-                        var dupa = "dupa";
 
-                        throw;
-                    }
+                    return ExecutionResultGeneric<Guid>.CreateFailed(postContent);
                 }
             }
         }
@@ -92,29 +70,18 @@ namespace Wholesaler.Frontend.DataAccess
         {
             using (var httpClient4 = new HttpClient())
             {
-                try
+
+                var result = await httpClient4.GetAsync($"{apiPath}/workdays/{workdayid}");
+                var content = await result.Content.ReadAsStringAsync();
+
+                if (result.IsSuccessStatusCode)
                 {
-                    var result = await httpClient4.GetAsync($"{apiPath}/workdays/{workdayid}");
-                    var content = await result.Content.ReadAsStringAsync();
-
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var workday = JsonConvert.DeserializeObject<WorkdayDto>(content);
-                        return ExecutionResultGeneric<WorkdayDto>.CreateSuccessful(workday);
-                    }
-
-                    else
-                    {
-                        return ExecutionResultGeneric<WorkdayDto>.CreateFailed(content);
-                    }                    
+                    var workday = JsonConvert.DeserializeObject<WorkdayDto>(content);
+                    return ExecutionResultGeneric<WorkdayDto>.CreateSuccessful(workday);
                 }
 
-                catch(Exception ex)
-                {
-                    var dupa = "dupa";
+                return ExecutionResultGeneric<WorkdayDto>.CreateFailed(content);
 
-                    throw;
-                }
             }
         }
     }
