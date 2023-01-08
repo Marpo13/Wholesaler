@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WholesalerContext>(opt => opt.UseSqlServer(connection));
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUsersRepository, UserRepository>();
+builder.Services.AddTransient<IWorkdayRepository, WorkdayRepository>();
 
 var app = builder.Build();
 

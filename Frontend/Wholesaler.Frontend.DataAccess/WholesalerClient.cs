@@ -5,7 +5,6 @@ using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.Domain;
 using Wholesaler.Frontend.Domain.ValueObjects;
-using static Wholesaler.Frontend.Domain.ValueObjects.ExecutionResultGeneric;
 
 namespace Wholesaler.Frontend.DataAccess
 {
@@ -13,9 +12,8 @@ namespace Wholesaler.Frontend.DataAccess
     {
         private const string apiPath = $"http://localhost:5050";
 
-        public async Task<ExecutionResult<UserDto>> TryLoginWithDataFromUserAsync(string loginFromUser, string passwordFromUser)
+        public async Task<ExecutionResultGeneric<UserDto>> TryLoginWithDataFromUserAsync(string loginFromUser, string passwordFromUser)
         {
-
             using (var httpClient = new HttpClient())
             {
                 using (var postRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{apiPath}/users/actions/login"))
@@ -29,23 +27,24 @@ namespace Wholesaler.Frontend.DataAccess
                     postRequestMessage.Content = JsonContent.Create(content);
 
                     var postResult = await httpClient.SendAsync(postRequestMessage);
+                    var postContent = await postResult.Content.ReadAsStringAsync();
 
                     if (postResult.IsSuccessStatusCode)
                     {
                         var person = JsonConvert.DeserializeObject<UserDto>(await postResult.Content.ReadAsStringAsync());
-                        return ExecutionResult<UserDto>.CreateSuccessful(person);
+                        return ExecutionResultGeneric<UserDto>.CreateSuccessful(person);
                     }
 
-                    return ExecutionResult<UserDto>.CreateFailed("Error.");
+                    return ExecutionResultGeneric<UserDto>.CreateFailed(postContent);
                 }
             }
         }
 
-        public async Task<ExecutionResult> StartWorking(Guid userId)
+        public async Task<ExecutionResultGeneric<Guid>> StartWorkingAsync(Guid userId)
         {
             using (var httpClient2 = new HttpClient())
             {
-                using (var postRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{apiPath}/workday/start"))
+                using (var postRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{apiPath}/workdays/start"))
                 {
                     var content = new StartWorkdayRequestModel
                     {
@@ -55,16 +54,39 @@ namespace Wholesaler.Frontend.DataAccess
                     postRequestMessage.Content = JsonContent.Create(content);
 
                     var postResult = await httpClient2.SendAsync(postRequestMessage);
+                    var postContent = await postResult.Content.ReadAsStringAsync();
 
                     if (postResult.IsSuccessStatusCode)
-                        return ExecutionResult.CreateSuccessful();
+                    {
+                        var workdayId = JsonConvert.DeserializeObject<Guid>(postContent);
+                        return ExecutionResultGeneric<Guid>.CreateSuccessful(workdayId);
+                    }
 
-                    return ExecutionResult.CreateFailed("Error.");
+                    return ExecutionResultGeneric<Guid>.CreateFailed(postContent);
                 }
             }
         }
 
-        public async Task<ExecutionResult> FinishWorking(Guid userId)
+        public async Task<ExecutionResultGeneric<WorkdayDto>> GetWorkdayAsync(Guid workdayid)
+        {
+            using (var httpClient4 = new HttpClient())
+            {
+
+                var result = await httpClient4.GetAsync($"{apiPath}/workdays/{workdayid}");
+                var content = await result.Content.ReadAsStringAsync();
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var workday = JsonConvert.DeserializeObject<WorkdayDto>(content);
+                    return ExecutionResultGeneric<WorkdayDto>.CreateSuccessful(workday);
+                }
+
+                return ExecutionResultGeneric<WorkdayDto>.CreateFailed(content);
+
+            }
+        }
+    }
+    public async Task<ExecutionResult> FinishWorking(Guid userId)
         {
             using (var httpClient3 = new HttpClient())
             {
@@ -88,4 +110,7 @@ namespace Wholesaler.Frontend.DataAccess
         }
     }
     
+}
+                
+
 }
