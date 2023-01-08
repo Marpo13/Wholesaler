@@ -22,6 +22,10 @@ namespace Wholesaler.Backend.DataAccess.Configurations
 
             builder.Property(p => p.Role)
                 .IsRequired();
+
+            builder
+                .HasMany(p => p.Workdays)
+                .WithOne(w => w.Person);
         }
     }
 }

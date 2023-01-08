@@ -6,8 +6,8 @@
         public string Login { get; }
         public string Password { get; }
         public Role Role { get; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        public string Name { get; }
+        public string Surname { get; }        
 
         public Person(Guid id, string login, string password, Role role, string name, string surname)
         {
@@ -18,7 +18,6 @@
             Name = name;
             Surname = surname;
         }
-
         public Person(string login, string password, Role role, string name, string surname)
         {
             Id = Guid.NewGuid();

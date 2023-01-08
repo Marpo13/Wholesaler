@@ -6,6 +6,8 @@ namespace Wholesaler.Backend.Domain.Repositories
     {
         Person? GetUserOrDefault(string login);
 
+        Person? GetUserOrDefault(Guid id);
+
         Guid AddPerson(Person person);
     }
 }

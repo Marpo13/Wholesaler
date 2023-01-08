@@ -2,7 +2,7 @@
 {
     public class Requirement
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
         public Requirement()
         {
