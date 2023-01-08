@@ -8,7 +8,6 @@ namespace Wholesaler.Backend.Domain
         Person Login(string username, string password);
         
         Workday StartWorkday(Guid userId);
-
-        Workday CreateNewWorkday(DateTime time, Person person);
+        
     }
 }

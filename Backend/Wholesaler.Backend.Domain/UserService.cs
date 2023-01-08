@@ -36,29 +36,16 @@ namespace Wholesaler.Backend.Domain
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");
 
-            var workdayList = _workdayRepository.GetByPersonAsync(userId);
+            var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
 
-            if (workdayList == null)
-            {
-                var newWorkday = CreateNewWorkday(time, person);
-                return newWorkday;
-            }
-
-            var startedWorkday = workdayList.Find(w => w.Stop == null);
-
-            if(startedWorkday != null)
-                throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {startedWorkday.Id}");
-
-            var newWorkday1 = CreateNewWorkday(time, person);
-            return newWorkday1;            
-        }
-
-        public Workday CreateNewWorkday(DateTime time, Person person)
-        {
-            var newWorkday = new Workday(time, person);
-            var createdWorkday = _workdayRepository.Add(newWorkday);
+            if(activeWorkday != null)
+                throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {activeWorkday.Id}");
+           
+            var workday = new Workday(time, person);
+            var createdWorkday = _workdayRepository.Add(workday);
 
             return createdWorkday;
-        }       
+        }
+            
     }
 }

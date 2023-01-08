@@ -14,5 +14,7 @@ namespace Wholesaler.Backend.Domain.Repositories
         Workday? GetActiveOrDefault(Guid id);
 
         List<Workday> GetByPersonAsync(Guid personId);
+
+        Workday? GetActiveByPersonOrDefaultAsync(Guid personId);
     }
 }

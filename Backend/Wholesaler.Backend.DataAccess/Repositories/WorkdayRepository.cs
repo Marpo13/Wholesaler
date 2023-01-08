@@ -17,7 +17,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
         {
             _context = context;
         }
-        
+
         public Workday? GetActiveOrDefault(Guid id)
         {
             var workdayDb = _context.Workdays
@@ -42,18 +42,14 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return workday;
         }
 
-        public List<Workday?> GetByPersonAsync(Guid personId)
+        public List<Workday> GetByPersonAsync(Guid personId)
         {
-            var listOfWorkdays = new List<Workday?>();
             var workdayDbList = _context.Workdays
                             .Include(w => w.Person)
                             .Where(w => w.PersonId == personId)
                             .ToList();
 
-            if (workdayDbList == null)
-                return default;
-
-            foreach (var workdayDb in workdayDbList)
+            var listOfWorkdays = workdayDbList.Select(workdayDb =>
             {
                 var person = new Person(
                 workdayDb.Person.Id,
@@ -64,10 +60,34 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 workdayDb.Person.Surname);
 
                 var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
-                listOfWorkdays.Add(workday);
-            }
+                return workday;
+            });
 
-            return listOfWorkdays;
+            return listOfWorkdays.ToList();
+        }
+
+        public Workday? GetActiveByPersonOrDefaultAsync(Guid personId)
+        {
+            var workdayDb = _context.Workdays
+                            .Include(w => w.Person)
+                            .Where(w => w.PersonId == personId)
+                            .Where(w => w.Stop == null)
+                            .FirstOrDefault();
+
+            if (workdayDb == null)
+                return default;
+
+            var person = new Person(
+                workdayDb.Person.Id,
+                workdayDb.Person.Login,
+                workdayDb.Person.Password,
+                workdayDb.Person.Role,
+                workdayDb.Person.Name,
+                workdayDb.Person.Surname);
+
+            var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
+
+            return workday;
         }
 
         public Workday Add(Workday workday)
