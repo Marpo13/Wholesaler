@@ -7,10 +7,12 @@ namespace Wholesaler.Backend.Domain
     public class UserService : IUserService
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly IWorkdayRepository _workdayRepository;
 
-        public UserService(IUsersRepository usersRepository)
+        public UserService(IUsersRepository usersRepository, IWorkdayRepository workdayRepository)
         {
             _usersRepository = usersRepository;
+            _workdayRepository = workdayRepository;
         }
 
         public Person Login(string loginFromUser, string passwordFromUser)
@@ -26,7 +28,7 @@ namespace Wholesaler.Backend.Domain
             return user;
         }
 
-        public Guid StartWorkday(Guid userId)
+        public Workday StartWorkday(Guid userId)
         {
             var person = _usersRepository.GetUserOrDefault(userId);
             var time = DateTime.Now;
@@ -34,25 +36,29 @@ namespace Wholesaler.Backend.Domain
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");
 
-            var workday = _usersRepository.GetWorkdayOrDefault(userId);
+            var workdayList = _workdayRepository.GetByPersonAsync(userId);
 
-            if (workday == null)
+            if (workdayList == null)
             {
-                var newWorkday = new Workday(time, person);
-                var createdWorkday = _usersRepository.AddWorkday(newWorkday);
-                return createdWorkday.Id;
+                var newWorkday = CreateNewWorkday(time, person);
+                return newWorkday;
             }
 
-            else
-            {
-                if (workday.Stop == null)
-                    throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {workday.Id}");
+            var startedWorkday = workdayList.Find(w => w.Stop == null);
 
-                var newWorkday = new Workday(time, person);
-                var createdWorkday = _usersRepository.AddWorkday(newWorkday);
-                return createdWorkday.Id;
-            }           
-            
+            if(startedWorkday != null)
+                throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {startedWorkday.Id}");
+
+            var newWorkday1 = CreateNewWorkday(time, person);
+            return newWorkday1;            
         }
+
+        public Workday CreateNewWorkday(DateTime time, Person person)
+        {
+            var newWorkday = new Workday(time, person);
+            var createdWorkday = _workdayRepository.Add(newWorkday);
+
+            return createdWorkday;
+        }       
     }
 }

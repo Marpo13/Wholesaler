@@ -34,7 +34,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients");
+                    b.ToTable("Clients", (string)null);
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Person", b =>
@@ -64,7 +64,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("People");
+                    b.ToTable("People", (string)null);
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Requirement", b =>
@@ -80,7 +80,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Requirements");
+                    b.ToTable("Requirements", (string)null);
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Workday", b =>
@@ -102,7 +102,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Workdays");
+                    b.ToTable("Workdays", (string)null);
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Requirement", b =>

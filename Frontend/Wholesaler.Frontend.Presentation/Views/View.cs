@@ -1,16 +1,24 @@
 ﻿using Wholesaler.Frontend.Presentation.Interfaces;
+using Wholesaler.Frontend.Presentation.States;
 
 namespace Wholesaler.Frontend.Presentation.Views
 {
     internal abstract class View : IView
     {
-        protected abstract Task RenderView();
+        protected readonly ApplicationState State;
 
-        public async Task Render()
+        protected View(ApplicationState state)
+        {
+            State = state;
+        }
+
+        protected abstract Task RenderViewAsync();
+
+        public async Task RenderAsync()
         {
             Console.Clear();
 
-            await RenderView();
+            await RenderViewAsync();
 
             Console.Clear();
         }

@@ -1,7 +1,7 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Repositories;
 using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
-using WorkdayDb = Wholesaler.Backend.DataAccess.Models.Workday;
+
 
 namespace Wholesaler.Backend.DataAccess.Repositories
 {
@@ -55,42 +55,5 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             return person.Id;
         }
-
-        public Workday? GetWorkdayOrDefault(Guid personId)
-        {
-            var workdayDb = _context.Workdays
-                            .Where(w => w.PersonId == personId)
-                            .FirstOrDefault();
-            
-            if (workdayDb == null)
-                return default;
-
-            var person = new Person(
-                workdayDb.Person.Id, 
-                workdayDb.Person.Login, 
-                workdayDb.Person.Password, 
-                workdayDb.Person.Role, 
-                workdayDb.Person.Name, 
-                workdayDb.Person.Surname);
-
-            return new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
-        }
-
-        public Workday AddWorkday(Workday workday)
-        {
-            var workdayDb = new WorkdayDb
-            {
-                Id = workday.Id,
-                PersonId = workday.Person.Id,
-                Start = workday.Start,
-                Stop = workday.Stop
-            };
-
-            _context.Workdays.Add(workdayDb);
-            _context.SaveChanges();
-
-            return workday;
-        }
-
     }
 }

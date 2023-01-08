@@ -6,16 +6,15 @@ namespace Wholesaler.Frontend.Presentation.Views
 {
     internal class LoginView : View, ILoginView
     {
-        private readonly IUserService _service;
-        private readonly ApplicationState _state;
+        private readonly IUserService _service;        
 
         public LoginView(IUserService service, ApplicationState state)
+            : base(state)
         {
-            _service = service;
-            _state = state;
+            _service = service;            
         }
 
-        protected override async Task RenderView()
+        protected override async Task RenderViewAsync()
         {
             bool isLoggedSucccesfully = false;
 
@@ -34,7 +33,7 @@ namespace Wholesaler.Frontend.Presentation.Views
 
                     if (loginResult.IsSuccess)
                     {
-                        _state.User = loginResult.Payload;
+                        State.Login(loginResult.Payload);
                         break;
                     }
                 }

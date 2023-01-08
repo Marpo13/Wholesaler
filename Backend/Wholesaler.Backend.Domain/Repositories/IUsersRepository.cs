@@ -9,10 +9,5 @@ namespace Wholesaler.Backend.Domain.Repositories
         Person? GetUserOrDefault(Guid id);
 
         Guid AddPerson(Person person);
-
-        Workday AddWorkday(Workday workday);
-
-        Workday? GetWorkdayOrDefault(Guid id);
-
     }
 }

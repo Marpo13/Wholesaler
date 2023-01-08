@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Domain;
 using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
-using Wholesaler.Frontend.Domain.Exceptions;
 
 namespace Wholesaler.Backend.Api.Controllers
 {
@@ -33,7 +33,7 @@ namespace Wholesaler.Backend.Api.Controllers
                 {
                     Id = person.Id,
                     Login = person.Login,
-                    Role = person.Role.ToString(),
+                    Role = person.Role.ToString(),                    
                 });
             }
             catch (Exception ex)

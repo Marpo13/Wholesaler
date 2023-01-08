@@ -12,8 +12,8 @@ using Wholesaler.Backend.DataAccess;
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
     [DbContext(typeof(WholesalerContext))]
-    [Migration("20221211111352_AddPerson")]
-    partial class AddPerson
+    [Migration("20221211114609_RemoveTasksTable")]
+    partial class RemoveTasksTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,13 +64,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TaskId")
-                        .IsUnique();
 
                     b.ToTable("People");
                 });
@@ -91,39 +85,6 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                     b.ToTable("Requirements");
                 });
 
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.WorkTask", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("NumberOfRows")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ReguirementId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReguirementId");
-
-                    b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Person", b =>
-                {
-                    b.HasOne("Wholesaler.Backend.DataAccess.Models.WorkTask", "Task")
-                        .WithOne("Person")
-                        .HasForeignKey("Wholesaler.Backend.DataAccess.Models.Person", "TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-                });
-
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Requirement", b =>
                 {
                     b.HasOne("Wholesaler.Backend.DataAccess.Models.Client", "Client")
@@ -135,31 +96,9 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.WorkTask", b =>
-                {
-                    b.HasOne("Wholesaler.Backend.DataAccess.Models.Requirement", "Requirement")
-                        .WithMany("Tasks")
-                        .HasForeignKey("ReguirementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Requirement");
-                });
-
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Client", b =>
                 {
                     b.Navigation("Requirements");
-                });
-
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Requirement", b =>
-                {
-                    b.Navigation("Tasks");
-                });
-
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.WorkTask", b =>
-                {
-                    b.Navigation("Person")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

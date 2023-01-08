@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wholesaler.Frontend.Domain.Exceptions
+namespace Wholesaler.Frontend.Presentation.Exceptions
 {
     public class InvalidDataProvidedException : Exception
     {

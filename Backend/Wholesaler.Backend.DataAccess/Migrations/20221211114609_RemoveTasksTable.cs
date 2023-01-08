@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
-    public partial class Changes : Migration
+    public partial class RemoveTasksTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
