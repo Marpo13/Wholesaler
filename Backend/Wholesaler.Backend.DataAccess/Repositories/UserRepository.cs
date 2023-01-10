@@ -55,19 +55,5 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             return person.Id;
         }
-
-
-        public Guid UpdateWorkday(Guid id, DateTime? stopTime)
-        {
-            var workdayDb = _context.Workdays
-                .Where(w => w.Id == id)
-                .First();
-
-            workdayDb.Stop = stopTime;
-
-            _context.SaveChanges();
-
-            return id;
-        }
     }
 }

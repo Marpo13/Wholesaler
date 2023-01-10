@@ -11,10 +11,9 @@ namespace Wholesaler.Frontend.Domain
        
         Task<ExecutionResultGeneric<Guid>> StartWorkingAsync(Guid userId);
 
-        Task<ExecutionResultGeneric<WorkdayDto>> GetWorkdayAsync(Guid workdayid);
-     
+        Task<ExecutionResultGeneric<WorkdayDto>> GetWorkdayAsync(Guid workdayid);     
 
-        Task<ExecutionResult> FinishWorking(Guid userId);
+        Task<ExecutionResultGeneric<Guid>> FinishWorkingAsync(Guid userId);
 
     }
 }

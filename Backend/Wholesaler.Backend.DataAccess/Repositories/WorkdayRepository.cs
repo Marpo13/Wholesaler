@@ -18,12 +18,11 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             _context = context;
         }
 
-        public Workday? GetActiveOrDefault(Guid id)
+        public Workday? GetOrDefault(Guid id)
         {
             var workdayDb = _context.Workdays
                 .Include(w => w.Person)
-                .Where(w => w.Id == id)
-                .Where(w => w.Stop == null)
+                .Where(w => w.Id == id)                
                 .FirstOrDefault();
 
             if (workdayDb == null)
@@ -101,6 +100,22 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             };
 
             _context.Workdays.Add(workdayDb);
+            _context.SaveChanges();
+
+            return workday;
+        }
+
+        public Workday UpdateWorkday(Workday workday)
+        {
+            var workdayDb = _context.Workdays
+                .Where(w => w.Id == workday.Id)
+                .FirstOrDefault();
+
+            if (workdayDb == null)
+                return default;
+
+            workdayDb.Stop = workday.Stop;
+
             _context.SaveChanges();
 
             return workday;

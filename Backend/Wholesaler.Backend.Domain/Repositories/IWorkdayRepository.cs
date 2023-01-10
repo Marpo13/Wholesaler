@@ -11,10 +11,12 @@ namespace Wholesaler.Backend.Domain.Repositories
     {
         Workday Add(Workday workday);      
 
-        Workday? GetActiveOrDefault(Guid id);
+        Workday? GetOrDefault(Guid id);
 
         List<Workday> GetByPersonAsync(Guid personId);
 
         Workday? GetActiveByPersonOrDefaultAsync(Guid personId);
+
+        Workday UpdateWorkday(Workday workday);
     }
 }

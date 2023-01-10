@@ -12,16 +12,14 @@ namespace Wholesaler.Backend.Api.Controllers
     public class WorkdayController : ControllerBase
     {
         private readonly IUserService _service;
-        private readonly IWorkdayRepository _repository;
 
-        public WorkdayController(IUserService service, IWorkdayRepository repository)
+        public WorkdayController(IUserService service)
         {
             _service = service;
-            _repository = repository;
         }
 
         [HttpPost]
-        [Route("start")]
+        [Route("actions/start")]
         public async Task<ActionResult<Guid>> StartWorkdayAsync([FromBody] StartWorkdayRequestModel request)
         {
             try
@@ -43,9 +41,9 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("{id}")]
         public async Task<ActionResult<WorkdayDto>> GetWorkdayAsync(Guid id)
         {
-            try 
+            try
             {
-                var workday = _repository.GetActiveOrDefault(id);
+                var workday = _service.GetWorkdayOrDefault(id);
 
                 return Ok(new WorkdayDto()
                 {
@@ -53,9 +51,9 @@ namespace Wholesaler.Backend.Api.Controllers
                     Start = workday.Start,
                     Stop = workday.Stop,
                 });
-            }  
-            
-            catch(Exception ex)
+            }
+
+            catch (Exception ex)
             {
                 if (ex is InvalidDataProvidedException)
                     return BadRequest(ex.Message);
@@ -65,8 +63,8 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
-        [Route("finish")]
-        public async Task<ActionResult<Guid>> FinishWorkday([FromBody] FinishWorkdayRequestModel request)
+        [Route("actions/finish")]
+        public async Task<ActionResult<Guid>> FinishWorkdayAsync([FromBody] FinishWorkdayRequestModel request)
         {
             try
             {

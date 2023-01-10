@@ -46,21 +46,34 @@ namespace Wholesaler.Frontend.Presentation.States
     internal class EmployeeViews : IState
     {
         public StartWorkdayState? StartWorkday { get; private set; }
+        public FinishWorkdayState? FinishWorkday { get; private set; }
 
         public void Initialize()
         {
             StartWorkday = null;
+            FinishWorkday = null;
         }
 
         public StartWorkdayState GetStartWorkday()
         {
-            if(StartWorkday == null)
+            if (StartWorkday == null)
             {
-                StartWorkday= new StartWorkdayState();
+                StartWorkday = new StartWorkdayState();
                 StartWorkday.Initialize();
             }
 
             return StartWorkday;
+        }
+
+        public FinishWorkdayState GetFinishWorkday()
+        {
+            if(FinishWorkday == null)
+            {
+                FinishWorkday = new FinishWorkdayState();
+                FinishWorkday.Initialize();
+            }
+
+            return FinishWorkday;
         }
     }
 
@@ -100,5 +113,44 @@ namespace Wholesaler.Frontend.Presentation.States
 
             return StartedWorkdayId.Value;
         }
+    }
+
+    internal class FinishWorkdayState : IState
+    {
+        public Guid? FinishedWorkdayId { get; private set; }
+        public WorkdayDto? Workday { get; private set; }
+
+        public void Initialize()
+        {
+            FinishedWorkdayId = null;
+            Workday = null;
+        }
+
+        public WorkdayDto GetWorkday()
+        {
+            if (Workday == null)
+                throw new InvalidApplicationStateException("Workday is null");
+
+            return Workday;
+        }
+
+        public void FinishWork(Guid workdayId)
+        {
+            FinishedWorkdayId = workdayId;
+        }
+
+        public Guid GetFinishedWorkdayId()
+        {
+            if (FinishedWorkdayId == null)
+                throw new InvalidApplicationStateException("Id is null.");
+
+            return FinishedWorkdayId.Value;
+        }
+
+        public void FinishWorkday(WorkdayDto workday)
+        {
+            Workday = workday;
+        }
+        
     }
 }

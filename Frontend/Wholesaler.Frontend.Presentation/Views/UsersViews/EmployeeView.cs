@@ -7,11 +7,13 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
     internal class EmployeeView : View
     {
         private readonly StartWorkday _startWorkday;
+        private readonly FinishWorkday _finishWorkday;
 
-        public EmployeeView(StartWorkday startWorkday, ApplicationState state) 
+        public EmployeeView(StartWorkday startWorkday,  ApplicationState state, FinishWorkday finishWorkday)
             : base(state)
         {
             _startWorkday = startWorkday;
+            _finishWorkday = finishWorkday;
         }
 
         protected override async Task RenderViewAsync()
@@ -44,7 +46,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
-                        Console.Clear();
+                        await _finishWorkday.RenderAsync();
                         continue;
 
                     case ConsoleKey.D4:
@@ -53,6 +55,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                         continue;
 
                     case ConsoleKey.Escape:
+                        wasExitKeyPressed = true;
                         break;
 
                     default: continue;
