@@ -4,13 +4,13 @@ using Wholesaler.Backend.DataAccess.Models;
 
 namespace Wholesaler.Backend.DataAccess.Configurations
 {
-    public class WorkdayConfiguration : IEntityTypeConfiguration<Workday>
+    public class WorkTaskConfiguration : IEntityTypeConfiguration<WorkTask>
     {
-        public void Configure(EntityTypeBuilder<Workday> builder)
+        public void Configure(EntityTypeBuilder<WorkTask> builder)
         {
             builder
                 .HasOne(w => w.Person)
-                .WithMany(p => p.Workdays)
+                .WithMany(p => p.WorkTasks)
                 .HasForeignKey(p => p.PersonId);
         }
     }

@@ -5,10 +5,10 @@ using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
 
 namespace Wholesaler.Backend.DataAccess.Repositories
 {
-    public class UserRepository : IUsersRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly WholesalerContext _context;
-        public UserRepository(WholesalerContext context)
+        public UsersRepository(WholesalerContext context)
         {
             _context = context;
         }

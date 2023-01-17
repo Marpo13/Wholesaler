@@ -53,6 +53,6 @@ namespace Wholesaler.Backend.Api.Controllers
             var id = _repository.AddPerson(person);
 
             return id;
-        }
+        }        
     }
 }

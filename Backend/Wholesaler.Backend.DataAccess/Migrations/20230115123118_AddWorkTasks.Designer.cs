@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wholesaler.Backend.DataAccess;
 
@@ -11,9 +12,10 @@ using Wholesaler.Backend.DataAccess;
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
     [DbContext(typeof(WholesalerContext))]
-    partial class WholesalerContextModelSnapshot : ModelSnapshot
+    [Migration("20230115123118_AddWorkTasks")]
+    partial class AddWorkTasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +113,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PersonId")
+                    b.Property<Guid>("PersonId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Row")
@@ -156,7 +158,9 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                 {
                     b.HasOne("Wholesaler.Backend.DataAccess.Models.Person", "Person")
                         .WithMany("WorkTasks")
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
                 });

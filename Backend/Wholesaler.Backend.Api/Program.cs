@@ -14,8 +14,10 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WholesalerContext>(opt => opt.UseSqlServer(connection));
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IUsersRepository, UserRepository>();
+builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 builder.Services.AddTransient<IWorkdayRepository, WorkdayRepository>();
+builder.Services.AddTransient<IWorkTaskRepository, WorkTaskRepository>();
+builder.Services.AddTransient<IWorkTaskService, WorkTaskService>();
 
 var app = builder.Build();
 

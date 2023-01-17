@@ -74,6 +74,6 @@ namespace Wholesaler.Backend.Domain
                 throw new InvalidDataProvidedException($"There is no workday with id: {id}");
 
             return workday;
-        }
+        }      
     }
 }

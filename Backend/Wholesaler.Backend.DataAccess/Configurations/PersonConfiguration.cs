@@ -26,6 +26,10 @@ namespace Wholesaler.Backend.DataAccess.Configurations
             builder
                 .HasMany(p => p.Workdays)
                 .WithOne(w => w.Person);
+
+            builder
+                .HasMany(p => p.WorkTasks)
+                .WithOne(w => w.Person);
         }
     }
 }

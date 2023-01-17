@@ -12,6 +12,5 @@ namespace Wholesaler.Backend.Domain
         Guid FinishWorkday(Guid userId);
 
         Workday GetWorkdayOrDefault(Guid id);
-        
     }
 }
