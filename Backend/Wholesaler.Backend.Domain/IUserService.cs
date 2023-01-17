@@ -9,5 +9,7 @@ namespace Wholesaler.Backend.Domain
         
         Workday StartWorkday(Guid userId);
         
+        Guid FinishWorkday(Guid userId);        
+        
     }
 }

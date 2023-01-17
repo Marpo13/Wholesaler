@@ -41,14 +41,32 @@ namespace Wholesaler.Backend.Domain
 
             var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
 
-            if(activeWorkday != null)
+            if (activeWorkday != null)
                 throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {activeWorkday.Id}");
-           
+
             var workday = new Workday(time, person);
             var createdWorkday = _workdayRepository.Add(workday);
 
             return createdWorkday;
         }
-            
+
+
+        public Guid FinishWorkday(Guid userId)
+        {
+            var person = _usersRepository.GetUserOrDefault(userId);
+
+            if (person == null)
+                throw new InvalidDataProvidedException($"There is no person with id: {userId}");
+
+            var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
+
+            if (activeWorkday == null)
+                throw new InvalidDataProvidedException($"There is no started workdays for person with id: {userId}");
+
+            activeWorkday.StopWorkday();
+            _workdayRepository.UpdateWorkday(activeWorkday);
+
+            return activeWorkday.Id;
+        }
     }
 }

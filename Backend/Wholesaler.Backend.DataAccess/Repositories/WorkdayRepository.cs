@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using WorkdayDb = Wholesaler.Backend.DataAccess.Models.Workday;
 
@@ -18,12 +14,11 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             _context = context;
         }
 
-        public Workday? GetActiveOrDefault(Guid id)
+        public Workday? GetOrDefault(Guid id)
         {
             var workdayDb = _context.Workdays
                 .Include(w => w.Person)
-                .Where(w => w.Id == id)
-                .Where(w => w.Stop == null)
+                .Where(w => w.Id == id)                
                 .FirstOrDefault();
 
             if (workdayDb == null)
@@ -101,6 +96,22 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             };
 
             _context.Workdays.Add(workdayDb);
+            _context.SaveChanges();
+
+            return workday;
+        }
+
+        public Workday UpdateWorkday(Workday workday)
+        {
+            var workdayDb = _context.Workdays
+                .Where(w => w.Id == workday.Id)
+                .FirstOrDefault();
+
+            if (workdayDb == null)
+                throw new InvalidProcedureException($"There is no workday with id: {workday.Id}");
+
+            workdayDb.Stop = workday.Stop;
+
             _context.SaveChanges();
 
             return workday;

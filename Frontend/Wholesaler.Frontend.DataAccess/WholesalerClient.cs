@@ -1,88 +1,72 @@
-﻿using Newtonsoft.Json;
-using System.Net.Http.Json;
-using Wholesaler.Core.Dto.RequestModels;
+﻿using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
+using Wholesaler.Frontend.DataAccess.Http;
 using Wholesaler.Frontend.Domain;
 using Wholesaler.Frontend.Domain.ValueObjects;
 
 namespace Wholesaler.Frontend.DataAccess
 {
-    public class WholesalerClient : IUserService
+    public class WholesalerClient : RequestService, IUserService
     {
         private const string apiPath = $"http://localhost:5050";
 
         public async Task<ExecutionResultGeneric<UserDto>> TryLoginWithDataFromUserAsync(string loginFromUser, string passwordFromUser)
         {
-            using (var httpClient = new HttpClient())
+            var request = new Request<LoginUserRequestModel, UserDto>()
             {
-                using (var postRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{apiPath}/users/actions/login"))
+                Path = $"{apiPath}/users/actions/login",
+                Method = HttpMethod.Post,
+                Content = new LoginUserRequestModel
                 {
-                    var content = new LoginUserRequestModel
-                    {
-                        Login = loginFromUser,
-                        Password = passwordFromUser,
-                    };
-
-                    postRequestMessage.Content = JsonContent.Create(content);
-
-                    var postResult = await httpClient.SendAsync(postRequestMessage);
-                    var postContent = await postResult.Content.ReadAsStringAsync();
-
-                    if (postResult.IsSuccessStatusCode)
-                    {
-                        var person = JsonConvert.DeserializeObject<UserDto>(await postResult.Content.ReadAsStringAsync());
-                        return ExecutionResultGeneric<UserDto>.CreateSuccessful(person);
-                    }
-
-                    return ExecutionResultGeneric<UserDto>.CreateFailed(postContent);
+                    Login = loginFromUser,
+                    Password = passwordFromUser,
                 }
-            }
+            };
+
+            return await SendAsync(request);
         }
 
         public async Task<ExecutionResultGeneric<Guid>> StartWorkingAsync(Guid userId)
         {
-            using (var httpClient2 = new HttpClient())
+            var request = new Request<StartWorkdayRequestModel, Guid>()
             {
-                using (var postRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{apiPath}/workdays/start"))
+                Path = $"{apiPath}/workdays/actions/start",
+                Method = HttpMethod.Post,
+                Content = new StartWorkdayRequestModel()
                 {
-                    var content = new StartWorkdayRequestModel
-                    {
-                        UserId = userId,
-                    };
-
-                    postRequestMessage.Content = JsonContent.Create(content);
-
-                    var postResult = await httpClient2.SendAsync(postRequestMessage);
-                    var postContent = await postResult.Content.ReadAsStringAsync();
-
-                    if (postResult.IsSuccessStatusCode)
-                    {
-                        var workdayId = JsonConvert.DeserializeObject<Guid>(postContent);
-                        return ExecutionResultGeneric<Guid>.CreateSuccessful(workdayId);
-                    }
-
-                    return ExecutionResultGeneric<Guid>.CreateFailed(postContent);
+                    UserId = userId,
                 }
-            }
+            };
+
+            return await SendAsync(request);
         }
 
         public async Task<ExecutionResultGeneric<WorkdayDto>> GetWorkdayAsync(Guid workdayid)
         {
-            using (var httpClient4 = new HttpClient())
+            var request = new Request<HttpRequestMessage, WorkdayDto>()
             {
+                Path = $"{apiPath}/workdays/{workdayid}",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
+            };
 
-                var result = await httpClient4.GetAsync($"{apiPath}/workdays/{workdayid}");
-                var content = await result.Content.ReadAsStringAsync();
+            return await SendAsync(request);
+        }
 
-                if (result.IsSuccessStatusCode)
+        public async Task<ExecutionResultGeneric<Guid>> FinishWorkingAsync(Guid userId)
+        {
+            var request = new Request<FinishWorkdayRequestModel, Guid>()
+            {
+                Path = $"{apiPath}/workdays/actions/finish",
+                Method = HttpMethod.Post,
+                Content = new FinishWorkdayRequestModel()
                 {
-                    var workday = JsonConvert.DeserializeObject<WorkdayDto>(content);
-                    return ExecutionResultGeneric<WorkdayDto>.CreateSuccessful(workday);
+                    UserId = userId,
                 }
+            };
 
-                return ExecutionResultGeneric<WorkdayDto>.CreateFailed(content);
-
-            }
+            return await SendAsync(request);
         }
     }
 }
+

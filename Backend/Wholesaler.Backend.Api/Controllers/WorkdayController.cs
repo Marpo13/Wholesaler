@@ -12,16 +12,16 @@ namespace Wholesaler.Backend.Api.Controllers
     public class WorkdayController : ControllerBase
     {
         private readonly IUserService _service;
-        private readonly IWorkdayRepository _repository;
+        private readonly IWorkdayRepository _workdayRepository;
 
-        public WorkdayController(IUserService service, IWorkdayRepository repository)
+        public WorkdayController(IUserService service, IWorkdayRepository workdayRepository)
         {
             _service = service;
-            _repository = repository;
+            _workdayRepository = workdayRepository;
         }
 
         [HttpPost]
-        [Route("start")]
+        [Route("actions/start")]
         public async Task<ActionResult<Guid>> StartWorkdayAsync([FromBody] StartWorkdayRequestModel request)
         {
             try
@@ -43,9 +43,9 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("{id}")]
         public async Task<ActionResult<WorkdayDto>> GetWorkdayAsync(Guid id)
         {
-            try 
+            try
             {
-                var workday = _repository.GetActiveOrDefault(id);
+                var workday = _workdayRepository.GetOrDefault(id);
 
                 return Ok(new WorkdayDto()
                 {
@@ -53,9 +53,27 @@ namespace Wholesaler.Backend.Api.Controllers
                     Start = workday.Start,
                     Stop = workday.Stop,
                 });
-            }  
-            
-            catch(Exception ex)
+            }
+
+            catch (Exception ex)
+            {
+                if (ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Route("actions/finish")]
+        public async Task<ActionResult<Guid>> FinishWorkdayAsync([FromBody] FinishWorkdayRequestModel request)
+        {
+            try
+            {
+                var workdayId = _service.FinishWorkday(request.UserId);
+                return workdayId;
+            }
+            catch (Exception ex)
             {
                 if (ex is InvalidDataProvidedException)
                     return BadRequest(ex.Message);
