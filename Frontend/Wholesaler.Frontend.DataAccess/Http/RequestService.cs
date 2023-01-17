@@ -5,7 +5,7 @@ using Wholesaler.Frontend.Domain.ValueObjects;
 namespace Wholesaler.Frontend.DataAccess.Http
 {
 
-    public class RequestService
+    public abstract class RequestService
     {
         protected async Task<ExecutionResultGeneric<TResponseModel>> SendAsync<TRequestModel, TResponseModel>(Request<TRequestModel, TResponseModel> request)
         {

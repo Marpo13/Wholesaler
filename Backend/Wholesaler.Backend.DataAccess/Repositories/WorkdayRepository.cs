@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using WorkdayDb = Wholesaler.Backend.DataAccess.Models.Workday;
 
@@ -112,7 +108,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workdayDb == null)
-                return default;
+                throw new InvalidProcedureException($"There is no workday with id: {workday.Id}");
 
             workdayDb.Stop = workday.Stop;
 

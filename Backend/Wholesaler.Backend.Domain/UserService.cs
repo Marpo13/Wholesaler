@@ -36,6 +36,9 @@ namespace Wholesaler.Backend.Domain
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");
 
+            if (person.Role != Role.Employee)
+                throw new InvalidDataProvidedException($"You can not create a workday for role: {person.Role}. You have to be an Employee.");
+
             var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
 
             if (activeWorkday != null)
@@ -65,15 +68,5 @@ namespace Wholesaler.Backend.Domain
 
             return activeWorkday.Id;
         }
-
-        public Workday GetWorkdayOrDefault(Guid id)
-        {
-            var workday = _workdayRepository.GetOrDefault(id);
-
-            if (workday == null)
-                throw new InvalidDataProvidedException($"There is no workday with id: {id}");
-
-            return workday;
-        }      
     }
 }

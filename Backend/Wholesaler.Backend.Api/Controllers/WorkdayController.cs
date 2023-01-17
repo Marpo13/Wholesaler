@@ -11,10 +11,12 @@ namespace Wholesaler.Backend.Api.Controllers
     public class WorkdayController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly IWorkdayRepository _workdayRepository;
 
-        public WorkdayController(IUserService service)
+        public WorkdayController(IUserService service, IWorkdayRepository workdayRepository)
         {
             _service = service;
+            _workdayRepository = workdayRepository;
         }
 
         [HttpPost]
@@ -42,7 +44,7 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             try
             {
-                var workday = _service.GetWorkdayOrDefault(id);
+                var workday = _workdayRepository.GetOrDefault(id);
 
                 return Ok(new WorkdayDto()
                 {
