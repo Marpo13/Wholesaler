@@ -1,15 +1,14 @@
-﻿using Wholesaler.Frontend.Domain;
-using Wholesaler.Frontend.Presentation.States;
+﻿using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views.EmployeeViews;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 {
     internal class EmployeeView : View
     {
-        private readonly StartWorkday _startWorkday;
-        private readonly FinishWorkday _finishWorkday;
+        private readonly StartWorkdayView _startWorkday;
+        private readonly FinishWorkdayView _finishWorkday;
 
-        public EmployeeView(StartWorkday startWorkday,  ApplicationState state, FinishWorkday finishWorkday)
+        public EmployeeView(StartWorkdayView startWorkday,  ApplicationState state, FinishWorkdayView finishWorkday)
             : base(state)
         {
             _startWorkday = startWorkday;

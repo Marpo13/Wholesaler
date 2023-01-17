@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Wholesaler.Core.Dto.ResponseModels
+﻿namespace Wholesaler.Core.Dto.ResponseModels
 {
     public class UserDto
     {

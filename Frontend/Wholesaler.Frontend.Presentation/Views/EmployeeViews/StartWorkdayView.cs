@@ -4,12 +4,12 @@ using Wholesaler.Frontend.Presentation.States;
 
 namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
-    internal class StartWorkday : View
+    internal class StartWorkdayView : View
     {
         private readonly IUserService _service;
         private readonly StartWorkdayState _state;
 
-        public StartWorkday(IUserService service, ApplicationState state)
+        public StartWorkdayView(IUserService service, ApplicationState state)
             : base(state)
         {
             _service = service;

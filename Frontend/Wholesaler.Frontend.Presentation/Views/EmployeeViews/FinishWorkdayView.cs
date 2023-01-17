@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain;
 using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
 
 namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
-    internal class FinishWorkday : View
+    internal class FinishWorkdayView : View
     {
         private readonly IUserService _service;
         private readonly FinishWorkdayState _state;        
 
-        public FinishWorkday(IUserService service, ApplicationState state)
+        public FinishWorkdayView(IUserService service, ApplicationState state)
             : base(state)
         {
             _service = service;

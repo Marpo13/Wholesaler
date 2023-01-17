@@ -65,15 +65,5 @@ namespace Wholesaler.Backend.Domain
 
             return activeWorkday.Id;
         }
-
-        public Workday GetWorkdayOrDefault(Guid id)
-        {
-            var workday = _workdayRepository.GetOrDefault(id);
-
-            if (workday == null)
-                throw new InvalidDataProvidedException($"There is no workday with id: {id}");
-
-            return workday;
-        }
     }
 }

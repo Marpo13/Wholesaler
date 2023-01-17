@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Net.Http.Json;
-using Wholesaler.Core.Dto.RequestModels;
+﻿using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.DataAccess.Http;
 using Wholesaler.Frontend.Domain;

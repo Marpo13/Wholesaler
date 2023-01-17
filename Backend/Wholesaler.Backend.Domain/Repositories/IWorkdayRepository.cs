@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wholesaler.Backend.Domain.Entities;
+﻿using Wholesaler.Backend.Domain.Entities;
 
 namespace Wholesaler.Backend.Domain.Repositories
 {
@@ -18,5 +13,6 @@ namespace Wholesaler.Backend.Domain.Repositories
         Workday? GetActiveByPersonOrDefaultAsync(Guid personId);
 
         Workday UpdateWorkday(Workday workday);
+        
     }
 }
