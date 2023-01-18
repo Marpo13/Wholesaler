@@ -33,7 +33,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
-        [Route("actions/asign")]
+        [Route("actions/assign")]
         public async Task<ActionResult<WorkTaskDto>> Assign([FromBody] AssignTaskRequestModel assignTask)
         {            
             var workTask = _workTaskService.Assign(assignTask.WorkTaskId, assignTask.UserId);

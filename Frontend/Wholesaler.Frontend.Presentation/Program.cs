@@ -7,6 +7,7 @@ using Wholesaler.Frontend.Presentation.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views;
 using Wholesaler.Frontend.Presentation.Views.EmployeeViews;
+using Wholesaler.Frontend.Presentation.Views.ManagerViews;
 using Wholesaler.Frontend.Presentation.Views.UsersViews;
 
 var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
@@ -18,7 +19,8 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<ManagerView>();
     services.AddTransient<OwnerView>();
     services.AddTransient<StartWorkdayView>();
-    services.AddTransient<FinishWorkday>();
+    services.AddTransient<FinishWorkdayView>();
+    services.AddTransient<AssignTaskView>();
     services.AddSingleton<ApplicationState>();
     });
 

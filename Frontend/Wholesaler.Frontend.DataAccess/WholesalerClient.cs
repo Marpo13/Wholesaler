@@ -67,6 +67,22 @@ namespace Wholesaler.Frontend.DataAccess
 
             return await SendAsync(request);
         }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid userId, Guid workTaskId)
+        {
+            var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/actions/assign",
+                Method = HttpMethod.Post,
+                Content = new AssignTaskRequestModel()
+                {
+                    UserId = userId,
+                    WorkTaskId = workTaskId,
+                }
+            };
+
+            return await SendAsync(request);
+        }
     }
 }
 

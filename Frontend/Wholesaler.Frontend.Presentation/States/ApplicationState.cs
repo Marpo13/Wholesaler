@@ -8,11 +8,13 @@ namespace Wholesaler.Frontend.Presentation.States
     {
         private UserDto? _loggedUser;
         private EmployeeViews? _employeeViews;
+        private ManagerViews? _managerViews;
 
         public void Initialize()
         {
             _loggedUser = null;
             _employeeViews = null;
+            _managerViews = null;
         }
 
         public void Login(UserDto user)
@@ -40,6 +42,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return _employeeViews;
+        }
+
+        public ManagerViews GetManagerViews()
+        {
+            if(_managerViews == null)
+            {
+                _managerViews = new ManagerViews();
+                _managerViews.Initialize();
+            }
+
+            return _managerViews;
         }
     }
 
@@ -152,5 +165,59 @@ namespace Wholesaler.Frontend.Presentation.States
             Workday = workday;
         }
         
+    }
+
+    internal class ManagerViews : IState
+    {
+        public AssignTaskState? AssignTask { get; private set; }
+
+        public void Initialize()
+        {
+            AssignTask = null;
+        }
+
+        public AssignTaskState GetAssignTask()
+        {
+            if (AssignTask == null)
+            {
+                AssignTask = new AssignTaskState();
+                AssignTask.Initialize();
+            }
+
+            return AssignTask;
+        }
+    }
+
+    internal class AssignTaskState : IState
+    {
+        public Guid? WorkTaskId { get; private set; }
+        public WorkTaskDto? WorkTask { get; private set; }
+
+        public void Initialize()
+        {
+            WorkTaskId = null;
+            WorkTask = null;
+        }
+
+        public Guid GetWorkTaskId()
+        {
+            if (WorkTaskId == null)
+                throw new InvalidApplicationStateException("WorkTask id  is null");
+
+            return WorkTaskId.Value;
+        }
+
+        public WorkTaskDto GetWorkTask()
+        {
+            if (WorkTask == null)
+                throw new InvalidApplicationStateException("WorkTask is null");
+
+            return WorkTask;
+        }
+
+        public void AssignTask(WorkTaskDto workTask)
+        {
+            WorkTask = workTask;
+        }
     }
 }

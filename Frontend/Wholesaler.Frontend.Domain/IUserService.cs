@@ -15,5 +15,6 @@ namespace Wholesaler.Frontend.Domain
 
         Task<ExecutionResultGeneric<Guid>> FinishWorkingAsync(Guid userId);
 
+        Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid userId, Guid workTaskId);
     }
 }
