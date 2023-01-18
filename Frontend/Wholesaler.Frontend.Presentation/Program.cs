@@ -18,7 +18,7 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<ManagerView>();
     services.AddTransient<OwnerView>();
     services.AddTransient<StartWorkdayView>();
-    services.AddTransient<FinishWorkday>();
+    services.AddTransient<FinishWorkdayView>();
     services.AddSingleton<ApplicationState>();
     });
 
