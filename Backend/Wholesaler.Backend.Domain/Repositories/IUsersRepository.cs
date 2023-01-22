@@ -4,11 +4,14 @@ namespace Wholesaler.Backend.Domain.Repositories
 {
     public interface IUsersRepository
     {
-        Person? GetUserOrDefault(string login);
+        Person Get(Guid id);
 
-        Person? GetUserOrDefault(Guid id);
+        Person? GetOrDefault(string login);
+
+        Person? GetOrDefault(Guid id);
 
         Guid AddPerson(Person person);       
 
+        List<Person> GetEmployees();
     }
 }

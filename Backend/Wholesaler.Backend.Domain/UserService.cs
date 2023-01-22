@@ -17,7 +17,7 @@ namespace Wholesaler.Backend.Domain
 
         public Person Login(string loginFromUser, string passwordFromUser)
         {
-            var user = _usersRepository.GetUserOrDefault(loginFromUser);
+            var user = _usersRepository.GetOrDefault(loginFromUser);
 
             if (user == null)
                 throw new InvalidDataProvidedException($"There is no person with login: {loginFromUser}.");
@@ -30,7 +30,7 @@ namespace Wholesaler.Backend.Domain
 
         public Workday StartWorkday(Guid userId)
         {
-            var person = _usersRepository.GetUserOrDefault(userId);
+            var person = _usersRepository.GetOrDefault(userId);
             var time = DateTime.Now;
 
             if (person == null)
@@ -53,7 +53,7 @@ namespace Wholesaler.Backend.Domain
 
         public Guid FinishWorkday(Guid userId)
         {
-            var person = _usersRepository.GetUserOrDefault(userId);
+            var person = _usersRepository.GetOrDefault(userId);
 
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");

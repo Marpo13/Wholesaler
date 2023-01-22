@@ -60,11 +60,13 @@ namespace Wholesaler.Frontend.Presentation.States
     {
         public StartWorkdayState? StartWorkday { get; private set; }
         public FinishWorkdayState? FinishWorkday { get; private set; }
+        public GetAssignedTasksState? GetAssignedTasks { get; private set; }
 
         public void Initialize()
         {
             StartWorkday = null;
             FinishWorkday = null;
+            GetAssignedTasks = null;
         }
 
         public StartWorkdayState GetStartWorkday()
@@ -87,6 +89,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return FinishWorkday;
+        }
+
+        public GetAssignedTasksState GetAssigned()
+        {
+            if(GetAssignedTasks == null)
+            {
+                GetAssignedTasks = new GetAssignedTasksState();
+                GetAssignedTasks.Initialize();
+            }
+
+            return GetAssignedTasks;
         }
     }
 
@@ -192,7 +205,9 @@ namespace Wholesaler.Frontend.Presentation.States
     {
         public Guid? WorkTaskId { get; private set; }
         public WorkTaskDto? WorkTask { get; private set; }
-
+        public List<WorkTaskDto>? WorkTasks { get; private set; }
+        public List<UserDto>? Employees { get; private set; }
+               
         public void Initialize()
         {
             WorkTaskId = null;
@@ -218,6 +233,31 @@ namespace Wholesaler.Frontend.Presentation.States
         public void AssignTask(WorkTaskDto workTask)
         {
             WorkTask = workTask;
+        }
+
+        public void AssignTasks(List<WorkTaskDto> workTasks)
+        {
+            WorkTasks = workTasks;
+        }
+
+        public void GetEmployees(List<UserDto> employees)
+        {
+            Employees = employees;
+        }
+    }
+
+    internal class GetAssignedTasksState : IState
+    {
+        public List<WorkTaskDto> Worktasks { get; private set; }
+
+        public void Initialize()
+        {
+            Worktasks = null;
+        }
+
+        public void GetTasks(List<WorkTaskDto> workTasks)
+        {
+            Worktasks = workTasks;
         }
     }
 }

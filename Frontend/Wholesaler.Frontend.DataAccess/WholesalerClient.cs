@@ -68,17 +68,53 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid userId, Guid workTaskId)
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid workTaskId, Guid userId)
         {
             var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/actions/assign",
+                Path = $"{apiPath}/worktask/actions/assign",
                 Method = HttpMethod.Post,
                 Content = new AssignTaskRequestModel()
                 {
                     UserId = userId,
                     WorkTaskId = workTaskId,
                 }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasks()
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/workTask/getNotAssigned",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<UserDto>>> GetEmployees()
+        {
+            var request = new Request<HttpRequestMessage, List<UserDto>>()
+            {
+                Path = $"{apiPath}/users/employees",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployee(Guid userId)
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/worktask/action/getAssignedToAnEmployee?userId={userId}",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
             };
 
             return await SendAsync(request);

@@ -12,7 +12,22 @@ namespace Wholesaler.Backend.DataAccess.Repositories
         {
             _context = context;
         }
-        public Person? GetUserOrDefault(string login)
+
+        public Person? Get(Guid id)
+        {
+            var user = _context.People
+                .Where(p => p.Id == id)
+                .FirstOrDefault();
+
+            if (user == null)
+                throw new InvalidOperationException($"There is no person with id: {id}");
+
+            var person = new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
+
+            return person;
+        }
+
+        public Person? GetOrDefault(string login)
         {
             var user = _context.People
                 .Where(p => p.Login == login)
@@ -24,7 +39,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
         }
 
-        public Person? GetUserOrDefault(Guid id)
+        public Person? GetOrDefault(Guid id)
         {
             var user = _context.People
                 .Where(p => p.Id == id)
@@ -54,6 +69,28 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             _context.SaveChanges();
 
             return person.Id;
+        }
+
+        public List<Person> GetEmployees()
+        {
+            var employees = _context.People
+                .Where(p => p.Role == Role.Employee)
+                .ToList();
+
+            var listOfEmployees = employees.Select(employeeDb =>
+            {
+                var employee = new Person(
+                    employeeDb.Id,
+                    employeeDb.Login,
+                    employeeDb.Password,
+                    employeeDb.Role,
+                    employeeDb.Name,
+                    employeeDb.Surname);               
+
+                return employee;
+            });
+
+            return listOfEmployees.ToList();
         }
     }
 }

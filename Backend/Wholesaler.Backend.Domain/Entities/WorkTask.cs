@@ -20,7 +20,7 @@
         public WorkTask(int row)
         {
             Id = Guid.NewGuid();
-            Row = row;            
+            Row = row;
         }
         public WorkTask(Guid id, int row)
         {

@@ -17,11 +17,14 @@ namespace Wholesaler.Backend.Domain
 
         public WorkTask Assign(Guid workTaskId, Guid userId)
         {
-            var workTask = _workTaskRepository.GetOrDefault(workTaskId);
-            var person = _usersRepository.GetUserOrDefault(userId);
+            var workTask = _workTaskRepository.Get(workTaskId);
+            if (workTask.Person != null)
+                throw new InvalidDataProvidedException($"Work task with id: {workTaskId} is already assigned to employee: {workTask.Person.Id}");
+
+            var person = _usersRepository.Get(userId);
             if (person.Role != Role.Employee)
                 throw new InvalidDataProvidedException($"You can not assign task to {person.Role}. Valid role is employee");
-
+                        
             workTask.AssignPerson(person);
 
             _workTaskRepository.Update(workTask);

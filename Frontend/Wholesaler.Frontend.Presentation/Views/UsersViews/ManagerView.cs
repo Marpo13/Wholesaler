@@ -21,9 +21,9 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
         protected override async Task RenderViewAsync()
         {
-            var pressedKey = Console.ReadKey();
+            var wasExitKeyPressed = false;
 
-            while (pressedKey.Key == ConsoleKey.Escape)
+            while (wasExitKeyPressed == false)
             {
                 Console.Write("---Welcome in Wholesaler---");
                 Console.WriteLine
@@ -35,6 +35,8 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                     "\n[6] To get information about started tasks" +
                     "\n[7] To see progress of requirement" +
                     "\n[ESC] To quit");
+
+                var pressedKey = Console.ReadKey();
 
                 switch (pressedKey.Key)
                 {
@@ -74,6 +76,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                         continue;
 
                     case ConsoleKey.Escape:
+                        wasExitKeyPressed = false;
                         break;
 
                     default: continue;
