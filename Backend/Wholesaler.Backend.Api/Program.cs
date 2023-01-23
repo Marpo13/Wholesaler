@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Wholesaler.Backend.DataAccess;
 using Wholesaler.Backend.DataAccess.Repositories;
-using Wholesaler.Backend.Domain;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
+using Wholesaler.Backend.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

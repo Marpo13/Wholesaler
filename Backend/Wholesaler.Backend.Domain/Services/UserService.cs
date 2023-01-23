@@ -1,8 +1,9 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 
-namespace Wholesaler.Backend.Domain
+namespace Wholesaler.Backend.Domain.Services
 {
     public class UserService : IUserService
     {

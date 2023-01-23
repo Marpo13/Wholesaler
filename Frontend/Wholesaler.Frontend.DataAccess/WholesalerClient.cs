@@ -88,7 +88,19 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/workTask/getNotAssigned",
+                Path = $"{apiPath}/workTask/actions/getNotAssigned",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTask()
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/workTask/actions/getAssigned",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };
@@ -112,9 +124,25 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktask/action/getAssignedToAnEmployee?userId={userId}",
+                Path = $"{apiPath}/worktask/actions/getAssignedToAnEmployee?userId={userId}",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> ChangeOwner(Guid workTaskId, Guid newOwnerId)
+        {
+            var request = new Request<ChangeOwnerRequestModel, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/worktask/actions/changeOwner",
+                Method = HttpMethod.Post,
+                Content = new ChangeOwnerRequestModel()
+                {
+                    NewOwnerId = newOwnerId,
+                    WorkTaskId = workTaskId,
+                }
             };
 
             return await SendAsync(request);

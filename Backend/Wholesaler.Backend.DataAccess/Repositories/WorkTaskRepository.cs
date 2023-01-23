@@ -45,6 +45,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 return new WorkTask(workTaskDb.Id, workTaskDb.Row);
 
             var person = new Person(
+                    workTaskDb.Person.Id,
                     workTaskDb.Person.Login,
                     workTaskDb.Person.Password,
                     workTaskDb.Person.Role,
@@ -111,6 +112,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
             {
                 var person = new Person(
+                    workTaskDb.Person.Id,
                     workTaskDb.Person.Login,
                     workTaskDb.Person.Password,
                     workTaskDb.Person.Role,
@@ -125,5 +127,34 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return listOfWorkTasks.ToList();
         }
 
+        public List<WorkTask> GetAssign()
+        {
+            var workTasksDbList = _context.WorkTasks
+                .Include(w => w.Person)
+                .Where(w => w.Person != null)
+                .ToList();
+
+            var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
+            {
+                var person = new Person(
+                    workTaskDb.Person.Id,
+                    workTaskDb.Person.Login,
+                    workTaskDb.Person.Password,
+                    workTaskDb.Person.Role,
+                    workTaskDb.Person.Name,
+                    workTaskDb.Person.Surname);
+
+            var workTask = new WorkTask(
+                workTaskDb.Id, 
+                workTaskDb.Row, 
+                workTaskDb.Start, 
+                workTaskDb.Stop, 
+                person);
+
+                return workTask;
+            });
+
+            return listOfWorkTasks.ToList();
+        }
     }
 }

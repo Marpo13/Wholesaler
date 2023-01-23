@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wholesaler.Backend.Domain;
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
@@ -56,12 +56,37 @@ namespace Wholesaler.Backend.Api.Controllers
                     return BadRequest(ex.Message);
 
                 throw;
+            }            
+        }
+
+        [HttpPost]
+        [Route("actions/changeOwner")]
+        public async Task<ActionResult<WorkTaskDto>> ChangeOwnerOfWorkTask([FromBody] ChangeOwnerRequestModel changeOwner)
+        {
+            try
+            {
+                var workTask = _workTaskService.ChangeOwner(changeOwner.WorkTaskId, changeOwner.NewOwnerId);
+
+                var workTaskDto = new WorkTaskDto()
+                {
+                    Id = workTask.Id,
+                    Row = workTask.Row,
+                    UserId = workTask.Person.Id,
+                };
+
+                return workTaskDto;
             }
-            
+            catch (Exception ex)
+            {
+                if (ex is InvalidOperationException || ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
+
+                throw;
+            }
         }
 
         [HttpGet]
-        [Route("getNotAssigned")]
+        [Route("actions/getNotAssigned")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetNotAssignWorktasks()
         {
             try
@@ -92,7 +117,39 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("action/getAssignedToAnEmployee")]
+        [Route("actions/getAssigned")]
+        public async Task<ActionResult<List<WorkTaskDto>>> GetAssignWorktasks()
+        {
+            try
+            {
+                var workday = _workTaskRepository.GetAssign();
+
+                var listOfWorkTasks = workday.Select(workTask =>
+                {
+                    var workTaskDto = new WorkTaskDto()
+                    {
+                        Id = workTask.Id,
+                        Row = workTask.Row,
+                        UserId = workTask.Person.Id,
+                    };
+
+                    return workTaskDto;
+                });
+
+                return listOfWorkTasks.ToList();
+            }
+
+            catch (Exception ex)
+            {
+                if (ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("actions/getAssignedToAnEmployee")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
         {
             try
@@ -121,7 +178,7 @@ namespace Wholesaler.Backend.Api.Controllers
 
                 throw;
             }
-        }
+        }       
 
     }
 }

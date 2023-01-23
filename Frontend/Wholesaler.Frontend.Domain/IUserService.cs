@@ -21,5 +21,9 @@ namespace Wholesaler.Frontend.Domain
         Task<ExecutionResultGeneric<List<UserDto>>> GetEmployees();
 
         Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployee(Guid userId);
+
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTask();
+
+        Task<ExecutionResultGeneric<WorkTaskDto>> ChangeOwner(Guid workTaskId, Guid newOwnerId);
     }
 }
