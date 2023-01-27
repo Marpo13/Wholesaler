@@ -28,7 +28,7 @@ namespace Wholesaler.Backend.Domain.Services
 
             workTask.AssignPerson(person);
 
-            _workTaskRepository.Update(workTask);
+            _workTaskRepository.UpdatePerson(workTask);
 
             return workTask;
         }
@@ -38,7 +38,7 @@ namespace Wholesaler.Backend.Domain.Services
             var workTask = _workTaskRepository.Get(workTaskId);
             if (workTask.Person == null)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is not already assigned.");
-            if(workTask.Person.Id == newOwnerId)
+            if (workTask.Person.Id == newOwnerId)
                 throw new InvalidDataProvidedException($"Task with id: {workTask.Id} is already assigned to employee with id: {newOwnerId}");
 
             var person = _usersRepository.Get(newOwnerId);
@@ -47,7 +47,33 @@ namespace Wholesaler.Backend.Domain.Services
 
             workTask.AssignPerson(person);
 
-            _workTaskRepository.Update(workTask);
+            _workTaskRepository.UpdatePerson(workTask);
+
+            return workTask;
+        }
+
+        public WorkTask Start(Guid workTaskId)
+        {
+            var workTask = _workTaskRepository.Get(workTaskId);
+            if (workTask.Person == null)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not already assigned and can not be started.");
+            if (workTask.Start != null)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is already started.");
+
+            workTask.StartWorkTask();
+            _workTaskRepository.Start(workTask);
+
+            return workTask;
+        }
+
+        public WorkTask Stop(Guid workTaskId)
+        {
+            var workTask = _workTaskRepository.Get(workTaskId);            
+            if (workTask.Stop != null)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is already finished.");
+
+            workTask.StopWorkTask();
+            _workTaskRepository.Stop(workTask);
 
             return workTask;
         }

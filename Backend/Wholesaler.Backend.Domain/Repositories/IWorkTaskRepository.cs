@@ -8,12 +8,16 @@ namespace Wholesaler.Backend.Domain.Repositories
 
         WorkTask Get(Guid id);
 
-        WorkTask Update(WorkTask worktask);
+        WorkTask UpdatePerson(WorkTask worktask);
 
         List<WorkTask> GetNotAssign();
 
         List<WorkTask> GetAssign(Guid userId);
 
         List<WorkTask> GetAssign();
+
+        WorkTask Start(WorkTask worktask);
+
+        WorkTask Stop(WorkTask worktask);
     }
 }

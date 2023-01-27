@@ -7,5 +7,9 @@ namespace Wholesaler.Backend.Domain.Interfaces
         WorkTask Assign(Guid workTaskId, Guid userId);
 
         WorkTask ChangeOwner(Guid workTaskId, Guid newOwnerId);
+
+        WorkTask Start(Guid workTaskId);
+
+        WorkTask Stop(Guid workTaskId);
     }
 }

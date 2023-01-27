@@ -85,6 +85,64 @@ namespace Wholesaler.Backend.Api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("actions/start")]
+        public async Task<ActionResult<WorkTaskDto>> StartWorkTask([FromBody] StartWorkTaskRequestModel startWorkTask)
+        {
+            try
+            {
+                var workTask = _workTaskService.Start(startWorkTask.Id);
+
+                var workTaskDto = new WorkTaskDto()
+                {
+                    Id = workTask.Id,
+                    Row = workTask.Row,
+                    UserId = workTask.Person.Id,
+                    Start = workTask.Start,
+                    Stop = workTask.Stop,
+                };
+
+                return workTaskDto;
+
+            }
+            catch(Exception ex)
+            {
+                if (ex is InvalidOperationException || ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Route("actions/finish")]
+        public async Task<ActionResult<WorkTaskDto>> FinishWorkTask([FromBody] FinishWorkTaskRequestModel finishWorkTask)
+        {
+            try
+            {
+                var workTask = _workTaskService.Stop(finishWorkTask.Id);
+
+                var workTaskDto = new WorkTaskDto()
+                {
+                    Id = workTask.Id,
+                    Row = workTask.Row,
+                    UserId = workTask.Person.Id,
+                    Start = workTask.Start,
+                    Stop = workTask.Stop,
+                };
+
+                return workTaskDto;
+
+            }
+            catch (Exception ex)
+            {
+                if (ex is InvalidOperationException || ex is InvalidDataProvidedException)
+                    return BadRequest(ex.Message);
+
+                throw;
+            }
+        }
+
         [HttpGet]
         [Route("actions/getNotAssigned")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetNotAssignWorktasks()

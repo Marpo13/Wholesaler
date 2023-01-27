@@ -55,7 +55,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return new WorkTask(workTaskDb.Id, workTaskDb.Row, workTaskDb.Start, workTaskDb.Start, person);
         }
 
-        public WorkTask Update(WorkTask workTask)
+        public WorkTask UpdatePerson(WorkTask workTask)
         {
             var workTaskDb = _context.WorkTasks
                 .Include(w => w.Person)
@@ -77,6 +77,62 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             workTaskDb.Person = person;
             workTaskDb.PersonId = person.Id;
+
+            _context.SaveChanges();
+
+            return workTask;
+        }
+
+        public WorkTask Start(WorkTask workTask)
+        {
+            var workTaskDb = _context.WorkTasks
+                .Include(w => w.Person)
+                .Where(w => w.Id == workTask.Id)
+                .FirstOrDefault();
+
+            if (workTaskDb == null)
+                throw new InvalidOperationException($"There is no work task with id: {workTask.Id}");
+
+            var person = new PersonDb()
+            {
+                Id = workTask.Person.Id,
+                Role = workTask.Person.Role,
+                Login = workTask.Person.Login,
+                Password = workTask.Person.Password,
+                Name = workTask.Person.Name,
+                Surname = workTask.Person.Surname,
+            };
+
+            var time = DateTime.Now;
+            workTaskDb.Start = time;
+            
+            _context.SaveChanges();
+
+            return workTask;
+        }
+
+        public WorkTask Stop(WorkTask workTask)
+        {
+            var workTaskDb = _context.WorkTasks
+                .Include(w => w.Person)
+                .Where(w => w.Id == workTask.Id)
+                .FirstOrDefault();
+
+            if (workTaskDb == null)
+                throw new InvalidOperationException($"There is no work task with id: {workTask.Id}");
+
+            var person = new PersonDb()
+            {
+                Id = workTask.Person.Id,
+                Role = workTask.Person.Role,
+                Login = workTask.Person.Login,
+                Password = workTask.Person.Password,
+                Name = workTask.Person.Name,
+                Surname = workTask.Person.Surname,
+            };
+
+            var time = DateTime.Now;
+            workTaskDb.Stop = time;
 
             _context.SaveChanges();
 
