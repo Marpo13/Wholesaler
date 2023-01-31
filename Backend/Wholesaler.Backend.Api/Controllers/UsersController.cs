@@ -55,40 +55,6 @@ namespace Wholesaler.Backend.Api.Controllers
             var id = _repository.AddPerson(person);
 
             return id;
-        }
-
-        [HttpGet]
-        [Route("employees")]
-        public async Task<ActionResult<List<UserDto>>> GetEmployees()
-        {
-            try
-            {
-                var employees = _repository.GetEmployees();
-
-                var listOfEmployees = employees.Select(user =>
-                {
-                    var userDto = new UserDto()
-                    {
-                        Id = user.Id,
-                        Login = user.Login,
-                        Name = user.Name,
-                        Surname = user.Surname,
-                        Role = user.Role.ToString(),
-                    };
-
-                    return userDto;
-                });
-
-                return listOfEmployees.ToList();
-
-            }
-            catch(Exception ex)
-            {
-                if (ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
-
-                throw;
-            }
-        }
+        }        
     }
 }

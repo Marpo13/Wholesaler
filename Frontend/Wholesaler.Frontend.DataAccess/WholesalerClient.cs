@@ -72,12 +72,11 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktask/actions/assign",
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/assign",
                 Method = HttpMethod.Post,
                 Content = new AssignTaskRequestModel()
                 {
-                    UserId = userId,
-                    WorkTaskId = workTaskId,
+                    UserId = userId,                    
                 }
             };
 
@@ -88,7 +87,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/workTask/getNotAssigned",
+                Path = $"{apiPath}/workTasks/unassigned",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };
@@ -100,7 +99,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<UserDto>>()
             {
-                Path = $"{apiPath}/users/employees",
+                Path = $"{apiPath}/employees",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };
@@ -112,7 +111,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktask/action/getAssignedToAnEmployee?userId={userId}",
+                Path = $"{apiPath}/worktasks/action/assignedToAnEmployee?userId={userId}",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };

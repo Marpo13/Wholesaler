@@ -4,7 +4,7 @@ namespace Wholesaler.Backend.Domain.Repositories
 {
     public interface IUsersRepository
     {
-        Person Get(Guid id);
+        Person? Get(Guid id);
 
         Person? GetOrDefault(string login);
 

@@ -69,7 +69,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
                 .FirstOrDefault();
 
             if (workTask == null)
-                return default;
+                throw new InvalidDataProvidedException("There is no work task that meets these requirements.");
 
             var workTaskId = workTask.Id;            
 
@@ -99,7 +99,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
                 .FirstOrDefault();
 
             if (user == null)
-                return default;
+                throw new InvalidDataProvidedException("There is no user that meets these requirements.");
 
             var userId = user.Id;
 

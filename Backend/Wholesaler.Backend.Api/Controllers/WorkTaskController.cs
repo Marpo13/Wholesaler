@@ -9,7 +9,7 @@ using Wholesaler.Core.Dto.ResponseModels;
 namespace Wholesaler.Backend.Api.Controllers
 {
     [ApiController]
-    [Route("worktask")]
+    [Route("worktasks")]
     public class WorkTaskController : ControllerBase
     {
         private readonly IWorkTaskRepository _workTaskRepository;
@@ -34,12 +34,12 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
-        [Route("actions/assign")]
-        public async Task<ActionResult<WorkTaskDto>> Assign([FromBody] AssignTaskRequestModel assignTask)
+        [Route("{id}/actions/assign")]
+        public async Task<ActionResult<WorkTaskDto>> Assign(Guid id, [FromBody] AssignTaskRequestModel assignTask)
         {
             try
             {
-                var workTask = _workTaskService.Assign(assignTask.WorkTaskId, assignTask.UserId);
+                var workTask = _workTaskService.Assign(id, assignTask.UserId);
 
                 var workTaskDto = new WorkTaskDto()
                 {
@@ -61,7 +61,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("getNotAssigned")]
+        [Route("unassigned")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetNotAssignWorktasks()
         {
             try
@@ -92,13 +92,12 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("action/getAssignedToAnEmployee")]
+        [Route("action/assignedToAnEmployee")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
         {
             try
             {
-                var person = _usersRepository.Get(userId);
-                var worktasks = _workTaskRepository.GetAssign(userId);
+                var worktasks = _workTaskRepository.GetAssigned(userId);
 
                 var listOfWorktasksDto = worktasks.Select(workTask =>
                 {
