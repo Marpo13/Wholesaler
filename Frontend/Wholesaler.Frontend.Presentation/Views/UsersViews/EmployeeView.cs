@@ -7,12 +7,14 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
     {
         private readonly StartWorkdayView _startWorkday;
         private readonly FinishWorkdayView _finishWorkday;
+        private readonly ReviewAssignedTasksView _reviewAssignedTasks;
 
-        public EmployeeView(StartWorkdayView startWorkday,  ApplicationState state, FinishWorkdayView finishWorkday)
+        public EmployeeView(StartWorkdayView startWorkday,  ApplicationState state, FinishWorkdayView finishWorkday, ReviewAssignedTasksView reviewAssignedTasks)
             : base(state)
         {
             _startWorkday = startWorkday;
             _finishWorkday = finishWorkday;
+            _reviewAssignedTasks = reviewAssignedTasks;
         }
 
         protected override async Task RenderViewAsync()
@@ -50,7 +52,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
-                        Console.Clear();
+                        await _reviewAssignedTasks.RenderAsync();
                         continue;
 
                     case ConsoleKey.Escape:

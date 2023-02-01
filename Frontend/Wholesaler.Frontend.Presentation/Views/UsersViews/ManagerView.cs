@@ -5,24 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Wholesaler.Frontend.Domain;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.ManagerViews;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 {
     internal class ManagerView : View
-    {
-        private readonly IUserService _service;
+    {        
+        private readonly AssignTaskView _assignTask;
 
-        public ManagerView(IUserService service, ApplicationState state)
+        public ManagerView(ApplicationState state, AssignTaskView assignTask)
             : base(state)
         {
-            _service = service;
+            _assignTask = assignTask;
         }
 
         protected override async Task RenderViewAsync()
         {
-            var pressedKey = Console.ReadKey();
+            var wasExitKeyPressed = false;
 
-            while (pressedKey.Key == ConsoleKey.Escape)
+            while (wasExitKeyPressed == false)
             {
                 Console.Write("---Welcome in Wholesaler---");
                 Console.WriteLine
@@ -35,11 +36,13 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                     "\n[7] To see progress of requirement" +
                     "\n[ESC] To quit");
 
+                var pressedKey = Console.ReadKey();
+
                 switch (pressedKey.Key)
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        Console.Clear();
+                        await _assignTask.RenderAsync();
                         continue;
 
                     case ConsoleKey.D2:
@@ -73,6 +76,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                         continue;
 
                     case ConsoleKey.Escape:
+                        wasExitKeyPressed = false;
                         break;
 
                     default: continue;

@@ -33,6 +33,8 @@ namespace Wholesaler.Backend.Api.Controllers
                 {
                     Id = person.Id,
                     Login = person.Login,
+                    Name = person.Name,
+                    Surname = person.Surname,
                     Role = person.Role.ToString(),                    
                 });
             }
@@ -53,6 +55,6 @@ namespace Wholesaler.Backend.Api.Controllers
             var id = _repository.AddPerson(person);
 
             return id;
-        }
+        }        
     }
 }
