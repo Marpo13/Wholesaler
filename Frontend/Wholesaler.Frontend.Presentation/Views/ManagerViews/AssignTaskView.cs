@@ -1,4 +1,4 @@
-﻿using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
 
@@ -7,10 +7,14 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
     internal class AssignTaskView : View
     {
         private readonly IUserService _service;
+        private readonly IUserRepository _userRepository;
+        private readonly IWorkTaskRepository _workTaskRepository;
         private readonly AssignTaskState _state;
 
-        public AssignTaskView(IUserService service, ApplicationState state) : base(state)
+        public AssignTaskView(IUserService service, IWorkTaskRepository workTaskRepository, IUserRepository userRepository, ApplicationState state) : base(state)
         {
+            _userRepository = userRepository;
+            _workTaskRepository = workTaskRepository;
             _service = service;
             _state = State.GetManagerViews().GetAssignTask();
             _state.Initialize();
@@ -47,7 +51,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 
         protected async Task<Guid> GetWorkTaskIdAsync()
         {
-            var listOfWorkTasks = await _service.GetNotAssignWorkTasks();
+            var listOfWorkTasks = await _workTaskRepository.GetNotAssignWorkTasks();
 
             if (listOfWorkTasks.IsSuccess)
                 _state.AssignTasks(listOfWorkTasks.Payload);
@@ -78,7 +82,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 
         protected async Task<Guid> GetUserIdAsync()
         {
-            var listOfEmployees = await _service.GetEmployees();
+            var listOfEmployees = await _userRepository.GetEmployees();
 
             if (listOfEmployees.IsSuccess)
                 _state.GetEmployees(listOfEmployees.Payload);

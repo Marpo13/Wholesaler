@@ -1,4 +1,4 @@
-﻿using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews

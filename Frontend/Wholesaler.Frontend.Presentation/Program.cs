@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wholesaler.Frontend.DataAccess;
-using Wholesaler.Frontend.Domain;
+using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views;
@@ -13,6 +13,9 @@ using Wholesaler.Frontend.Presentation.Views.UsersViews;
 var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
 {
     services.AddTransient<IUserService, WholesalerClient>();
+    services.AddTransient<IWorkDayRepository, WholesalerClient>();
+    services.AddTransient<IWorkTaskRepository, WholesalerClient>();
+    services.AddTransient<IUserRepository, WholesalerClient>();
     services.AddTransient<ILoginView, LoginView>();
     services.AddTransient<IMenuView, MenuView>();
     services.AddTransient<EmployeeView>();

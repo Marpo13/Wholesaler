@@ -1,4 +1,4 @@
-﻿using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
 
@@ -6,12 +6,12 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
     internal class ReviewAssignedTasksView : View
     {
-        private readonly IUserService _service;
+        private readonly IWorkTaskRepository _workTaskRepository;
         private readonly GetAssignedTasksState _state;
 
-        public ReviewAssignedTasksView(ApplicationState state, IUserService service) : base(state)
+        public ReviewAssignedTasksView(ApplicationState state, IWorkTaskRepository workTaskRepository) : base(state)
         {
-            _service = service;
+            _workTaskRepository = workTaskRepository;
             _state = state.GetEmployeeViews().GetAssigned();
             _state.Initialize();
         }
@@ -19,7 +19,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
         protected async override Task RenderViewAsync()
         {
             var id = State.GetLoggedInUser().Id;
-            var getTasks = await _service.GetAssignedTaskToAnEmployee(id);
+            var getTasks = await _workTaskRepository.GetAssignedTaskToAnEmployee(id);
 
             if (getTasks.IsSuccess)
                 _state.GetTasks(getTasks.Payload);

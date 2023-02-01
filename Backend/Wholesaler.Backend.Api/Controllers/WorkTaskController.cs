@@ -92,7 +92,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("action/assignedToAnEmployee")]
+        [Route("assignedToAnEmployee")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
         {
             try

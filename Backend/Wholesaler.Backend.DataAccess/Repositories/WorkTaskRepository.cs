@@ -92,10 +92,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             var workTasksDbList = _context.WorkTasks
                 .Include(w => w.Person)
                 .Where(w => w.PersonId == userId)
-                .ToList();
-
-            if (workTasksDbList.Count == 0)
-                return new List<WorkTask>();                       
+                .ToList();                   
 
             var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
             {
