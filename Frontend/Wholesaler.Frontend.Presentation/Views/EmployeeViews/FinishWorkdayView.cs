@@ -1,4 +1,4 @@
-﻿using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
 
@@ -6,13 +6,15 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
     internal class FinishWorkdayView : View
     {
+        private readonly IWorkDayRepository _workDayRepository;
         private readonly IUserService _service;
         private readonly FinishWorkdayState _state;        
 
-        public FinishWorkdayView(IUserService service, ApplicationState state)
+        public FinishWorkdayView(IUserService service, IWorkDayRepository workDayRepository, ApplicationState state)
             : base(state)
         {
             _service = service;
+            _workDayRepository = workDayRepository;
             _state = state.GetEmployeeViews().GetFinishWorkday();
             _state.Initialize();
         }
@@ -30,7 +32,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 
             var workdayId = _state.GetFinishedWorkdayId();
 
-            var finishWorkday = await _service.GetWorkdayAsync(workdayId);
+            var finishWorkday = await _workDayRepository.GetWorkdayAsync(workdayId);
 
             if (finishWorkday.IsSuccess)
                 _state.FinishWorkday(finishWorkday.Payload);

@@ -1,12 +1,12 @@
 ﻿using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.DataAccess.Http;
-using Wholesaler.Frontend.Domain;
+using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Domain.ValueObjects;
 
 namespace Wholesaler.Frontend.DataAccess
 {
-    public class WholesalerClient : RequestService, IUserService
+    public class WholesalerClient : RequestService, IUserService, IWorkDayRepository, IWorkTaskRepository, IUserRepository
     {
         private const string apiPath = $"http://localhost:5050";
 
@@ -63,6 +63,57 @@ namespace Wholesaler.Frontend.DataAccess
                 {
                     UserId = userId,
                 }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid workTaskId, Guid userId)
+        {
+            var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/assign",
+                Method = HttpMethod.Post,
+                Content = new AssignTaskRequestModel()
+                {
+                    UserId = userId,                    
+                }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasks()
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/workTasks/unassigned",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<UserDto>>> GetEmployees()
+        {
+            var request = new Request<HttpRequestMessage, List<UserDto>>()
+            {
+                Path = $"{apiPath}/employees",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployee(Guid userId)
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/worktasks/assignedToAnEmployee?userId={userId}",
+                Method = HttpMethod.Get,
+                Content = new HttpRequestMessage(),
             };
 
             return await SendAsync(request);

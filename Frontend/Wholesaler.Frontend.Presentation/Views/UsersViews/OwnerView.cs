@@ -1,4 +1,4 @@
-﻿using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews
@@ -15,9 +15,9 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
         protected override async Task RenderViewAsync()
         {
-            var pressedKey = Console.ReadKey();
+            var wasExitKeyPressed = false;
 
-            while (pressedKey.Key == ConsoleKey.Escape)
+            while (wasExitKeyPressed == false)               
             {
                 Console.Write("---Welcome in Wholesaler---");
                 Console.WriteLine
@@ -25,6 +25,8 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                     "\n[2] To check incomes" +
                     "\n[3] To see balance sheet" +
                     "\n[ESC] To quit");
+
+                var pressedKey = Console.ReadKey();
 
                 switch (pressedKey.Key)
                 {
