@@ -136,12 +136,11 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<ChangeOwnerRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktask/actions/changeOwner",
-                Method = HttpMethod.Post,
+                Path = $"{apiPath}/worktask/actions/changeOwner/{workTaskId}",
+                Method = HttpMethod.Patch,
                 Content = new ChangeOwnerRequestModel()
                 {
-                    NewOwnerId = newOwnerId,
-                    WorkTaskId = workTaskId,
+                    NewOwnerId = newOwnerId,                    
                 }
             };
 

@@ -59,13 +59,13 @@ namespace Wholesaler.Backend.Api.Controllers
             }            
         }
 
-        [HttpPost]
-        [Route("actions/changeOwner")]
-        public async Task<ActionResult<WorkTaskDto>> ChangeOwnerOfWorkTask([FromBody] ChangeOwnerRequestModel changeOwner)
+        [HttpPatch]
+        [Route("actions/changeOwner/{workTaskId}")]
+        public async Task<ActionResult<WorkTaskDto>> ChangeOwnerOfWorkTask(Guid workTaskId, [FromBody] ChangeOwnerRequestModel changeOwner)
         {
             try
             {
-                var workTask = _workTaskService.ChangeOwner(changeOwner.WorkTaskId, changeOwner.NewOwnerId);
+                var workTask = _workTaskService.ChangeOwner(workTaskId, changeOwner.NewOwnerId);
 
                 var workTaskDto = new WorkTaskDto()
                 {
@@ -86,12 +86,12 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
-        [Route("actions/start")]
-        public async Task<ActionResult<WorkTaskDto>> StartWorkTask([FromBody] StartWorkTaskRequestModel startWorkTask)
+        [Route("actions/start/{workTaskId}")]
+        public async Task<ActionResult<WorkTaskDto>> StartWorkTask(Guid workTaskId)
         {
             try
             {
-                var workTask = _workTaskService.Start(startWorkTask.Id);
+                var workTask = _workTaskService.Start(workTaskId);
 
                 var workTaskDto = new WorkTaskDto()
                 {
@@ -115,12 +115,12 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
-        [Route("actions/finish")]
-        public async Task<ActionResult<WorkTaskDto>> FinishWorkTask([FromBody] FinishWorkTaskRequestModel finishWorkTask)
+        [Route("actions/finish/{workTaskId}")]
+        public async Task<ActionResult<WorkTaskDto>> FinishWorkTask(Guid workTaskId)
         {
             try
             {
-                var workTask = _workTaskService.Stop(finishWorkTask.Id);
+                var workTask = _workTaskService.Stop(workTaskId);
 
                 var workTaskDto = new WorkTaskDto()
                 {
