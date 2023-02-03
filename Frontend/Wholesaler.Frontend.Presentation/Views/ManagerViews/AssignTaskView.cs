@@ -1,4 +1,4 @@
-﻿using Wholesaler.Frontend.Domain;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views.Generic;
@@ -7,12 +7,17 @@ using Wholesaler.Frontend.Presentation.Views.ManagerViews.Components;
 namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 {
     internal class AssignTaskView : View
-    {        
+    {
+        private readonly IUserService _service;
+        private readonly IUserRepository _userRepository;
+        private readonly IWorkTaskRepository _workTaskRepository;
         private readonly AssignTaskState _state;
         private readonly IUserService _service;
 
-        public AssignTaskView(ApplicationState state, IUserService service) : base(state)        
+        public AssignTaskView(IUserService service, IWorkTaskRepository workTaskRepository, IUserRepository userRepository, ApplicationState state) : base(state)
         {
+            _userRepository = userRepository;
+            _workTaskRepository = workTaskRepository;
             _service = service;
             _state = State.GetManagerViews().GetAssignTask();
             _state.Initialize();

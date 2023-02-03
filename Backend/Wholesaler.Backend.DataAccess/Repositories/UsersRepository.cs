@@ -12,7 +12,6 @@ namespace Wholesaler.Backend.DataAccess.Repositories
         {
             _context = context;
         }
-
         public Person? Get(Guid id)
         {
             var user = _context.People

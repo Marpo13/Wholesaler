@@ -63,20 +63,9 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw default;
+                throw new InvalidOperationException($"There is no worktask with id: {workTask.Id}");
 
-            var person = new PersonDb()
-            {
-                Id = workTask.Person.Id,
-                Role = workTask.Person.Role,
-                Login = workTask.Person.Login,
-                Password = workTask.Person.Password,
-                Name = workTask.Person.Name,
-                Surname = workTask.Person.Surname,               
-            };                
-
-            workTaskDb.Person = person;
-            workTaskDb.PersonId = person.Id;
+            workTaskDb.PersonId = workTask.Person.Id;
 
             _context.SaveChanges();
 
@@ -155,15 +144,12 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return listOfWorkTasks.ToList();
         }
 
-        public List<WorkTask> GetAssign(Guid userId)
+        public List<WorkTask> GetAssigned(Guid userId)
         {            
             var workTasksDbList = _context.WorkTasks
                 .Include(w => w.Person)
                 .Where(w => w.PersonId == userId)
-                .ToList();
-
-            if (workTasksDbList.Count == 0)
-                throw new InvalidOperationException($"There is no worktask assigned to an employee with id: {userId}");                       
+                .ToList();                   
 
             var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
             {

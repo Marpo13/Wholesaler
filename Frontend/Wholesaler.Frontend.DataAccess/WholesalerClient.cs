@@ -1,12 +1,12 @@
 ﻿using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.DataAccess.Http;
-using Wholesaler.Frontend.Domain;
+using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Domain.ValueObjects;
 
 namespace Wholesaler.Frontend.DataAccess
 {
-    public class WholesalerClient : RequestService, IUserService
+    public class WholesalerClient : RequestService, IUserService, IWorkDayRepository, IWorkTaskRepository, IUserRepository
     {
         private const string apiPath = $"http://localhost:5050";
 
@@ -72,12 +72,11 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktask/actions/assign",
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/assign",
                 Method = HttpMethod.Post,
                 Content = new AssignTaskRequestModel()
                 {
-                    UserId = userId,
-                    WorkTaskId = workTaskId,
+                    UserId = userId,                    
                 }
             };
 
@@ -88,7 +87,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/workTask/actions/getNotAssigned",
+                Path = $"{apiPath}/workTasks/unassigned",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };
@@ -112,7 +111,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<UserDto>>()
             {
-                Path = $"{apiPath}/users/employees",
+                Path = $"{apiPath}/employees",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };
@@ -124,7 +123,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktask/actions/getAssignedToAnEmployee?userId={userId}",
+                Path = $"{apiPath}/worktasks/assignedToAnEmployee?userId={userId}",
                 Method = HttpMethod.Get,
                 Content = new HttpRequestMessage(),
             };
