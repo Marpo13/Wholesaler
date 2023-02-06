@@ -4,4 +4,9 @@
     {
         public abstract TOutput Render();
     }
+
+    public abstract class Component
+    {
+        public abstract void Render();
+    }
 }

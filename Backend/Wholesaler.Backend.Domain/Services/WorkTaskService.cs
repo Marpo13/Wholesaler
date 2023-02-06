@@ -20,15 +20,15 @@ namespace Wholesaler.Backend.Domain.Services
         {
             var workTask = _workTaskRepository.Get(workTaskId);
             if (workTask.Person != null)
-                throw new InvalidDataProvidedException($"Work task with id: {workTaskId} is already assigned to employee: {workTask.Person.Id}");
+                throw new InvalidDataProvidedException($"Work task with id: {workTaskId} is assigned to employee: {workTask.Person.Id}");
 
             var person = _usersRepository.Get(userId);
             if (person.Role != Role.Employee)
-                throw new InvalidDataProvidedException($"You can not assign task to {person.Role}. Valid role is employee");
+                throw new UnpermittedActionPerformedException($"You can not assign task to {person.Role}. Valid role is employee");
 
             workTask.AssignPerson(person);
 
-            _workTaskRepository.UpdatePerson(workTask);
+            _workTaskRepository.Update(workTask);
 
             return workTask;
         }
@@ -37,17 +37,17 @@ namespace Wholesaler.Backend.Domain.Services
         {
             var workTask = _workTaskRepository.Get(workTaskId);
             if (workTask.Person == null)
-                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not already assigned.");
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not assigned.");
             if (workTask.Person.Id == newOwnerId)
-                throw new InvalidDataProvidedException($"Task with id: {workTask.Id} is already assigned to employee with id: {newOwnerId}");
+                throw new InvalidDataProvidedException($"Task with id: {workTask.Id} is assigned to employee with id: {newOwnerId}");
 
             var person = _usersRepository.Get(newOwnerId);
             if (person.Role != Role.Employee)
-                throw new InvalidDataProvidedException($"You can not assign task to {person.Role}. Valid role is employee");
+                throw new UnpermittedActionPerformedException($"You can not assign task to {person.Role}. Valid role is employee");
 
             workTask.AssignPerson(person);
 
-            _workTaskRepository.UpdatePerson(workTask);
+            _workTaskRepository.Update(workTask);
 
             return workTask;
         }
@@ -56,12 +56,12 @@ namespace Wholesaler.Backend.Domain.Services
         {
             var workTask = _workTaskRepository.Get(workTaskId);
             if (workTask.Person == null)
-                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not already assigned and can not be started.");
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not assigned and can not be started.");
             if (workTask.Start != null)
-                throw new InvalidDataProvidedException($"Task with id {workTaskId} is already started.");
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is started.");
 
             workTask.StartWorkTask();
-            _workTaskRepository.Start(workTask);
+            _workTaskRepository.Update(workTask);
 
             return workTask;
         }
@@ -70,10 +70,10 @@ namespace Wholesaler.Backend.Domain.Services
         {
             var workTask = _workTaskRepository.Get(workTaskId);            
             if (workTask.Stop != null)
-                throw new InvalidDataProvidedException($"Task with id {workTaskId} is already finished.");
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is finished.");
 
             workTask.StopWorkTask();
-            _workTaskRepository.Stop(workTask);
+            _workTaskRepository.Update(workTask);
 
             return workTask;
         }

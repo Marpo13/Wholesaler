@@ -1,6 +1,6 @@
-﻿using Wholesaler.Frontend.Domain;
-using Wholesaler.Frontend.Presentation.Exceptions;
+﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Components;
 using Wholesaler.Frontend.Presentation.Views.Generic;
 using Wholesaler.Frontend.Presentation.Views.ManagerViews.Components;
 
@@ -9,10 +9,14 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
     internal class ChangeOwnerOfTaskView : View
     {
         private readonly ChangeOwnerOfTaskState _state;
+        private readonly IUserRepository _userRepository;
+        private readonly IWorkTaskRepository _workTaskRepository;
         private readonly IUserService _service;
 
-        public ChangeOwnerOfTaskView(ApplicationState state, IUserService service) : base(state)
+        public ChangeOwnerOfTaskView(ApplicationState state, IUserRepository userRepository, IWorkTaskRepository workTaskRepository, IUserService service) : base(state)
         {
+            _userRepository = userRepository;
+            _workTaskRepository = workTaskRepository;
             _service = service;
             _state = State.GetManagerViews().GetChangeOwner();
             _state.Initialize();
@@ -25,7 +29,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             if (role != "Manager")
                 throw new InvalidOperationException($"You can not assign task with role {role}. Valid role is Manager.");
 
-            var listOfWorkTasks = await _service.GetAssignedTask();
+            var listOfWorkTasks = await _workTaskRepository.GetAssignedTask();
 
             if (listOfWorkTasks.IsSuccess)
                 _state.GetWorkTasks(listOfWorkTasks.Payload);
@@ -33,7 +37,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             var workTaskComponent = new SelectWorkTaskComponent(listOfWorkTasks.Payload);
             var selectedWorkTaskId = workTaskComponent.Render().Id;
 
-            var listOfEmployees = await _service.GetEmployees();
+            var listOfEmployees = await _userRepository.GetEmployees();
 
             if (listOfEmployees.IsSuccess)
                 _state.GetEmployees(listOfEmployees.Payload);
@@ -43,12 +47,13 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 
             var changeOwnerOfTask = await _service.ChangeOwner(selectedWorkTaskId, selectedUserId);
 
-            if (changeOwnerOfTask.IsSuccess)
-                _state.ChangeOwnerOfTask(changeOwnerOfTask.Payload);
+            if (!changeOwnerOfTask.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(changeOwnerOfTask.Message);
+                errorPage.Render();
+            }
 
-            else
-                throw new InvalidDataProvidedException(changeOwnerOfTask.Message);
-
+            _state.ChangeOwnerOfTask(changeOwnerOfTask.Payload);
             Console.WriteLine("----------------------------");
             Console.WriteLine($"You assigned task: {changeOwnerOfTask.Payload.Id} to person: {changeOwnerOfTask.Payload.UserId}");
             Console.ReadLine();

@@ -43,7 +43,7 @@ namespace Wholesaler.Backend.Domain.Services
             var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
 
             if (activeWorkday != null)
-                throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {activeWorkday.Id}");
+                throw new InvalidDataProvidedException($"You can not start another workday, because you started workday with Id: {activeWorkday.Id}");
 
             var workday = new Workday(time, person);
             var createdWorkday = _workdayRepository.Add(workday);

@@ -1,6 +1,6 @@
 ﻿using Wholesaler.Frontend.Domain.Interfaces;
-using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Components;
 using Wholesaler.Frontend.Presentation.Views.Generic;
 using Wholesaler.Frontend.Presentation.Views.ManagerViews.Components;
 
@@ -11,8 +11,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
         private readonly IUserService _service;
         private readonly IUserRepository _userRepository;
         private readonly IWorkTaskRepository _workTaskRepository;
-        private readonly AssignTaskState _state;
-        private readonly IUserService _service;
+        private readonly AssignTaskState _state;        
 
         public AssignTaskView(IUserService service, IWorkTaskRepository workTaskRepository, IUserRepository userRepository, ApplicationState state) : base(state)
         {
@@ -30,7 +29,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             if (role != "Manager")
                 throw new InvalidOperationException($"You can not assign task with role {role}. Valid role is Manager.");
 
-            var listOfWorkTasks = await _service.GetNotAssignWorkTasks();
+            var listOfWorkTasks = await _workTaskRepository.GetNotAssignWorkTasks();
 
             if (listOfWorkTasks.IsSuccess)
                 _state.AssignTasks(listOfWorkTasks.Payload);
@@ -38,7 +37,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             var workTaskComponent = new SelectWorkTaskComponent(listOfWorkTasks.Payload);
             var selectedWorkTaskId = workTaskComponent.Render().Id;
 
-            var listOfEmployees = await _service.GetEmployees();
+            var listOfEmployees = await _userRepository.GetEmployees();
 
             if (listOfEmployees.IsSuccess)
                 _state.GetEmployees(listOfEmployees.Payload);
@@ -48,12 +47,13 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 
             var assignTask = await _service.AssignTask(selectedWorkTaskId, selectedUserId);
 
-            if (assignTask.IsSuccess)
-                _state.AssignTask(assignTask.Payload);
+            if (!assignTask.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(assignTask.Message);
+                errorPage.Render();
+            }          
 
-            else
-                throw new InvalidDataProvidedException(assignTask.Message);
-
+            _state.AssignTask(assignTask.Payload);
             Console.WriteLine("----------------------------");
             Console.WriteLine($"You assigned task: {assignTask.Payload.Id} to person: {assignTask.Payload.UserId}");
             Console.ReadLine();

@@ -8,11 +8,12 @@ namespace Wholesaler.Frontend.Domain.Interfaces
     {
         Task<ExecutionResultGeneric<UserDto>> TryLoginWithDataFromUserAsync(string loginFromUser, string passwordFromUser);
 
-        Task<ExecutionResultGeneric<Guid>> StartWorkingAsync(Guid userId);        
+        Task<ExecutionResultGeneric<Guid>> StartWorkingAsync(Guid userId);
 
         Task<ExecutionResultGeneric<Guid>> FinishWorkingAsync(Guid userId);
 
-        Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid workTaskId, Guid userId);      
-        
+        Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid workTaskId, Guid userId);
+
+        Task<ExecutionResultGeneric<WorkTaskDto>> ChangeOwner(Guid workTaskId, Guid newOwnerId);
     }
 }

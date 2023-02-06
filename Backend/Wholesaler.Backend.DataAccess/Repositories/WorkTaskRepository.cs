@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
-using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
 using WorkTaskDb = Wholesaler.Backend.DataAccess.Models.WorkTask;
 
 namespace Wholesaler.Backend.DataAccess.Repositories
@@ -39,7 +39,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw new InvalidOperationException($"There is no not assigned worktask with id: {id}");
+                throw new InvalidProcedureException($"There is no not assigned worktask with id: {id}");
 
             if (workTaskDb.Person == null)
                 return new WorkTask(workTaskDb.Id, workTaskDb.Row);
@@ -55,7 +55,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return new WorkTask(workTaskDb.Id, workTaskDb.Row, workTaskDb.Start, workTaskDb.Start, person);
         }
 
-        public WorkTask UpdatePerson(WorkTask workTask)
+        public WorkTask Update(WorkTask workTask)
         {
             var workTaskDb = _context.WorkTasks
                 .Include(w => w.Person)
@@ -63,71 +63,19 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw new InvalidOperationException($"There is no worktask with id: {workTask.Id}");
+                throw new InvalidProcedureException($"There is no worktask with id: {workTask.Id}");
 
-            workTaskDb.PersonId = workTask.Person.Id;
-
-            _context.SaveChanges();
-
-            return workTask;
-        }
-
-        public WorkTask Start(WorkTask workTask)
-        {
-            var workTaskDb = _context.WorkTasks
-                .Include(w => w.Person)
-                .Where(w => w.Id == workTask.Id)
-                .FirstOrDefault();
-
-            if (workTaskDb == null)
-                throw new InvalidOperationException($"There is no work task with id: {workTask.Id}");
-
-            var person = new PersonDb()
-            {
-                Id = workTask.Person.Id,
-                Role = workTask.Person.Role,
-                Login = workTask.Person.Login,
-                Password = workTask.Person.Password,
-                Name = workTask.Person.Name,
-                Surname = workTask.Person.Surname,
-            };
-
-            var time = DateTime.Now;
-            workTaskDb.Start = time;
-            
-            _context.SaveChanges();
-
-            return workTask;
-        }
-
-        public WorkTask Stop(WorkTask workTask)
-        {
-            var workTaskDb = _context.WorkTasks
-                .Include(w => w.Person)
-                .Where(w => w.Id == workTask.Id)
-                .FirstOrDefault();
-
-            if (workTaskDb == null)
-                throw new InvalidOperationException($"There is no work task with id: {workTask.Id}");
-
-            var person = new PersonDb()
-            {
-                Id = workTask.Person.Id,
-                Role = workTask.Person.Role,
-                Login = workTask.Person.Login,
-                Password = workTask.Person.Password,
-                Name = workTask.Person.Name,
-                Surname = workTask.Person.Surname,
-            };
-
-            var time = DateTime.Now;
-            workTaskDb.Stop = time;
+            workTaskDb.Id = workTask.Id;
+            workTaskDb.Row = workTask.Row;
+            workTaskDb.Start = workTask.Start;
+            workTaskDb.Stop = workTask.Stop;
+            workTaskDb.PersonId = workTask.Person?.Id;
 
             _context.SaveChanges();
 
             return workTask;
         }
-
+                
         public List<WorkTask> GetNotAssign()
         {
             var workTasksDbList = _context.WorkTasks                
@@ -144,7 +92,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return listOfWorkTasks.ToList();
         }
 
-        public List<WorkTask> GetAssigned(Guid userId)
+        public List<WorkTask> GetAssign(Guid userId)
         {            
             var workTasksDbList = _context.WorkTasks
                 .Include(w => w.Person)
@@ -169,7 +117,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return listOfWorkTasks.ToList();
         }
 
-        public List<WorkTask> GetAssign()
+        public List<WorkTask> GetAssigned()
         {
             var workTasksDbList = _context.WorkTasks
                 .Include(w => w.Person)

@@ -1,5 +1,4 @@
 ﻿using Wholesaler.Core.Dto.ResponseModels;
-using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
@@ -15,25 +14,39 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
 
         public override WorkTaskDto Render()
         {
-            Console.WriteLine("----------------------------");
-            Console.WriteLine("Tasks:");
+            bool wasCorrectValueProvided = false;
+            WorkTaskDto? workTask = null;
 
-            foreach (var task in _workTasks)
-                Console.WriteLine($"{_workTasks.IndexOf(task) + 1} {task.Id}");
+            while(wasCorrectValueProvided is false)
+            {
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("Tasks:");
 
-            Console.WriteLine("----------------------------");
-            Console.WriteLine("Enter an index of a task you want to assign: ");
-            if (!int.TryParse(Console.ReadLine(), out int workTaskNumber))
-                throw new InvalidDataProvidedException("You entered an invalid value.");
+                foreach (var task in _workTasks)
+                    Console.WriteLine($"{_workTasks.IndexOf(task) + 1} {task.Id}");
 
-            var index = workTaskNumber - 1;
-            var workTask = _workTasks
-                .Where(x => _workTasks.IndexOf(x) == index)
-                .FirstOrDefault();
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("Enter an index of a task you want to assign: ");
+                if (!int.TryParse(Console.ReadLine(), out int workTaskNumber))
+                {
+                    Console.WriteLine("You entered an invalid value.");
+                    continue;
+                }
+                
+                var index = workTaskNumber - 1;
+                workTask = _workTasks
+                    .Where(x => _workTasks.IndexOf(x) == index)
+                    .FirstOrDefault();
 
-            if (workTask == null)
-                throw new InvalidDataProvidedException("You input an invalid value.");
+                if (workTask == null)
+                {
+                    Console.WriteLine("You entered an invalid value.");
+                    continue;
+                }
 
+                wasCorrectValueProvided = true;
+            }
+           
             return workTask;
         }
     }

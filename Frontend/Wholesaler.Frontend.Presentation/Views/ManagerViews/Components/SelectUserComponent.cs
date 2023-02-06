@@ -1,5 +1,4 @@
 ﻿using Wholesaler.Core.Dto.ResponseModels;
-using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
@@ -15,23 +14,37 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
 
         public override UserDto Render()
         {
-            Console.WriteLine("----------------------------");
-            Console.WriteLine("Employees ID:");
+            bool wasCorrectValueProvided = false;
+            UserDto? user = null;
 
-            foreach (var employee in _users)
-                Console.WriteLine($"{_users.IndexOf(employee) + 1}: {employee.Id}");
-            Console.WriteLine("----------------------------");
-            Console.WriteLine("Enter an id of an employee you want to choose: ");
-            if (!int.TryParse(Console.ReadLine(), out int userNumber))
-                throw new InvalidDataProvidedException("You entered an invalid value.");
+            while(wasCorrectValueProvided is false)
+            {
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("Employees ID:");
 
-            var index = userNumber - 1;
-            var user = _users
-                .Where(x => _users.IndexOf(x) == index)
-                .FirstOrDefault();
+                foreach (var employee in _users)
+                    Console.WriteLine($"{_users.IndexOf(employee) + 1}: {employee.Id}");
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("Enter an id of an employee you want to choose: ");
+                if (!int.TryParse(Console.ReadLine(), out int userNumber))
+                {
+                    Console.WriteLine("You entered an invalid value.");
+                    continue;
+                }
 
-            if (user == null)
-                throw new InvalidDataProvidedException("You input an invalid value.");
+                var index = userNumber - 1;
+                user = _users
+                    .Where(x => _users.IndexOf(x) == index)
+                    .FirstOrDefault();
+
+                if (user == null)
+                {
+                    Console.WriteLine("You entered an invalid value.");
+                    continue;
+                }
+
+                wasCorrectValueProvided = true;
+            }
 
             return user;
         }

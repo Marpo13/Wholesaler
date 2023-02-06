@@ -1,6 +1,6 @@
 ﻿using Wholesaler.Frontend.Domain.Interfaces;
-using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Components;
 using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
@@ -22,16 +22,17 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
             var id = State.GetLoggedInUser().Id;
             var getTasks = await _workTaskRepository.GetAssignedTaskToAnEmployee(id);
 
-            if (getTasks.IsSuccess)
-                _state.GetTasks(getTasks.Payload);
-
-            else
-                throw new InvalidDataProvidedException(getTasks.Message);
-
+            if (!getTasks.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(getTasks.Message);
+                errorPage.Render();
+            }
+            
+            _state.GetTasks(getTasks.Payload);
             Console.WriteLine($"Assigned tasks to an employee with id: {id}");
 
             foreach (var task in getTasks.Payload)
-            {                
+            {
                 Console.WriteLine(
                     $"\nId: {task.Id}" +
                     $"\nRow: {task.Row}");
