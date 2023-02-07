@@ -94,7 +94,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("getAssigned")]
+        [Route("assigned")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedWorktasks()
         {
             var workday = _workTaskRepository.GetAssigned();
@@ -110,7 +110,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("getAssignedToAnEmployee")]
+        [Route("assignedToAnEmployee")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
         {
             var worktasks = _workTaskRepository.GetAssign(userId);

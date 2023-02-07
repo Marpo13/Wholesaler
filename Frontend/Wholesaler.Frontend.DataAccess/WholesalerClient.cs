@@ -97,7 +97,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/getAssigned",
+                Path = $"{apiPath}/worktasks/assigned",
                 Method = HttpMethod.Get,                
             };
 
@@ -119,7 +119,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/getAssignedToAnEmployee?userId={userId}",
+                Path = $"{apiPath}/worktasks/assignedToAnEmployee?userId={userId}",
                 Method = HttpMethod.Get,
             };
 
@@ -130,7 +130,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<ChangeOwnerRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/{workTaskId}/worktasks/actions/changeOwner",
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/changeOwner",
                 Method = HttpMethod.Patch,
                 Content = new ChangeOwnerRequestModel()
                 {
