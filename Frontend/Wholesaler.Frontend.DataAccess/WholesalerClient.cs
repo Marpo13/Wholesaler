@@ -47,7 +47,6 @@ namespace Wholesaler.Frontend.DataAccess
             {
                 Path = $"{apiPath}/workdays/{workdayid}",
                 Method = HttpMethod.Get,
-                Content = new HttpRequestMessage(),
             };
 
             return await SendAsync(request);
@@ -87,9 +86,19 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/workTasks/unassigned",
+                Path = $"{apiPath}/worktasks/unassigned",
                 Method = HttpMethod.Get,
-                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTask()
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/worktasks/assigned",
+                Method = HttpMethod.Get,                
             };
 
             return await SendAsync(request);
@@ -101,7 +110,6 @@ namespace Wholesaler.Frontend.DataAccess
             {
                 Path = $"{apiPath}/employees",
                 Method = HttpMethod.Get,
-                Content = new HttpRequestMessage(),
             };
 
             return await SendAsync(request);
@@ -113,7 +121,21 @@ namespace Wholesaler.Frontend.DataAccess
             {
                 Path = $"{apiPath}/worktasks/assignedToAnEmployee?userId={userId}",
                 Method = HttpMethod.Get,
-                Content = new HttpRequestMessage(),
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> ChangeOwner(Guid workTaskId, Guid newOwnerId)
+        {
+            var request = new Request<ChangeOwnerRequestModel, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/changeOwner",
+                Method = HttpMethod.Patch,
+                Content = new ChangeOwnerRequestModel()
+                {
+                    NewOwnerId = newOwnerId,                    
+                }
             };
 
             return await SendAsync(request);

@@ -179,14 +179,30 @@ namespace Wholesaler.Frontend.Presentation.States
         }
         
     }
+    internal class GetAssignedTasksState : IState
+    {
+        public List<WorkTaskDto> Worktasks { get; private set; }
+
+        public void Initialize()
+        {
+            Worktasks = null;
+        }
+
+        public void GetTasks(List<WorkTaskDto> workTasks)
+        {
+            Worktasks = workTasks;
+        }
+    }
 
     internal class ManagerViews : IState
     {
         public AssignTaskState? AssignTask { get; private set; }
+        public ChangeOwnerOfTaskState? ChangeOwnerOfTask { get; private set; }
 
         public void Initialize()
         {
             AssignTask = null;
+            ChangeOwnerOfTask = null;
         }
 
         public AssignTaskState GetAssignTask()
@@ -198,6 +214,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return AssignTask;
+        }
+
+        public ChangeOwnerOfTaskState GetChangeOwner()
+        {
+            if(ChangeOwnerOfTask == null)
+            {
+                ChangeOwnerOfTask = new ChangeOwnerOfTaskState();
+                ChangeOwnerOfTask.Initialize();
+            }
+
+            return ChangeOwnerOfTask;
         }
     }
 
@@ -212,22 +239,6 @@ namespace Wholesaler.Frontend.Presentation.States
         {
             WorkTaskId = null;
             WorkTask = null;
-        }
-
-        public Guid GetWorkTaskId()
-        {
-            if (WorkTaskId == null)
-                throw new InvalidApplicationStateException("WorkTask id  is null");
-
-            return WorkTaskId.Value;
-        }
-
-        public WorkTaskDto GetWorkTask()
-        {
-            if (WorkTask == null)
-                throw new InvalidApplicationStateException("WorkTask is null");
-
-            return WorkTask;
         }
 
         public void AssignTask(WorkTaskDto workTask)
@@ -246,18 +257,32 @@ namespace Wholesaler.Frontend.Presentation.States
         }
     }
 
-    internal class GetAssignedTasksState : IState
+    internal class ChangeOwnerOfTaskState : IState
     {
-        public List<WorkTaskDto> Worktasks { get; private set; }
+        public WorkTaskDto? WorkTask { get; private set; }
+        public List<WorkTaskDto>? WorkTasks { get; private set; }
+        public List<UserDto>? Employees { get; private set; }
 
         public void Initialize()
         {
-            Worktasks = null;
+            WorkTask = null;
+            WorkTasks = null;
+            Employees = null;
+        }
+     
+        public void GetWorkTasks(List<WorkTaskDto> workTasks)
+        {
+            WorkTasks = workTasks;
         }
 
-        public void GetTasks(List<WorkTaskDto> workTasks)
+        public void GetEmployees(List<UserDto> employees)
         {
-            Worktasks = workTasks;
+            Employees = employees;
+        }
+
+        public void ChangeOwnerOfTask(WorkTaskDto workTask)
+        {
+            WorkTask = workTask;
         }
     }
 }

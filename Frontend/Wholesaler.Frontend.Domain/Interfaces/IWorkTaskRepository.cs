@@ -7,6 +7,8 @@ namespace Wholesaler.Frontend.Domain.Interfaces
     {
         Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasks();
 
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTask();
+
         Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployee(Guid userId);
     }
 }

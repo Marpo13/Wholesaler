@@ -1,6 +1,7 @@
 ﻿using Wholesaler.Frontend.Domain.Interfaces;
-using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Components;
+using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
@@ -8,7 +9,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
     {
         private readonly IWorkDayRepository _workDayRepository;
         private readonly IUserService _service;
-        private readonly FinishWorkdayState _state;        
+        private readonly FinishWorkdayState _state;
 
         public FinishWorkdayView(IUserService service, IWorkDayRepository workDayRepository, ApplicationState state)
             : base(state)
@@ -24,22 +25,23 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
             var id = State.GetLoggedInUser().Id;
             var finishWorking = await _service.FinishWorkingAsync(id);
 
-            if (finishWorking.IsSuccess)
-                _state.FinishWork(finishWorking.Payload);
+            if (!finishWorking.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(finishWorking.Message);
+                errorPage.Render();
+            }
 
-            else
-                throw new InvalidDataProvidedException(finishWorking.Message);
-
+            _state.FinishWork(finishWorking.Payload);
             var workdayId = _state.GetFinishedWorkdayId();
-
             var finishWorkday = await _workDayRepository.GetWorkdayAsync(workdayId);
 
-            if (finishWorkday.IsSuccess)
-                _state.FinishWorkday(finishWorkday.Payload);
-
-            else
-                throw new InvalidDataProvidedException(finishWorkday.Message);
-
+            if (!finishWorkday.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(finishWorkday.Message);
+                errorPage.Render();
+            }
+            
+            _state.FinishWorkday(finishWorkday.Payload);
             Console.WriteLine($"You finished your work at: {_state.GetWorkday().Stop}");
             Console.ReadLine();
         }
