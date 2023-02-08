@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Wholesaler.Backend.Domain;
 using Wholesaler.Backend.Domain.Entities;
-using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
@@ -23,38 +22,28 @@ namespace Wholesaler.Backend.Api.Controllers
 
         [HttpPost]
         [Route("actions/login")]
-        public async Task<ActionResult<UserDto>> LoginAsync ([FromBody] LoginUserRequestModel loginUser)
+        public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginUserRequestModel loginUser)
         {
-            try
-            {
-                var person = _service.Login(loginUser.Login, loginUser.Password);
+            var person = _service.Login(loginUser.Login, loginUser.Password);
 
-                return Ok(new UserDto()
-                {
-                    Id = person.Id,
-                    Login = person.Login,
-                    Name = person.Name,
-                    Surname = person.Surname,
-                    Role = person.Role.ToString(),                    
-                });
-            }
-            catch (Exception ex)
+            return Ok(new UserDto()
             {
-                if (ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
-
-                throw;
-            }
+                Id = person.Id,
+                Login = person.Login,
+                Name = person.Name,
+                Surname = person.Surname,
+                Role = person.Role.ToString(),
+            });
         }
 
         [HttpPost]
         public async Task<ActionResult<Guid>> AddPerson([FromBody] AddPersonReqestModel addPerson)
         {
             var person = new Person(addPerson.Login, addPerson.Password, Enum.Parse<Role>(addPerson.Role), addPerson.Name, addPerson.Surname);
-            
+
             var id = _repository.AddPerson(person);
 
             return id;
-        }        
+        }
     }
 }

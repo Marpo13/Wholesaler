@@ -1,8 +1,9 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 
-namespace Wholesaler.Backend.Domain
+namespace Wholesaler.Backend.Domain.Services
 {
     public class UserService : IUserService
     {
@@ -42,7 +43,7 @@ namespace Wholesaler.Backend.Domain
             var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
 
             if (activeWorkday != null)
-                throw new InvalidDataProvidedException($"You can not start another workday, because you already started workday with Id: {activeWorkday.Id}");
+                throw new InvalidDataProvidedException($"You can not start another workday, because you started workday with Id: {activeWorkday.Id}");
 
             var workday = new Workday(time, person);
             var createdWorkday = _workdayRepository.Add(workday);

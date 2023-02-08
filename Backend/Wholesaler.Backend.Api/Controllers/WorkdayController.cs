@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wholesaler.Backend.Domain;
-using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
@@ -24,27 +23,15 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("actions/start")]
         public async Task<ActionResult<Guid>> StartWorkdayAsync([FromBody] StartWorkdayRequestModel request)
         {
-            try
-            {
-                var workday = _service.StartWorkday(request.UserId);
+            var workday = _service.StartWorkday(request.UserId);
 
-                return workday.Id;
-            }
-            catch (Exception ex)
-            {
-                if (ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
-
-                throw;
-            }
+            return workday.Id;
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<WorkdayDto>> GetWorkdayAsync(Guid id)
-        {
-            try
-            {
+        {            
                 var workday = _workdayRepository.GetOrDefault(id);
 
                 return Ok(new WorkdayDto()
@@ -52,34 +39,15 @@ namespace Wholesaler.Backend.Api.Controllers
                     Id = workday.Id,
                     Start = workday.Start,
                     Stop = workday.Stop,
-                });
-            }
-
-            catch (Exception ex)
-            {
-                if (ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
-
-                throw;
-            }
+                });            
         }
 
         [HttpPost]
         [Route("actions/finish")]
         public async Task<ActionResult<Guid>> FinishWorkdayAsync([FromBody] FinishWorkdayRequestModel request)
         {
-            try
-            {
-                var workdayId = _service.FinishWorkday(request.UserId);
-                return workdayId;
-            }
-            catch (Exception ex)
-            {
-                if (ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
-
-                throw;
-            }
+            var workdayId = _service.FinishWorkday(request.UserId);
+            return workdayId;
         }
     }
 }

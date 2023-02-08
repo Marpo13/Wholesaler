@@ -1,6 +1,7 @@
 ﻿using Wholesaler.Frontend.Domain.Interfaces;
-using Wholesaler.Frontend.Presentation.Exceptions;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Components;
+using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
@@ -24,22 +25,23 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
             var id = State.GetLoggedInUser().Id;
             var startWorking = await _service.StartWorkingAsync(id);
 
-            if (startWorking.IsSuccess)
-                _state.StartWork(startWorking.Payload);
+            if (!startWorking.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(startWorking.Message);
+                errorPage.Render();
+            }
 
-            else
-                throw new InvalidDataProvidedException(startWorking.Message);
-
+            _state.StartWork(startWorking.Payload);
             var workdayId = _state.GetStartedWorkdayId();
-
             var newWorkday = await _workDayRepository.GetWorkdayAsync(workdayId);
 
-            if (newWorkday.IsSuccess)
-                _state.StartWorkday(newWorkday.Payload);
+            if (!newWorkday.IsSuccess)
+            {
+                var errorPage = new ErrorPageComponent(newWorkday.Message);
+                errorPage.Render();
+            }
 
-            else
-                throw new InvalidDataProvidedException(newWorkday.Message);
-
+            _state.StartWorkday(newWorkday.Payload);
             Console.WriteLine($"You started your work at: {_state.GetWorkday().Start}");
             Console.ReadLine();
         }

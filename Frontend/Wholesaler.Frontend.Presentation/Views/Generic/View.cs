@@ -1,7 +1,7 @@
 ﻿using Wholesaler.Frontend.Presentation.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
 
-namespace Wholesaler.Frontend.Presentation.Views
+namespace Wholesaler.Frontend.Presentation.Views.Generic
 {
     internal abstract class View : IView
     {

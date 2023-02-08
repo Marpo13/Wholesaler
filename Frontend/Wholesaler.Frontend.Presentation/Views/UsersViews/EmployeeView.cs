@@ -1,5 +1,6 @@
 ﻿using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views.EmployeeViews;
+using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 {

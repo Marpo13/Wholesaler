@@ -1,4 +1,5 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
 
@@ -19,7 +20,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (user == null)
-                throw new InvalidOperationException($"There is no person with id: {id}");
+                throw new InvalidProcedureException($"There is no person with id: {id}");
 
             var person = new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
 

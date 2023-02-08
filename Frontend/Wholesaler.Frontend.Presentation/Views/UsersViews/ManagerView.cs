@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wholesaler.Frontend.Domain;
-using Wholesaler.Frontend.Presentation.States;
+﻿using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Generic;
 using Wholesaler.Frontend.Presentation.Views.ManagerViews;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews
@@ -12,11 +7,13 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
     internal class ManagerView : View
     {        
         private readonly AssignTaskView _assignTask;
+        private readonly ChangeOwnerOfTaskView _changeOwner;
 
-        public ManagerView(ApplicationState state, AssignTaskView assignTask)
+        public ManagerView(ApplicationState state, AssignTaskView assignTask, ChangeOwnerOfTaskView changeOwner)
             : base(state)
         {
             _assignTask = assignTask;
+            _changeOwner = changeOwner;
         }
 
         protected override async Task RenderViewAsync()
@@ -47,7 +44,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        Console.Clear();
+                        await _changeOwner.RenderAsync();
                         continue;
 
                     case ConsoleKey.D3:

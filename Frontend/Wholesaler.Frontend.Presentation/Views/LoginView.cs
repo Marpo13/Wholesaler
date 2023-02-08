@@ -1,6 +1,7 @@
 ﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
+using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views
 {

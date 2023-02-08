@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
-using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
 using WorkTaskDb = Wholesaler.Backend.DataAccess.Models.WorkTask;
 
 namespace Wholesaler.Backend.DataAccess.Repositories
@@ -39,12 +39,13 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw new InvalidOperationException($"There is no not assigned worktask with id: {id}");
+                throw new InvalidProcedureException($"There is no not assigned worktask with id: {id}");
 
             if (workTaskDb.Person == null)
                 return new WorkTask(workTaskDb.Id, workTaskDb.Row);
 
             var person = new Person(
+                    workTaskDb.Person.Id,
                     workTaskDb.Person.Login,
                     workTaskDb.Person.Password,
                     workTaskDb.Person.Role,
@@ -62,15 +63,19 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw new InvalidOperationException($"There is no worktask with id: {workTask.Id}");
+                throw new InvalidProcedureException($"There is no worktask with id: {workTask.Id}");
 
-            workTaskDb.PersonId = workTask.Person.Id;
+            workTaskDb.Id = workTask.Id;
+            workTaskDb.Row = workTask.Row;
+            workTaskDb.Start = workTask.Start;
+            workTaskDb.Stop = workTask.Stop;
+            workTaskDb.PersonId = workTask.Person?.Id;
 
             _context.SaveChanges();
 
             return workTask;
         }
-
+                
         public List<WorkTask> GetNotAssign()
         {
             var workTasksDbList = _context.WorkTasks                
@@ -87,7 +92,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return listOfWorkTasks.ToList();
         }
 
-        public List<WorkTask> GetAssigned(Guid userId)
+        public List<WorkTask> GetAssign(Guid userId)
         {            
             var workTasksDbList = _context.WorkTasks
                 .Include(w => w.Person)
@@ -97,6 +102,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
             {
                 var person = new Person(
+                    workTaskDb.Person.Id,
                     workTaskDb.Person.Login,
                     workTaskDb.Person.Password,
                     workTaskDb.Person.Role,
@@ -111,5 +117,34 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return listOfWorkTasks.ToList();
         }
 
+        public List<WorkTask> GetAssigned()
+        {
+            var workTasksDbList = _context.WorkTasks
+                .Include(w => w.Person)
+                .Where(w => w.Person != null)
+                .ToList();
+
+            var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
+            {
+                var person = new Person(
+                    workTaskDb.Person.Id,
+                    workTaskDb.Person.Login,
+                    workTaskDb.Person.Password,
+                    workTaskDb.Person.Role,
+                    workTaskDb.Person.Name,
+                    workTaskDb.Person.Surname);
+
+            var workTask = new WorkTask(
+                workTaskDb.Id, 
+                workTaskDb.Row, 
+                workTaskDb.Start, 
+                workTaskDb.Stop, 
+                person);
+
+                return workTask;
+            });
+
+            return listOfWorkTasks.ToList();
+        }
     }
 }

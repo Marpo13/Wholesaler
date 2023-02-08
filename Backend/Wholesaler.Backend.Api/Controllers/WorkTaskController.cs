@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wholesaler.Backend.Domain;
+using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.Domain.Entities;
-using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
@@ -14,13 +14,13 @@ namespace Wholesaler.Backend.Api.Controllers
     {
         private readonly IWorkTaskRepository _workTaskRepository;
         private readonly IWorkTaskService _workTaskService;
-        private readonly IUsersRepository _usersRepository;
+        private readonly IWorkTaskFactory _workTaskFactory;
 
-        public WorkTaskController(IWorkTaskRepository workTaskRepository, IUsersRepository usersRepository, IWorkTaskService workTaskService)
+        public WorkTaskController(IWorkTaskRepository workTaskRepository, IWorkTaskService workTaskService, IWorkTaskFactory workTaskFactory)
         {
             _workTaskRepository = workTaskRepository;
-            _usersRepository = usersRepository;
             _workTaskService = workTaskService;
+            _workTaskFactory = workTaskFactory;
         }
 
         [HttpPost]
@@ -37,89 +37,92 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("{id}/actions/assign")]
         public async Task<ActionResult<WorkTaskDto>> Assign(Guid id, [FromBody] AssignTaskRequestModel assignTask)
         {
-            try
-            {
-                var workTask = _workTaskService.Assign(id, assignTask.UserId);
+            var workTask = _workTaskService.Assign(id, assignTask.UserId);
 
-                var workTaskDto = new WorkTaskDto()
-                {
-                    Id = workTask.Id,
-                    Row = workTask.Row,
-                    UserId = workTask.Person.Id,                    
-                };
+            var workTaskDto = _workTaskFactory.Create(workTask);
 
-                return workTaskDto;
-            }
-            catch(Exception ex)
-            {
-                if(ex is InvalidDataProvidedException || ex is InvalidOperationException)
-                    return BadRequest(ex.Message);
+            return workTaskDto;
+        }
 
-                throw;
-            }
-            
+        [HttpPatch]
+        [Route("{workTaskId}/actions/changeOwner")]
+        public async Task<ActionResult<WorkTaskDto>> ChangeOwnerOfWorkTask(Guid workTaskId, [FromBody] ChangeOwnerRequestModel changeOwner)
+        {
+            var workTask = _workTaskService.ChangeOwner(workTaskId, changeOwner.NewOwnerId);
+
+            var workTaskDto = _workTaskFactory.Create(workTask);
+
+            return workTaskDto;
+        }
+
+        [HttpPost]
+        [Route("{workTaskId}/actions/start")]
+        public async Task<ActionResult<WorkTaskDto>> StartWorkTask(Guid workTaskId)
+        {
+            var workTask = _workTaskService.Start(workTaskId);
+
+            var workTaskDto = _workTaskFactory.Create(workTask);
+
+            return workTaskDto;
+        }
+
+        [HttpPost]
+        [Route("{workTaskId}/actions/finish")]
+        public async Task<ActionResult<WorkTaskDto>> FinishWorkTask(Guid workTaskId)
+        {
+            var workTask = _workTaskService.Stop(workTaskId);
+
+            var workTaskDto = _workTaskFactory.Create(workTask);
+
+            return workTaskDto;
         }
 
         [HttpGet]
         [Route("unassigned")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetNotAssignWorktasks()
         {
-            try
+            var workday = _workTaskRepository.GetNotAssign();
+
+            var listOfWorkTasks = workday.Select(workTask =>
             {
-                var workday = _workTaskRepository.GetNotAssign();
+                var workTaskDto = _workTaskFactory.Create(workTask);
 
-                var listOfWorkTasks = workday.Select(workTask =>
-                {
-                    var workTaskDto = new WorkTaskDto()
-                    {
-                        Id = workTask.Id,
-                        Row = workTask.Row,
-                    };
+                return workTaskDto;
+            });
 
-                    return workTaskDto;
-                });
+            return listOfWorkTasks.ToList();
+        }
 
-                return listOfWorkTasks.ToList();
-            }
+        [HttpGet]
+        [Route("assigned")]
+        public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedWorktasks()
+        {
+            var workday = _workTaskRepository.GetAssigned();
 
-            catch (Exception ex)
+            var listOfWorkTasks = workday.Select(workTask =>
             {
-                if (ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
+                var workTaskDto = _workTaskFactory.Create(workTask);
 
-                throw;
-            }
+                return workTaskDto;
+            });
+
+            return listOfWorkTasks.ToList();
         }
 
         [HttpGet]
         [Route("assignedToAnEmployee")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
         {
-            try
+            var worktasks = _workTaskRepository.GetAssign(userId);
+
+            var listOfWorktasksDto = worktasks.Select(workTask =>
             {
-                var worktasks = _workTaskRepository.GetAssigned(userId);
+                var workTaskDto = _workTaskFactory.Create(workTask);
 
-                var listOfWorktasksDto = worktasks.Select(workTask =>
-                {
-                    var workTaskDto = new WorkTaskDto()
-                    {
-                        Id = workTask.Id,
-                        Row = workTask.Row, 
-                        UserId = workTask.Person.Id,                        
-                    };
+                return workTaskDto;
+            });
 
-                    return workTaskDto;
-                });
-
-                return listOfWorktasksDto.ToList();
-            }
-            catch(Exception ex)
-            {
-                if (ex is InvalidOperationException || ex is InvalidDataProvidedException)
-                    return BadRequest(ex.Message);
-
-                throw;
-            }
+            return listOfWorktasksDto.ToList();
         }
 
     }

@@ -6,19 +6,19 @@ using Wholesaler.Frontend.Presentation.Views.ManagerViews.Components;
 
 namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 {
-    internal class AssignTaskView : View
+    internal class ChangeOwnerOfTaskView : View
     {
-        private readonly IUserService _service;
+        private readonly ChangeOwnerOfTaskState _state;
         private readonly IUserRepository _userRepository;
         private readonly IWorkTaskRepository _workTaskRepository;
-        private readonly AssignTaskState _state;        
+        private readonly IUserService _service;
 
-        public AssignTaskView(IUserService service, IWorkTaskRepository workTaskRepository, IUserRepository userRepository, ApplicationState state) : base(state)
+        public ChangeOwnerOfTaskView(ApplicationState state, IUserRepository userRepository, IWorkTaskRepository workTaskRepository, IUserService service) : base(state)
         {
             _userRepository = userRepository;
             _workTaskRepository = workTaskRepository;
             _service = service;
-            _state = State.GetManagerViews().GetAssignTask();
+            _state = State.GetManagerViews().GetChangeOwner();
             _state.Initialize();
         }
 
@@ -29,10 +29,10 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             if (role != "Manager")
                 throw new InvalidOperationException($"You can not assign task with role {role}. Valid role is Manager.");
 
-            var listOfWorkTasks = await _workTaskRepository.GetNotAssignWorkTasks();
+            var listOfWorkTasks = await _workTaskRepository.GetAssignedTask();
 
             if (listOfWorkTasks.IsSuccess)
-                _state.AssignTasks(listOfWorkTasks.Payload);
+                _state.GetWorkTasks(listOfWorkTasks.Payload);
 
             var workTaskComponent = new SelectWorkTaskComponent(listOfWorkTasks.Payload);
             var selectedWorkTaskId = workTaskComponent.Render().Id;
@@ -45,18 +45,18 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             var userComponent = new SelectUserComponent(listOfEmployees.Payload);
             var selectedUserId = userComponent.Render().Id;
 
-            var assignTask = await _service.AssignTask(selectedWorkTaskId, selectedUserId);
+            var changeOwnerOfTask = await _service.ChangeOwner(selectedWorkTaskId, selectedUserId);
 
-            if (!assignTask.IsSuccess)
+            if (!changeOwnerOfTask.IsSuccess)
             {
-                var errorPage = new ErrorPageComponent(assignTask.Message);
+                var errorPage = new ErrorPageComponent(changeOwnerOfTask.Message);
                 errorPage.Render();
-            }          
+            }
 
-            _state.AssignTask(assignTask.Payload);
+            _state.ChangeOwnerOfTask(changeOwnerOfTask.Payload);
             Console.WriteLine("----------------------------");
-            Console.WriteLine($"You assigned task: {assignTask.Payload.Id} to person: {assignTask.Payload.UserId}");
+            Console.WriteLine($"You assigned task: {changeOwnerOfTask.Payload.Id} to person: {changeOwnerOfTask.Payload.UserId}");
             Console.ReadLine();
-        }        
+        }
     }
 }
