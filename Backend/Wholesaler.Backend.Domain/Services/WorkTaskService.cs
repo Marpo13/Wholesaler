@@ -22,7 +22,7 @@ namespace Wholesaler.Backend.Domain.Services
             if (workTask.Person != null)
                 throw new InvalidDataProvidedException($"Work task with id: {workTaskId} is assigned to employee: {workTask.Person.Id}");
 
-            var person = _usersRepository.Get(userId);
+            var person = _usersRepository.Get(userId);            
             if (person.Role != Role.Employee)
                 throw new UnpermittedActionPerformedException($"You can not assign task to {person.Role}. Valid role is employee");
 
@@ -57,10 +57,8 @@ namespace Wholesaler.Backend.Domain.Services
             var workTask = _workTaskRepository.Get(workTaskId);
             if (workTask.Person == null)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is not assigned and can not be started.");
-            if (workTask.Start != null)
-                throw new InvalidDataProvidedException($"Task with id {workTaskId} is started.");
 
-            workTask.StartWorkTask();
+            workTask.StartStatus();
             _workTaskRepository.Update(workTask);
 
             return workTask;
@@ -68,11 +66,25 @@ namespace Wholesaler.Backend.Domain.Services
 
         public WorkTask Stop(Guid workTaskId)
         {
-            var workTask = _workTaskRepository.Get(workTaskId);            
-            if (workTask.Stop != null)
+            var workTask = _workTaskRepository.Get(workTaskId);      
+            if(workTask.IsStarted != true)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not started and can not be stopped.");
+
+            workTask.Stop();
+            _workTaskRepository.Update(workTask);
+
+            return workTask;
+        }
+
+        public WorkTask Finish(Guid workTaskId)
+        {
+            var workTask = _workTaskRepository.Get(workTaskId);
+            if (workTask.IsStarted != true)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not started and can not be stopped.");
+            if (workTask.IsFinished == true)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is finished.");
 
-            workTask.StopWorkTask();
+            workTask.FinishStatus();
             _workTaskRepository.Update(workTask);
 
             return workTask;

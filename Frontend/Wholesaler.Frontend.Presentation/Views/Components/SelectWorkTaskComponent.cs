@@ -1,7 +1,7 @@
 ﻿using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.Presentation.Views.Generic;
 
-namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
+namespace Wholesaler.Frontend.Presentation.Views.Components
 {
     public class SelectWorkTaskComponent : Component<WorkTaskDto>
     {
@@ -17,8 +17,9 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
             bool wasCorrectValueProvided = false;
             WorkTaskDto? workTask = null;
 
-            while(wasCorrectValueProvided is false)
+            while (wasCorrectValueProvided is false)
             {
+                Console.Clear();
                 Console.WriteLine("----------------------------");
                 Console.WriteLine("Tasks:");
 
@@ -26,13 +27,13 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
                     Console.WriteLine($"{_workTasks.IndexOf(task) + 1} {task.Id}");
 
                 Console.WriteLine("----------------------------");
-                Console.WriteLine("Enter an index of a task you want to assign: ");
+                Console.WriteLine("Enter an index of a task you want to choose: ");
                 if (!int.TryParse(Console.ReadLine(), out int workTaskNumber))
                 {
                     Console.WriteLine("You entered an invalid value.");
                     continue;
                 }
-                
+
                 var index = workTaskNumber - 1;
                 workTask = _workTasks
                     .Where(x => _workTasks.IndexOf(x) == index)
@@ -46,7 +47,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
 
                 wasCorrectValueProvided = true;
             }
-           
+
             return workTask;
         }
     }

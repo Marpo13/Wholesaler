@@ -67,10 +67,21 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPost]
+        [Route("{workTaskId}/actions/stop")]
+        public async Task<ActionResult<WorkTaskDto>> StopWorkTask(Guid workTaskId)
+        {
+            var workTask = _workTaskService.Stop(workTaskId);
+
+            var workTaskDto = _workTaskFactory.Create(workTask);
+
+            return workTaskDto;
+        }
+
+        [HttpPost]
         [Route("{workTaskId}/actions/finish")]
         public async Task<ActionResult<WorkTaskDto>> FinishWorkTask(Guid workTaskId)
         {
-            var workTask = _workTaskService.Stop(workTaskId);
+            var workTask = _workTaskService.Finish(workTaskId);
 
             var workTaskDto = _workTaskFactory.Create(workTask);
 
@@ -124,6 +135,5 @@ namespace Wholesaler.Backend.Api.Controllers
 
             return listOfWorktasksDto.ToList();
         }
-
     }
 }

@@ -32,16 +32,14 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
             }
 
             _state.FinishWork(finishWorking.Payload);
-            var workdayId = _state.GetFinishedWorkdayId();
-            var finishWorkday = await _workDayRepository.GetWorkdayAsync(workdayId);
+            var finishWorkday = await _workDayRepository.GetWorkdayAsync(finishWorking.Payload.Id);
 
             if (!finishWorkday.IsSuccess)
             {
                 var errorPage = new ErrorPageComponent(finishWorkday.Message);
                 errorPage.Render();
             }
-            
-            _state.FinishWorkday(finishWorkday.Payload);
+
             Console.WriteLine($"You finished your work at: {_state.GetWorkday().Stop}");
             Console.ReadLine();
         }

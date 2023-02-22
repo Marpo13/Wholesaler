@@ -12,6 +12,10 @@ namespace Wholesaler.Backend.DataAccess.Configurations
                 .HasOne(w => w.Person)
                 .WithMany(p => p.WorkTasks)
                 .HasForeignKey(p => p.PersonId);
+
+            builder
+                .HasMany(w => w.Activities)
+                .WithOne(a => a.WorkTask);
         }
     }
 }

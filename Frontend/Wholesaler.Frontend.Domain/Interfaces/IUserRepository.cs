@@ -5,6 +5,6 @@ namespace Wholesaler.Frontend.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<ExecutionResultGeneric<List<UserDto>>> GetEmployees();
+        Task<ExecutionResultGeneric<List<UserDto>>> GetEmployeesAsync();
     }
 }

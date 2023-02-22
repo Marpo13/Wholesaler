@@ -20,7 +20,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
         protected async override Task RenderViewAsync()
         {
             var id = State.GetLoggedInUser().Id;
-            var getTasks = await _workTaskRepository.GetAssignedTaskToAnEmployee(id);
+            var getTasks = await _workTaskRepository.GetAssignedTaskToAnEmployeeAsync(id);
 
             if (!getTasks.IsSuccess)
             {

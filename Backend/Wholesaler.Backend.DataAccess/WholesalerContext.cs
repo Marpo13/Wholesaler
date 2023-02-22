@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using Wholesaler.Backend.DataAccess.Configurations;
 using Wholesaler.Backend.DataAccess.Models;
 
@@ -12,6 +11,7 @@ namespace Wholesaler.Backend.DataAccess
         public DbSet<Person> People { get; set; }
         public DbSet<Workday> Workdays { get; set; }
         public DbSet<WorkTask> WorkTasks { get; set; }
+        public DbSet<Activity> Activity { get; set; }
         
         public WholesalerContext(DbContextOptions<WholesalerContext> options)
         : base(options)
@@ -25,6 +25,7 @@ namespace Wholesaler.Backend.DataAccess
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new WorkdayConfiguration());
             modelBuilder.ApplyConfiguration(new WorkTaskConfiguration());
+            modelBuilder.ApplyConfiguration(new ActivityConfiguration());
         }
     }
 }

@@ -25,29 +25,40 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workday = _service.StartWorkday(request.UserId);
 
-            return workday.Id;
+            return Ok(new WorkdayDto()
+            {
+                Id = workday.Id,
+                Start = workday.Start,
+                Stop = workday.Stop,
+            });
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<WorkdayDto>> GetWorkdayAsync(Guid id)
-        {            
-                var workday = _workdayRepository.GetOrDefault(id);
+        {
+            var workday = _workdayRepository.GetOrDefault(id);
 
-                return Ok(new WorkdayDto()
-                {
-                    Id = workday.Id,
-                    Start = workday.Start,
-                    Stop = workday.Stop,
-                });            
+            return Ok(new WorkdayDto()
+            {
+                Id = workday.Id,
+                Start = workday.Start,
+                Stop = workday.Stop,
+            });
         }
 
         [HttpPost]
         [Route("actions/finish")]
-        public async Task<ActionResult<Guid>> FinishWorkdayAsync([FromBody] FinishWorkdayRequestModel request)
+        public async Task<ActionResult<WorkdayDto>> FinishWorkdayAsync([FromBody] FinishWorkdayRequestModel request)
         {
-            var workdayId = _service.FinishWorkday(request.UserId);
-            return workdayId;
+            var workday = _service.FinishWorkday(request.UserId);
+
+            return Ok(new WorkdayDto()
+            {
+                Id = workday.Id,
+                Start = workday.Start,
+                Stop = workday.Stop,
+            });
         }
     }
 }

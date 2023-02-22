@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wholesaler.Backend.DataAccess;
 
@@ -11,9 +12,10 @@ using Wholesaler.Backend.DataAccess;
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
     [DbContext(typeof(WholesalerContext))]
-    partial class WholesalerContextModelSnapshot : ModelSnapshot
+    [Migration("20230208172005_AddColumnFinishTOWorkTasks")]
+    partial class AddColumnFinishTOWorkTasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,33 +23,6 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Activity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Stop")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkTaskId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.HasIndex("WorkTaskId");
-
-                    b.ToTable("Activity");
-                });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Client", b =>
                 {
@@ -138,8 +113,8 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsFinished")
-                        .HasColumnType("bit");
+                    b.Property<DateTime?>("Finish")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("PersonId")
                         .HasColumnType("uniqueidentifier");
@@ -147,30 +122,17 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                     b.Property<int>("Row")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Stop")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId");
 
                     b.ToTable("WorkTasks");
-                });
-
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Activity", b =>
-                {
-                    b.HasOne("Wholesaler.Backend.DataAccess.Models.Person", "Person")
-                        .WithMany("Activities")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wholesaler.Backend.DataAccess.Models.WorkTask", "WorkTask")
-                        .WithMany("Activities")
-                        .HasForeignKey("WorkTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("WorkTask");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Requirement", b =>
@@ -211,16 +173,9 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Person", b =>
                 {
-                    b.Navigation("Activities");
-
                     b.Navigation("WorkTasks");
 
                     b.Navigation("Workdays");
-                });
-
-            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.WorkTask", b =>
-                {
-                    b.Navigation("Activities");
                 });
 #pragma warning restore 612, 618
         }

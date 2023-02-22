@@ -11,5 +11,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
         WorkTask Start(Guid workTaskId);
 
         WorkTask Stop(Guid workTaskId);
+
+        WorkTask Finish(Guid workTaskId);
     }
 }

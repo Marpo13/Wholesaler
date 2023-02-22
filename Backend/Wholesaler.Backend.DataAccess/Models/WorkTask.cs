@@ -4,8 +4,8 @@
     {
         public Guid Id { get; set; }
         public int Row { get; set; }
-        public DateTime? Start { get; set; }
-        public DateTime? Stop { get; set; }
+        public bool IsFinished { get; set; }
+        public ICollection<Activity>? Activities { get; set; }
         public virtual Person? Person { get; set; }
         public Guid? PersonId { get; set; }
     }

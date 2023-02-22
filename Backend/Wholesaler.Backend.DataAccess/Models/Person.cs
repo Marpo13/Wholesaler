@@ -12,6 +12,7 @@ namespace Wholesaler.Backend.DataAccess.Models
         public string Surname { get; set; }
         public ICollection<Workday> Workdays { get; set; }
         public ICollection<WorkTask> WorkTasks { get; set; } 
+        public ICollection<Activity> Activities { get; set; }
         
     }
 }
