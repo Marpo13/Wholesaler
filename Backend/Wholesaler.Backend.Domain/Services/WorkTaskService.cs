@@ -1,4 +1,5 @@
-﻿using Wholesaler.Backend.Domain.Entities;
+﻿using System;
+using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
@@ -9,11 +10,13 @@ namespace Wholesaler.Backend.Domain.Services
     {
         private readonly IWorkTaskRepository _workTaskRepository;
         private readonly IUsersRepository _usersRepository;
+        private readonly IWorkdayRepository _workdayRepository;
 
-        public WorkTaskService(IWorkTaskRepository workTaskRepository, IUsersRepository usersRepository)
+        public WorkTaskService(IWorkTaskRepository workTaskRepository, IUsersRepository usersRepository, IWorkdayRepository workdayRepository)
         {
             _workTaskRepository = workTaskRepository;
             _usersRepository = usersRepository;
+            _workdayRepository = workdayRepository;
         }
 
         public WorkTask Assign(Guid workTaskId, Guid userId)
@@ -58,6 +61,10 @@ namespace Wholesaler.Backend.Domain.Services
             if (workTask.Person == null)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is not assigned and can not be started.");
 
+            var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(workTask.Person.Id);
+            if (activeWorkday == null)
+                throw new UnpermittedActionPerformedException("You can not start worktask because you did not start work.");
+
             workTask.StartStatus();
             _workTaskRepository.Update(workTask);
 
@@ -66,8 +73,8 @@ namespace Wholesaler.Backend.Domain.Services
 
         public WorkTask Stop(Guid workTaskId)
         {
-            var workTask = _workTaskRepository.Get(workTaskId);      
-            if(workTask.IsStarted != true)
+            var workTask = _workTaskRepository.Get(workTaskId);
+            if (workTask.IsStarted != true)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is not started and can not be stopped.");
 
             workTask.Stop();

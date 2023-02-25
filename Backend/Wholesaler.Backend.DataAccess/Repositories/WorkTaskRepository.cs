@@ -55,7 +55,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             if (workTaskDb.Activities == null)
             {
                 var emptyActivities = new List<Activity>();
-                return new WorkTask(workTaskDb.Id, workTaskDb.Row, emptyActivities, workTaskDb.IsFinished, person);
+                return new WorkTask(workTaskDb.Id, workTaskDb.Row, emptyActivities, workTaskDb.IsStarted, workTaskDb.IsFinished, person);
             }
 
             var activities = workTaskDb.Activities.Select(activityDb =>
@@ -64,7 +64,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 return activity;
             });
 
-            return new WorkTask(workTaskDb.Id, workTaskDb.Row, activities.ToList(), workTaskDb.IsFinished, person);
+            return new WorkTask(workTaskDb.Id, workTaskDb.Row, activities.ToList(), workTaskDb.IsStarted, workTaskDb.IsFinished, person);
         }
 
         public WorkTask Update(WorkTask workTask)
@@ -107,6 +107,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             workTaskDb.Row = workTask.Row;
             workTaskDb.Activities = activities.ToList();
+            workTaskDb.IsStarted = workTask.IsStarted;
             workTaskDb.IsFinished = workTask.IsFinished;
             workTaskDb.PersonId = workTask.Person?.Id;
             _context.SaveChanges();
@@ -154,7 +155,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                     return activity;
                 });
 
-                var worktask = new WorkTask(workTaskDb.Id, workTaskDb.Row, activities.ToList(), workTaskDb.IsFinished, person);
+                var worktask = new WorkTask(workTaskDb.Id, workTaskDb.Row, activities.ToList(), workTaskDb.IsStarted, workTaskDb.IsFinished, person);
 
                 return worktask;
             });
@@ -190,6 +191,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                     workTaskDb.Id,
                     workTaskDb.Row,
                     activities.ToList(),
+                    workTaskDb.IsStarted,
                     workTaskDb.IsFinished,
                     person);
 

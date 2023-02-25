@@ -13,11 +13,12 @@ namespace Wholesaler.Backend.Domain.Entities
         public bool IsFinished { get; private set; }
         public Person? Person { get; private set; }
 
-        public WorkTask(Guid id, int row, List<Activity> activities, bool isFinished, Person? person)
+        public WorkTask(Guid id, int row, List<Activity> activities, bool isStarted, bool isFinished, Person? person)
         {
             Id = id;
             Row = row;
             _activities = activities;
+            IsStarted = isStarted;
             IsFinished = isFinished;
             Person = person;
         }
@@ -52,8 +53,8 @@ namespace Wholesaler.Backend.Domain.Entities
             if (Activities.Any(a => a.IsOpen))
                 throw new InvalidDataProvidedException("You can not start another activity, because one is already open.");
             if (Person == null)
-                throw new InvalidDataProvidedException("Firstly you need to assign worktask to person.");
-            
+                throw new InvalidDataProvidedException("Firstly you need to assign worktask to person."); 
+
             var activity = new Activity(Guid.NewGuid(), DateTime.Now, null, Person.Id);
 
             _activities.Add(activity);

@@ -12,6 +12,7 @@ namespace Wholesaler.Backend.Api.Factories
                 Id = workTask.Id,
                 Row = workTask.Row,
                 UserId = workTask.Person?.Id,
+                IsStarted = workTask.IsStarted,
                 IsFinished = workTask.IsFinished,
             };
         }
