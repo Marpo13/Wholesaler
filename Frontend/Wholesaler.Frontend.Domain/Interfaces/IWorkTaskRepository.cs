@@ -10,5 +10,9 @@ namespace Wholesaler.Frontend.Domain.Interfaces
         Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskAsync();
 
         Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployeeAsync(Guid userId);
+
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetStartedWorkTasksAsync();
+
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetFinishedWorkTasksAsync();
     }
 }

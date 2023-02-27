@@ -8,12 +8,16 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
     {        
         private readonly AssignTaskView _assignTask;
         private readonly ChangeOwnerOfTaskView _changeOwner;
+        private readonly StartedTasksView _startedTasks;
+        private readonly FinishedTasksView _finishedTasks;
 
-        public ManagerView(ApplicationState state, AssignTaskView assignTask, ChangeOwnerOfTaskView changeOwner)
+        public ManagerView(ApplicationState state, AssignTaskView assignTask, ChangeOwnerOfTaskView changeOwner, StartedTasksView startedTasks, FinishedTasksView finishedTasks)
             : base(state)
         {
             _assignTask = assignTask;
             _changeOwner = changeOwner;
+            _startedTasks = startedTasks;
+            _finishedTasks = finishedTasks;
         }
 
         protected override async Task RenderViewAsync()
@@ -59,12 +63,12 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
-                        Console.Clear();
+                        await _finishedTasks.RenderAsync();
                         continue;
 
                     case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
-                        Console.Clear();
+                        await _startedTasks.RenderAsync();
                         continue;
 
                     case ConsoleKey.D7:
@@ -73,7 +77,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                         continue;
 
                     case ConsoleKey.Escape:
-                        wasExitKeyPressed = false;
+                        wasExitKeyPressed = true;
                         break;
 
                     default: continue;

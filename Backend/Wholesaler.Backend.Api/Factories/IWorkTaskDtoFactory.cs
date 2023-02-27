@@ -3,7 +3,7 @@ using Wholesaler.Core.Dto.ResponseModels;
 
 namespace Wholesaler.Backend.Api.Factories
 {
-    public interface IWorkTaskFactory
+    public interface IWorkTaskDtoFactory
     {
         WorkTaskDto Create(WorkTask workTask);
     }

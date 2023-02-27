@@ -29,16 +29,9 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
             }
             
             _state.GetTasks(getTasks.Payload);
-            Console.WriteLine($"Assigned tasks to an employee with id: {id}");
 
-            foreach (var task in getTasks.Payload)
-            {
-                Console.WriteLine(
-                    $"\nId: {task.Id}" +
-                    $"\nRow: {task.Row}");
-            }
-
-            Console.ReadLine();
+            var tasksWritedOnConsole = new ReturnWorkTasksComponent(getTasks.Payload);
+            tasksWritedOnConsole.Render();
         }
     }
 }
