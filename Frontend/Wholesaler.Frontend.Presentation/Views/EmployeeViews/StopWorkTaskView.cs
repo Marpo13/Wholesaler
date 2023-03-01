@@ -14,7 +14,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
         public StopWorkTaskView(IUserService service, ApplicationState state, IWorkTaskRepository workTaskRepository) : base(state)
         {
             _service = service;
-            _state = state.GetEmployeeViews().StopWorkTaskS();
+            _state = state.GetEmployeeViews().GetStopWorkTask();
             _state.Initialize();
             _workTaskRepository = workTaskRepository;
         }

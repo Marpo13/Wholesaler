@@ -14,7 +14,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
         public FinishWorkTaskView(IUserService service, ApplicationState state, IWorkTaskRepository workTaskRepository) : base(state)
         {
             _service = service;
-            _state = state.GetEmployeeViews().FinishWorkTaskS();
+            _state = state.GetEmployeeViews().GetFinishWorkTask();
             _state.Initialize();
             _workTaskRepository = workTaskRepository;
         }

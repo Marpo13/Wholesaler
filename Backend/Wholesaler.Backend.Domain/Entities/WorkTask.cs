@@ -37,9 +37,9 @@ namespace Wholesaler.Backend.Domain.Entities
 
         public void AssignPerson(Person person)
         {
-            if (Activities.Any(a => a.IsOpen))
+            if (_activities.Any(a => a.IsOpen))
             {
-                var activity = Activities
+                var activity = _activities
                     .First(a => a.IsOpen);
 
                 activity.Close();
@@ -50,19 +50,15 @@ namespace Wholesaler.Backend.Domain.Entities
 
         public void Start()
         {
-            if (Activities.Any(a => a.IsOpen))
-                throw new InvalidDataProvidedException("You can not start another activity, because one is already open.");
-            if (Person == null)
-                throw new InvalidDataProvidedException("Firstly you need to assign worktask to person."); 
-
             var activity = new Activity(Guid.NewGuid(), DateTime.Now, null, Person.Id);
 
+            IsStarted = true;
             _activities.Add(activity);
         }
 
         public void Stop()
         {
-            var openedActivity = Activities
+            var openedActivity = _activities
                 .FirstOrDefault(a => a.IsOpen);
 
             if (openedActivity == default)
@@ -75,13 +71,7 @@ namespace Wholesaler.Backend.Domain.Entities
             openedActivity.Close();
         }
 
-        public void StartStatus()
-        {
-            Start();
-            IsStarted = true;
-        }
-
-        public void FinishStatus()
+        public void Finish()
         {      
             Stop();
             IsFinished = true;

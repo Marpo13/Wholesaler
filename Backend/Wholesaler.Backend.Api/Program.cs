@@ -22,6 +22,8 @@ builder.Services.AddTransient<IWorkdayRepository, WorkdayRepository>();
 builder.Services.AddTransient<IWorkTaskRepository, WorkTaskRepository>();
 builder.Services.AddTransient<IWorkTaskService, WorkTaskService>();
 builder.Services.AddTransient<IWorkTaskFactory, WorkTasksFactory>();
+builder.Services.AddTransient<IWorkdayDtoFactory, WorkdayDtoFactory>();
+builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
 
 var app = builder.Build();

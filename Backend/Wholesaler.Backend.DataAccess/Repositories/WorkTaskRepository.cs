@@ -94,7 +94,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                         PersonId = activity.PersonId,
                         WorkTaskId = workTask.Id,
                     };
-                    _context.Activity.Add(newActivity);
+                    _context.Activities.Add(newActivity);
 
                     return newActivity;
                 }
