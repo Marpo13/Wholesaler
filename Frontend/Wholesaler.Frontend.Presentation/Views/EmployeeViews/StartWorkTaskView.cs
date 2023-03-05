@@ -14,7 +14,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
         public StartWorkTaskView(IUserService service, ApplicationState state, IWorkTaskRepository workTaskRepository) : base(state)
         {
             _service = service;
-            _state = state.GetEmployeeViews().StartWorkTaskS();
+            _state = state.GetEmployeeViews().GetStartWorkTask();
             _state.Initialize();
             _workTaskRepository = workTaskRepository;
         }
