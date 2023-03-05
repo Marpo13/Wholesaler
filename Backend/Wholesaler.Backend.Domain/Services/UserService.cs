@@ -52,7 +52,7 @@ namespace Wholesaler.Backend.Domain.Services
         }
 
 
-        public Guid FinishWorkday(Guid userId)
+        public Workday FinishWorkday(Guid userId)
         {
             var person = _usersRepository.GetOrDefault(userId);
 
@@ -67,7 +67,7 @@ namespace Wholesaler.Backend.Domain.Services
             activeWorkday.StopWorkday();
             _workdayRepository.UpdateWorkday(activeWorkday);
 
-            return activeWorkday.Id;
+            return activeWorkday;
         }
     }
 }

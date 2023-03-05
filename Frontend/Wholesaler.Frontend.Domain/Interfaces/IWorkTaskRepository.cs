@@ -5,10 +5,10 @@ namespace Wholesaler.Frontend.Domain.Interfaces
 {
     public interface IWorkTaskRepository
     {
-        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasks();
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasksAsync();
 
-        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTask();
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskAsync();
 
-        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployee(Guid userId);
+        Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployeeAsync(Guid userId);
     }
 }

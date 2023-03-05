@@ -29,7 +29,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             if (role != "Manager")
                 throw new InvalidOperationException($"You can not assign task with role {role}. Valid role is Manager.");
 
-            var listOfWorkTasks = await _workTaskRepository.GetAssignedTask();
+            var listOfWorkTasks = await _workTaskRepository.GetAssignedTaskAsync();
 
             if (listOfWorkTasks.IsSuccess)
                 _state.GetWorkTasks(listOfWorkTasks.Payload);
@@ -37,7 +37,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             var workTaskComponent = new SelectWorkTaskComponent(listOfWorkTasks.Payload);
             var selectedWorkTaskId = workTaskComponent.Render().Id;
 
-            var listOfEmployees = await _userRepository.GetEmployees();
+            var listOfEmployees = await _userRepository.GetEmployeesAsync();
 
             if (listOfEmployees.IsSuccess)
                 _state.GetEmployees(listOfEmployees.Payload);
@@ -45,7 +45,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             var userComponent = new SelectUserComponent(listOfEmployees.Payload);
             var selectedUserId = userComponent.Render().Id;
 
-            var changeOwnerOfTask = await _service.ChangeOwner(selectedWorkTaskId, selectedUserId);
+            var changeOwnerOfTask = await _service.ChangeOwnerAsync(selectedWorkTaskId, selectedUserId);
 
             if (!changeOwnerOfTask.IsSuccess)
             {

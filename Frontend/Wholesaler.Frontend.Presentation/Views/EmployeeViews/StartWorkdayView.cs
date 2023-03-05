@@ -31,9 +31,8 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
                 errorPage.Render();
             }
 
-            _state.StartWork(startWorking.Payload);
-            var workdayId = _state.GetStartedWorkdayId();
-            var newWorkday = await _workDayRepository.GetWorkdayAsync(workdayId);
+            _state.StartWork(startWorking.Payload);            
+            var newWorkday = await _workDayRepository.GetWorkdayAsync(startWorking.Payload.Id);
 
             if (!newWorkday.IsSuccess)
             {
@@ -41,7 +40,6 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
                 errorPage.Render();
             }
 
-            _state.StartWorkday(newWorkday.Payload);
             Console.WriteLine($"You started your work at: {_state.GetWorkday().Start}");
             Console.ReadLine();
         }

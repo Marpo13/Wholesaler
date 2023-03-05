@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wholesaler.Backend.DataAccess;
 
@@ -11,9 +12,10 @@ using Wholesaler.Backend.DataAccess;
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
     [DbContext(typeof(WholesalerContext))]
-    partial class WholesalerContextModelSnapshot : ModelSnapshot
+    [Migration("20230212105925_AddActivityToWorkTask")]
+    partial class AddActivityToWorkTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +48,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("WorkTaskId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activity");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Client", b =>
@@ -141,9 +143,6 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsStarted")
-                        .HasColumnType("bit");
-
                     b.Property<Guid?>("PersonId")
                         .HasColumnType("uniqueidentifier");
 
@@ -160,7 +159,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Activity", b =>
                 {
                     b.HasOne("Wholesaler.Backend.DataAccess.Models.Person", "Person")
-                        .WithMany("Activities")
+                        .WithMany()
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -214,8 +213,6 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Person", b =>
                 {
-                    b.Navigation("Activities");
-
                     b.Navigation("WorkTasks");
 
                     b.Navigation("Workdays");

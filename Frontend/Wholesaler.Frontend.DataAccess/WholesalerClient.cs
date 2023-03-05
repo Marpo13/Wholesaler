@@ -26,9 +26,9 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<Guid>> StartWorkingAsync(Guid userId)
+        public async Task<ExecutionResultGeneric<WorkdayDto>> StartWorkingAsync(Guid userId)
         {
-            var request = new Request<StartWorkdayRequestModel, Guid>()
+            var request = new Request<StartWorkdayRequestModel, WorkdayDto>()
             {
                 Path = $"{apiPath}/workdays/actions/start",
                 Method = HttpMethod.Post,
@@ -52,9 +52,9 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<Guid>> FinishWorkingAsync(Guid userId)
+        public async Task<ExecutionResultGeneric<WorkdayDto>> FinishWorkingAsync(Guid userId)
         {
-            var request = new Request<FinishWorkdayRequestModel, Guid>()
+            var request = new Request<FinishWorkdayRequestModel, WorkdayDto>()
             {
                 Path = $"{apiPath}/workdays/actions/finish",
                 Method = HttpMethod.Post,
@@ -67,7 +67,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<WorkTaskDto>> AssignTask(Guid workTaskId, Guid userId)
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> AssignTaskAsync(Guid workTaskId, Guid userId)
         {
             var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
             {
@@ -82,7 +82,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasks()
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetNotAssignWorkTasksAsync()
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
@@ -93,7 +93,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTask()
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskAsync()
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
@@ -104,7 +104,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<List<UserDto>>> GetEmployees()
+        public async Task<ExecutionResultGeneric<List<UserDto>>> GetEmployeesAsync()
         {
             var request = new Request<HttpRequestMessage, List<UserDto>>()
             {
@@ -115,7 +115,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployee(Guid userId)
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetAssignedTaskToAnEmployeeAsync(Guid userId)
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
@@ -126,7 +126,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<WorkTaskDto>> ChangeOwner(Guid workTaskId, Guid newOwnerId)
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> ChangeOwnerAsync(Guid workTaskId, Guid newOwnerId)
         {
             var request = new Request<ChangeOwnerRequestModel, WorkTaskDto>()
             {
@@ -136,6 +136,39 @@ namespace Wholesaler.Frontend.DataAccess
                 {
                     NewOwnerId = newOwnerId,                    
                 }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> StartWorkTaskAsync(Guid workTaskId)
+        {
+            var request = new Request<Guid, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/start",
+                Method = HttpMethod.Post,
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> StopWorkTaskAsync(Guid workTaskId)
+        {
+            var request = new Request<Guid, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/stop",
+                Method = HttpMethod.Post,
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<WorkTaskDto>> FinishWorkTaskAsync(Guid workTaskId)
+        {
+            var request = new Request<Guid, WorkTaskDto>()
+            {
+                Path = $"{apiPath}/worktasks/{workTaskId}/actions/finish",
+                Method = HttpMethod.Post,
             };
 
             return await SendAsync(request);

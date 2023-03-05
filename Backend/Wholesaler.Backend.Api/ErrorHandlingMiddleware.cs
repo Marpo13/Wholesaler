@@ -25,7 +25,7 @@ namespace Wholesaler.Backend.Api
                         break;
 
                     default:
-                        context.Response.StatusCode = 500;
+                        context.Response.StatusCode = 500;                        
                         await context.Response.WriteAsync(ex.Message);
                         break;
                 }

@@ -26,6 +26,10 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<AssignTaskView>();
     services.AddTransient<ChangeOwnerOfTaskView>();
     services.AddTransient<ReviewAssignedTasksView>();
+    services.AddTransient<StartWorkTaskView>();
+    services.AddTransient<StopWorkTaskView>();
+    services.AddTransient<FinishWorkTaskView>();
+    services.AddTransient<WorkTaskMenuView>();
     services.AddSingleton<ApplicationState>();
     });
 

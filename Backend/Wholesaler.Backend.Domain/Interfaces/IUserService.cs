@@ -8,7 +8,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
 
         Workday StartWorkday(Guid userId);
 
-        Guid FinishWorkday(Guid userId);
+        Workday FinishWorkday(Guid userId);
 
     }
 }

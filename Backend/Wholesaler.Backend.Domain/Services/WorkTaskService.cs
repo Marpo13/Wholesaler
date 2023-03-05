@@ -1,4 +1,5 @@
-﻿using Wholesaler.Backend.Domain.Entities;
+﻿using System;
+using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
@@ -9,11 +10,15 @@ namespace Wholesaler.Backend.Domain.Services
     {
         private readonly IWorkTaskRepository _workTaskRepository;
         private readonly IUsersRepository _usersRepository;
+        private readonly IWorkdayRepository _workdayRepository;
+        private readonly IActivityRepository _activityRepository;
 
-        public WorkTaskService(IWorkTaskRepository workTaskRepository, IUsersRepository usersRepository)
+        public WorkTaskService(IWorkTaskRepository workTaskRepository, IUsersRepository usersRepository, IWorkdayRepository workdayRepository, IActivityRepository activityRepository)
         {
             _workTaskRepository = workTaskRepository;
             _usersRepository = usersRepository;
+            _workdayRepository = workdayRepository;
+            _activityRepository = activityRepository;
         }
 
         public WorkTask Assign(Guid workTaskId, Guid userId)
@@ -57,10 +62,16 @@ namespace Wholesaler.Backend.Domain.Services
             var workTask = _workTaskRepository.Get(workTaskId);
             if (workTask.Person == null)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is not assigned and can not be started.");
-            if (workTask.Start != null)
-                throw new InvalidDataProvidedException($"Task with id {workTaskId} is started.");
 
-            workTask.StartWorkTask();
+            var openedActivities = _activityRepository.GetActiveByPerson(workTask.Person.Id);
+            if (openedActivities != null)
+                throw new UnpermittedActionPerformedException("You can not start another activity, because one is opened.");
+
+            var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(workTask.Person.Id);
+            if (activeWorkday == null)
+                throw new UnpermittedActionPerformedException("You can not start worktask because you did not start work.");
+
+            workTask.Start();
             _workTaskRepository.Update(workTask);
 
             return workTask;
@@ -68,11 +79,25 @@ namespace Wholesaler.Backend.Domain.Services
 
         public WorkTask Stop(Guid workTaskId)
         {
-            var workTask = _workTaskRepository.Get(workTaskId);            
-            if (workTask.Stop != null)
+            var workTask = _workTaskRepository.Get(workTaskId);
+            if (workTask.IsStarted != true)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not started and can not be stopped.");
+
+            workTask.Stop();
+            _workTaskRepository.Update(workTask);
+
+            return workTask;
+        }
+
+        public WorkTask Finish(Guid workTaskId)
+        {
+            var workTask = _workTaskRepository.Get(workTaskId);
+            if (workTask.IsStarted != true)
+                throw new InvalidDataProvidedException($"Task with id {workTaskId} is not started and can not be stopped.");
+            if (workTask.IsFinished == true)
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is finished.");
 
-            workTask.StopWorkTask();
+            workTask.Finish();
             _workTaskRepository.Update(workTask);
 
             return workTask;

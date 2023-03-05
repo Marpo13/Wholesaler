@@ -92,7 +92,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 Id = workday.Id,
                 PersonId = workday.Person.Id,
                 Start = workday.Start,
-                Stop = workday.Stop
+                Stop = workday.Stop,                
             };
 
             _context.Workdays.Add(workdayDb);

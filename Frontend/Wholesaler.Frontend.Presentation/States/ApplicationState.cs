@@ -46,7 +46,7 @@ namespace Wholesaler.Frontend.Presentation.States
 
         public ManagerViews GetManagerViews()
         {
-            if(_managerViews == null)
+            if (_managerViews == null)
             {
                 _managerViews = new ManagerViews();
                 _managerViews.Initialize();
@@ -61,12 +61,17 @@ namespace Wholesaler.Frontend.Presentation.States
         public StartWorkdayState? StartWorkday { get; private set; }
         public FinishWorkdayState? FinishWorkday { get; private set; }
         public GetAssignedTasksState? GetAssignedTasks { get; private set; }
+        public StartWorkTaskState? StartWorkTask { get; private set; }
+        public StopWorkTaskState? StopWorkTask { get; private set; }
+        public FinishWorkTaskState? FinishWorkTask { get; private set; }
 
         public void Initialize()
         {
             StartWorkday = null;
             FinishWorkday = null;
             GetAssignedTasks = null;
+            StopWorkTask = null;
+            FinishWorkTask = null;
         }
 
         public StartWorkdayState GetStartWorkday()
@@ -82,7 +87,7 @@ namespace Wholesaler.Frontend.Presentation.States
 
         public FinishWorkdayState GetFinishWorkday()
         {
-            if(FinishWorkday == null)
+            if (FinishWorkday == null)
             {
                 FinishWorkday = new FinishWorkdayState();
                 FinishWorkday.Initialize();
@@ -93,7 +98,7 @@ namespace Wholesaler.Frontend.Presentation.States
 
         public GetAssignedTasksState GetAssigned()
         {
-            if(GetAssignedTasks == null)
+            if (GetAssignedTasks == null)
             {
                 GetAssignedTasks = new GetAssignedTasksState();
                 GetAssignedTasks.Initialize();
@@ -101,25 +106,51 @@ namespace Wholesaler.Frontend.Presentation.States
 
             return GetAssignedTasks;
         }
+
+        public StartWorkTaskState GetStartWorkTask()
+        {
+            if (StartWorkTask == null)
+            {
+                StartWorkTask = new StartWorkTaskState();
+                StartWorkTask.Initialize();
+            }
+
+            return StartWorkTask;
+        }
+
+        public StopWorkTaskState GetStopWorkTask()
+        {
+            if (StopWorkTask == null)
+            {
+                StopWorkTask = new StopWorkTaskState();
+                StopWorkTask.Initialize();
+            }
+
+            return StopWorkTask;
+        }
+
+        public FinishWorkTaskState GetFinishWorkTask()
+        {
+            if (FinishWorkTask == null)
+            {
+                FinishWorkTask = new FinishWorkTaskState();
+                FinishWorkTask.Initialize();
+            }
+
+            return FinishWorkTask;
+        }
     }
 
     internal class StartWorkdayState : IState
     {
-        public Guid? StartedWorkdayId { get; private set; }
         public WorkdayDto? Workday { get; private set; }
 
         public void Initialize()
         {
-            StartedWorkdayId = null;
             Workday = null;
         }
 
-        public void StartWork(Guid workdayId)
-        {
-            StartedWorkdayId = workdayId;
-        }
-
-        public void StartWorkday(WorkdayDto workday)
+        public void StartWork(WorkdayDto workday)
         {
             Workday = workday;
         }
@@ -130,25 +161,15 @@ namespace Wholesaler.Frontend.Presentation.States
                 throw new InvalidApplicationStateException("Workday is null");
 
             return Workday;
-        }
-
-        public Guid GetStartedWorkdayId()
-        {
-            if (StartedWorkdayId == null)
-                throw new InvalidApplicationStateException("Id is null.");
-
-            return StartedWorkdayId.Value;
         }
     }
 
     internal class FinishWorkdayState : IState
     {
-        public Guid? FinishedWorkdayId { get; private set; }
         public WorkdayDto? Workday { get; private set; }
 
         public void Initialize()
         {
-            FinishedWorkdayId = null;
             Workday = null;
         }
 
@@ -160,28 +181,15 @@ namespace Wholesaler.Frontend.Presentation.States
             return Workday;
         }
 
-        public void FinishWork(Guid workdayId)
-        {
-            FinishedWorkdayId = workdayId;
-        }
-
-        public Guid GetFinishedWorkdayId()
-        {
-            if (FinishedWorkdayId == null)
-                throw new InvalidApplicationStateException("Id is null.");
-
-            return FinishedWorkdayId.Value;
-        }
-
-        public void FinishWorkday(WorkdayDto workday)
+        public void FinishWork(WorkdayDto workday)
         {
             Workday = workday;
         }
-        
     }
+
     internal class GetAssignedTasksState : IState
     {
-        public List<WorkTaskDto> Worktasks { get; private set; }
+        public List<WorkTaskDto>? Worktasks { get; private set; }
 
         public void Initialize()
         {
@@ -191,6 +199,51 @@ namespace Wholesaler.Frontend.Presentation.States
         public void GetTasks(List<WorkTaskDto> workTasks)
         {
             Worktasks = workTasks;
+        }
+    }
+
+    internal class StartWorkTaskState : IState
+    {
+        public WorkTaskDto? WorkTask { get; private set; }
+
+        public void Initialize()
+        {
+            WorkTask = null;
+        }
+
+        public void StartWorkTask(WorkTaskDto workTask)
+        {
+            WorkTask = workTask;
+        }
+    }
+
+    internal class StopWorkTaskState : IState
+    {
+        public WorkTaskDto? WorkTask { get; private set; }
+
+        public void Initialize()
+        {
+            WorkTask = null;
+        }
+
+        public void StopWorkTask(WorkTaskDto workTask)
+        {
+            WorkTask = workTask;
+        }
+    }
+
+    internal class FinishWorkTaskState : IState
+    {
+        public WorkTaskDto? WorkTask { get; private set; }
+
+        public void Initialize()
+        {
+            WorkTask = null;
+        }
+
+        public void FinishWorkTask(WorkTaskDto workTask)
+        {
+            WorkTask = workTask;
         }
     }
 
@@ -218,7 +271,7 @@ namespace Wholesaler.Frontend.Presentation.States
 
         public ChangeOwnerOfTaskState GetChangeOwner()
         {
-            if(ChangeOwnerOfTask == null)
+            if (ChangeOwnerOfTask == null)
             {
                 ChangeOwnerOfTask = new ChangeOwnerOfTaskState();
                 ChangeOwnerOfTask.Initialize();
@@ -234,7 +287,7 @@ namespace Wholesaler.Frontend.Presentation.States
         public WorkTaskDto? WorkTask { get; private set; }
         public List<WorkTaskDto>? WorkTasks { get; private set; }
         public List<UserDto>? Employees { get; private set; }
-               
+
         public void Initialize()
         {
             WorkTaskId = null;
@@ -269,7 +322,7 @@ namespace Wholesaler.Frontend.Presentation.States
             WorkTasks = null;
             Employees = null;
         }
-     
+
         public void GetWorkTasks(List<WorkTaskDto> workTasks)
         {
             WorkTasks = workTasks;

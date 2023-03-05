@@ -8,14 +8,21 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
     {
         private readonly StartWorkdayView _startWorkday;
         private readonly FinishWorkdayView _finishWorkday;
-        private readonly ReviewAssignedTasksView _reviewAssignedTasks;
+        private readonly StartWorkTaskView _startWorkTask;
+        private readonly WorkTaskMenuView _workTaskMenu;
 
-        public EmployeeView(StartWorkdayView startWorkday,  ApplicationState state, FinishWorkdayView finishWorkday, ReviewAssignedTasksView reviewAssignedTasks)
+        public EmployeeView(
+            StartWorkdayView startWorkday,
+            ApplicationState state,
+            FinishWorkdayView finishWorkday,
+            StartWorkTaskView startworkTask,
+            WorkTaskMenuView workTaskMenu)
             : base(state)
         {
             _startWorkday = startWorkday;
-            _finishWorkday = finishWorkday;
-            _reviewAssignedTasks = reviewAssignedTasks;
+            _finishWorkday = finishWorkday; 
+            _startWorkTask = startworkTask;
+            _workTaskMenu = workTaskMenu;
         }
 
         protected override async Task RenderViewAsync()
@@ -26,10 +33,9 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
             {
                 Console.WriteLine("---Welcome in Wholesaler---");
                 Console.WriteLine
-                    ("\n[1] To record ending of the row" +
+                    ("\n[1] To see worktask menu" +
                     "\n[2] To start work" +
                     "\n[3] To finish work" +
-                    "\n[4] To get information about assigned tasks" +
                     "\n[ESC] To quit");
 
                 var pressedKey = Console.ReadKey();
@@ -38,22 +44,18 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        Console.Clear();
+                        await _workTaskMenu.RenderAsync();
                         continue;
 
                     case ConsoleKey.D2:
-                    case ConsoleKey.NumPad2:                        
-                        await _startWorkday.RenderAsync();                       
+                    case ConsoleKey.NumPad2:
+                        await _startWorkday.RenderAsync();
+                        await _startWorkTask.RenderAsync();
                         continue;
 
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
                         await _finishWorkday.RenderAsync();
-                        continue;
-
-                    case ConsoleKey.D4:
-                    case ConsoleKey.NumPad4:
-                        await _reviewAssignedTasks.RenderAsync();
                         continue;
 
                     case ConsoleKey.Escape:
