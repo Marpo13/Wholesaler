@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5CD29421-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wholesaler.Core.Dto", "Core\Wholesaler.Core.Dto\Wholesaler.Core.Dto.csproj", "{39EF6190-D5BA-468A-B057-4FB778C38867}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wholesaler.Tests", "Wholesaler.Tests\Wholesaler.Tests.csproj", "{992B3CBD-7B2F-4025-9582-BFFF0AC2EF4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{39EF6190-D5BA-468A-B057-4FB778C38867}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39EF6190-D5BA-468A-B057-4FB778C38867}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39EF6190-D5BA-468A-B057-4FB778C38867}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992B3CBD-7B2F-4025-9582-BFFF0AC2EF4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992B3CBD-7B2F-4025-9582-BFFF0AC2EF4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992B3CBD-7B2F-4025-9582-BFFF0AC2EF4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992B3CBD-7B2F-4025-9582-BFFF0AC2EF4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
