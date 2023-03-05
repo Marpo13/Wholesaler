@@ -107,7 +107,7 @@ namespace Wholesaler.Frontend.Presentation.States
             return GetAssignedTasks;
         }
 
-        public StartWorkTaskState StartWorkTaskS()
+        public StartWorkTaskState GetStartWorkTask()
         {
             if (StartWorkTask == null)
             {
@@ -118,7 +118,7 @@ namespace Wholesaler.Frontend.Presentation.States
             return StartWorkTask;
         }
 
-        public StopWorkTaskState StopWorkTaskS()
+        public StopWorkTaskState GetStopWorkTask()
         {
             if (StopWorkTask == null)
             {
@@ -129,7 +129,7 @@ namespace Wholesaler.Frontend.Presentation.States
             return StopWorkTask;
         }
 
-        public FinishWorkTaskState FinishWorkTaskS()
+        public FinishWorkTaskState GetFinishWorkTask()
         {
             if (FinishWorkTask == null)
             {
