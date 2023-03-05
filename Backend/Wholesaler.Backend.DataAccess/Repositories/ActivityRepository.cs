@@ -18,10 +18,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .Where(a => a.PersonId == personId)
                 .Where(a => a.Stop == null)
                 .ToList();
-
-            if (activitiesDb == null)
-                return new List<Activity>();
-
+                        
             var listOfActivities = activitiesDb.Select(activityDb =>
             {
                 var activity = new Activity(activityDb.Id, activityDb.Start, activityDb.Stop, activityDb.PersonId);
