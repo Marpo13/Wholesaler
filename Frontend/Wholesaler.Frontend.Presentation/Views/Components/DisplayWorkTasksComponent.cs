@@ -3,11 +3,11 @@ using Wholesaler.Frontend.Presentation.Views.Generic;
 
 namespace Wholesaler.Frontend.Presentation.Views.Components
 {
-    internal class ReturnWorkTasksComponent : Component
+    internal class DisplayWorkTasksComponent : Component
     {
         private readonly List<WorkTaskDto> _listOfWorkTasks;
 
-        public ReturnWorkTasksComponent(List<WorkTaskDto> listOfWorktasks)
+        public DisplayWorkTasksComponent(List<WorkTaskDto> listOfWorktasks)
         {
             _listOfWorkTasks = listOfWorktasks;
         }

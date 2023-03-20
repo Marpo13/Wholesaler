@@ -137,7 +137,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("startedTasks")]
+        [Route("started")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetStartedWorkTasks()
         {
             var workTasks = _workTaskRepository.GetStarted();
@@ -153,7 +153,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("finishedTasks")]
+        [Route("finished")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetFinishedWorkTasks()
         {
             var workTasks = _workTaskRepository.GetFinished();

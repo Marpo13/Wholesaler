@@ -29,7 +29,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 
             _state.GetWorkTasks(getFinishedTasks.Payload);
 
-            var tasksWritedOnConsole = new ReturnWorkTasksComponent(getFinishedTasks.Payload);
+            var tasksWritedOnConsole = new DisplayWorkTasksComponent(getFinishedTasks.Payload);
             tasksWritedOnConsole.Render();
         }
     }

@@ -178,7 +178,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/startedTasks",
+                Path = $"{apiPath}/worktasks/started",
                 Method = HttpMethod.Get,
             };
 
@@ -189,7 +189,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/finishedTasks",
+                Path = $"{apiPath}/worktasks/finished",
                 Method = HttpMethod.Get,
             };
 
