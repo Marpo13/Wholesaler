@@ -11,9 +11,9 @@ namespace Wholesaler.Backend.DataAccess.Repositories
     public class WorkTaskRepository : IWorkTaskRepository
     {
         private readonly WholesalerContext _context;
-        private readonly IWorkTaskFactory _workTaskFactory;
+        private readonly IListWorkTaskFactory _workTaskFactory;
 
-        public WorkTaskRepository(WholesalerContext context, IWorkTaskFactory workTaskFactory)
+        public WorkTaskRepository(WholesalerContext context, IListWorkTaskFactory workTaskFactory)
         {
             _context = context;
             _workTaskFactory = workTaskFactory;

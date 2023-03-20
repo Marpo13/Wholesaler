@@ -1,4 +1,5 @@
-﻿using Wholesaler.Backend.Domain.Entities;
+﻿using Wholesaler.Backend.DataAccess.Factories;
+using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using PersonDb = Wholesaler.Backend.DataAccess.Models.Person;
@@ -9,46 +10,51 @@ namespace Wholesaler.Backend.DataAccess.Repositories
     public class UsersRepository : IUsersRepository
     {
         private readonly WholesalerContext _context;
-        public UsersRepository(WholesalerContext context)
+        private readonly IPersonDbFactory _personFactory;
+
+        public UsersRepository(WholesalerContext context, IPersonDbFactory personFactory)
         {
             _context = context;
+            _personFactory = personFactory;
         }
         public Person? Get(Guid id)
         {
-            var user = _context.People
+            var personDb = _context.People
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
 
-            if (user == null)
+            if (personDb == null)
                 throw new InvalidProcedureException($"There is no person with id: {id}");
 
-            var person = new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
+            var person = _personFactory.Create(personDb);
 
             return person;
         }
 
         public Person? GetOrDefault(string login)
         {
-            var user = _context.People
+            var personDb = _context.People
                 .Where(p => p.Login == login)
                 .FirstOrDefault();
 
-            if (user == null)
+            if (personDb == null)
                 return default;
 
-            return new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
+            var person = _personFactory.Create(personDb);
+
+            return person;
         }
 
         public Person? GetOrDefault(Guid id)
         {
-            var user = _context.People
+            var personDb = _context.People
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
 
-            if (user == null)
+            if (personDb == null)
                 return default;
 
-            var person = new Person(user.Id, user.Login, user.Password, user.Role, user.Name, user.Surname);
+            var person = _personFactory.Create(personDb);
 
             return person;
         }

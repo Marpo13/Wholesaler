@@ -24,9 +24,9 @@
             PersonId = personId;
         }
 
-        public void Close()
+        public void Close(DateTime time)
         {
-            Stop = DateTime.Now;
+            Stop = time;
         }
     }
 }

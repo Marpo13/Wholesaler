@@ -3,7 +3,7 @@ using WorkTaskDb = Wholesaler.Backend.DataAccess.Models.WorkTask;
 
 namespace Wholesaler.Backend.DataAccess.Factories
 {
-    public class WorkTaskFactory : IWorkTaskFactory
+    public class ListWorkTaskFactory : IListWorkTaskFactory
     {
         public List<WorkTask> Create(List<WorkTaskDb> workTasksDbList)
         {

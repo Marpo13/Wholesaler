@@ -6,7 +6,7 @@ namespace Wholesaler.Backend.Domain.Repositories
     {
         Workday Add(Workday workday);      
 
-        Workday? GetOrDefault(Guid id);
+        Workday Get(Guid id);
 
         List<Workday> GetByPersonAsync(Guid personId);
 

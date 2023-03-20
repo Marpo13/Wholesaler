@@ -3,6 +3,7 @@ using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
+using Wholesaler.Backend.Domain.Requests.WorkTasks;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 
@@ -26,11 +27,10 @@ namespace Wholesaler.Backend.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Add([FromBody] AddTaskRequestModel addTask)
         {
-            var task = new WorkTask(addTask.Row);
+            var request = new CreateWorkTaskRequest(addTask.Row);
+            var workTask = _workTaskService.Add(request);
 
-            var id = _workTaskRepository.Add(task);
-
-            return id;
+            return workTask.Id;
         }
 
         [HttpPost]

@@ -44,21 +44,21 @@ namespace Wholesaler.Backend.Domain.Entities
                 var activity = _activities
                     .First(a => a.IsOpen);
 
-                activity.Close();
+                activity.Close(DateTime.Now);
             }
 
             Person = person;
         }
 
-        public void Start()
+        public void Start(DateTime time)
         {
-            var activity = new Activity(Guid.NewGuid(), DateTime.Now, null, Person.Id);
+            var activity = new Activity(Guid.NewGuid(), time, null, Person.Id);
 
             IsStarted = true;
             _activities.Add(activity);
         }
 
-        public void Stop()
+        public void Stop(DateTime time)
         {
             var openedActivity = _activities
                 .FirstOrDefault(a => a.IsOpen);
@@ -70,12 +70,12 @@ namespace Wholesaler.Backend.Domain.Entities
             if (openedActivity.PersonId != Person.Id)
                 throw new InvalidDataProvidedException("Person who owns activity is not match with person who owns a task.");
             
-            openedActivity.Close();
+            openedActivity.Close(time);
         }
 
-        public void Finish()
+        public void Finish(DateTime time)
         {      
-            Stop();
+            Stop(time);
             IsFinished = true;
         }
     }

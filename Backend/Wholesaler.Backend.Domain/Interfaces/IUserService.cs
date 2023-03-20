@@ -1,4 +1,5 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Requests.People;
 
 namespace Wholesaler.Backend.Domain.Interfaces
 {
@@ -9,6 +10,8 @@ namespace Wholesaler.Backend.Domain.Interfaces
         Workday StartWorkday(Guid userId);
 
         Workday FinishWorkday(Guid userId);
+
+        Person Add(CreatePersonRequest request);
 
     }
 }
