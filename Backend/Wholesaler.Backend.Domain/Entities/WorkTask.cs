@@ -28,12 +28,14 @@ namespace Wholesaler.Backend.Domain.Entities
             Row = row;
             _activities = new List<Activity>();
         }
-        public WorkTask(Guid id, int row)
+        public WorkTask(Guid id, int row, bool isStarted, bool isFinished)
         {
             Id = id;
             Row = row;
             _activities = new List<Activity>();
-        }
+            IsStarted = isStarted;
+            IsFinished = isFinished;
+        }       
 
         public void AssignPerson(Person person)
         {

@@ -14,9 +14,9 @@ namespace Wholesaler.Backend.Api.Controllers
     {
         private readonly IWorkTaskRepository _workTaskRepository;
         private readonly IWorkTaskService _workTaskService;
-        private readonly IWorkTaskFactory _workTaskFactory;
+        private readonly IWorkTaskDtoFactory _workTaskFactory;
 
-        public WorkTaskController(IWorkTaskRepository workTaskRepository, IWorkTaskService workTaskService, IWorkTaskFactory workTaskFactory)
+        public WorkTaskController(IWorkTaskRepository workTaskRepository, IWorkTaskService workTaskService, IWorkTaskDtoFactory workTaskFactory)
         {
             _workTaskRepository = workTaskRepository;
             _workTaskService = workTaskService;
@@ -124,9 +124,41 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("assignedToAnEmployee")]
         public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
         {
-            var worktasks = _workTaskRepository.GetAssign(userId);
+            var workTasks = _workTaskRepository.GetAssigned(userId);
 
-            var listOfWorktasksDto = worktasks.Select(workTask =>
+            var listOfWorktasksDto = workTasks.Select(workTask =>
+            {
+                var workTaskDto = _workTaskFactory.Create(workTask);
+
+                return workTaskDto;
+            });
+
+            return listOfWorktasksDto.ToList();
+        }
+
+        [HttpGet]
+        [Route("started")]
+        public async Task<ActionResult<List<WorkTaskDto>>> GetStartedWorkTasks()
+        {
+            var workTasks = _workTaskRepository.GetStarted();
+
+            var listOfWorktasksDto = workTasks.Select(workTask =>
+            {
+                var workTaskDto = _workTaskFactory.Create(workTask);
+
+                return workTaskDto;
+            });
+
+            return listOfWorktasksDto.ToList();
+        }
+
+        [HttpGet]
+        [Route("finished")]
+        public async Task<ActionResult<List<WorkTaskDto>>> GetFinishedWorkTasks()
+        {
+            var workTasks = _workTaskRepository.GetFinished();
+
+            var listOfWorktasksDto = workTasks.Select(workTask =>
             {
                 var workTaskDto = _workTaskFactory.Create(workTask);
 

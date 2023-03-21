@@ -173,6 +173,28 @@ namespace Wholesaler.Frontend.DataAccess
 
             return await SendAsync(request);
         }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetStartedWorkTasksAsync()
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/worktasks/started",
+                Method = HttpMethod.Get,
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<WorkTaskDto>>> GetFinishedWorkTasksAsync()
+        {
+            var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
+            {
+                Path = $"{apiPath}/worktasks/finished",
+                Method = HttpMethod.Get,
+            };
+
+            return await SendAsync(request);
+        }
     }
 }
 

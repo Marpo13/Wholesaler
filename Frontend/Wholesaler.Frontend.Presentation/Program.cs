@@ -30,6 +30,8 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<StopWorkTaskView>();
     services.AddTransient<FinishWorkTaskView>();
     services.AddTransient<WorkTaskMenuView>();
+    services.AddTransient<StartedTasksView>();
+    services.AddTransient<FinishedTasksView>();
     services.AddSingleton<ApplicationState>();
     });
 

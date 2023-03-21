@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Wholesaler.Backend.Api;
 using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.DataAccess;
+using Wholesaler.Backend.DataAccess.Factories;
 using Wholesaler.Backend.DataAccess.Repositories;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
@@ -21,7 +22,8 @@ builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 builder.Services.AddTransient<IWorkdayRepository, WorkdayRepository>();
 builder.Services.AddTransient<IWorkTaskRepository, WorkTaskRepository>();
 builder.Services.AddTransient<IWorkTaskService, WorkTaskService>();
-builder.Services.AddTransient<IWorkTaskFactory, WorkTasksFactory>();
+builder.Services.AddTransient<IWorkTaskFactory, WorkTaskFactory>();
+builder.Services.AddTransient<IWorkTaskDtoFactory, WorkTaskDtoFactory>();
 builder.Services.AddTransient<IWorkdayDtoFactory, WorkdayDtoFactory>();
 builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
@@ -36,3 +38,8 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{
+
+}

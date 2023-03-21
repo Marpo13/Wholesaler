@@ -12,8 +12,12 @@ namespace Wholesaler.Backend.Domain.Repositories
 
         List<WorkTask> GetNotAssign();
 
-        List<WorkTask> GetAssign(Guid userId);
+        List<WorkTask> GetAssigned(Guid userId);
 
         List<WorkTask> GetAssigned();
+
+        List<WorkTask> GetStarted();
+
+        List<WorkTask> GetFinished();
     }
 }

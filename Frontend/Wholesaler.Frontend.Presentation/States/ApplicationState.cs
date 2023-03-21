@@ -251,6 +251,8 @@ namespace Wholesaler.Frontend.Presentation.States
     {
         public AssignTaskState? AssignTask { get; private set; }
         public ChangeOwnerOfTaskState? ChangeOwnerOfTask { get; private set; }
+        public StartedWorkTasksState StartedWorkTasks { get; private set; }
+        public FinishedWorkTasksState FinishedWorkTasks { get; private set; }
 
         public void Initialize()
         {
@@ -278,6 +280,28 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return ChangeOwnerOfTask;
+        }
+
+        public StartedWorkTasksState GetStartedWorkTasks()
+        {
+            if (StartedWorkTasks == null)
+            {
+                StartedWorkTasks = new StartedWorkTasksState();
+                StartedWorkTasks.Initialize();
+            }
+
+            return StartedWorkTasks;
+        }
+
+        public FinishedWorkTasksState GetFinishedWorkTasks()
+        {
+            if (FinishedWorkTasks == null)
+            {
+                FinishedWorkTasks = new FinishedWorkTasksState();
+                FinishedWorkTasks.Initialize();
+            }
+
+            return FinishedWorkTasks;
         }
     }
 
@@ -336,6 +360,36 @@ namespace Wholesaler.Frontend.Presentation.States
         public void ChangeOwnerOfTask(WorkTaskDto workTask)
         {
             WorkTask = workTask;
+        }
+    }
+
+    internal class StartedWorkTasksState : IState
+    {
+        public List<WorkTaskDto>? WorkTasks { get; private set; }
+
+        public void Initialize()
+        {
+            WorkTasks = null;
+        }
+
+        public void GetWorkTasks(List<WorkTaskDto> workTasks)
+        {
+            WorkTasks = workTasks;
+        }
+    }
+
+    internal class FinishedWorkTasksState : IState
+    {
+        public List<WorkTaskDto>? WorkTasks { get; private set; }
+
+        public void Initialize()
+        {
+            WorkTasks = null;
+        }
+
+        public void GetWorkTasks(List<WorkTaskDto> workTasks)
+        {
+            WorkTasks = workTasks;
         }
     }
 }

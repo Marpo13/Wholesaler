@@ -4,16 +4,19 @@ using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using WorkTaskDb = Wholesaler.Backend.DataAccess.Models.WorkTask;
 using ActivityDb = Wholesaler.Backend.DataAccess.Models.Activity;
+using Wholesaler.Backend.DataAccess.Factories;
 
 namespace Wholesaler.Backend.DataAccess.Repositories
 {
     public class WorkTaskRepository : IWorkTaskRepository
     {
         private readonly WholesalerContext _context;
+        private readonly IWorkTaskFactory _workTaskFactory;
 
-        public WorkTaskRepository(WholesalerContext context)
+        public WorkTaskRepository(WholesalerContext context, IWorkTaskFactory workTaskFactory)
         {
             _context = context;
+            _workTaskFactory = workTaskFactory;
         }
 
         public Guid Add(WorkTask worktask)
@@ -22,6 +25,9 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             {
                 Id = worktask.Id,
                 Row = worktask.Row,
+                IsStarted = worktask.IsStarted,
+                IsFinished = worktask.IsFinished,
+                PersonId = worktask.Person?.Id,
             };
 
             _context.WorkTasks.Add(workTaskDb);
@@ -41,16 +47,20 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             if (workTaskDb == null)
                 throw new InvalidProcedureException($"There is no not assigned worktask with id: {id}");
 
-            if (workTaskDb.Person == null)
-                return new WorkTask(workTaskDb.Id, workTaskDb.Row);
+            if (workTaskDb.Person is null)
+                return new WorkTask(
+                workTaskDb.Id,
+                workTaskDb.Row,
+                workTaskDb.IsStarted,
+                workTaskDb.IsFinished);
 
             var person = new Person(
-                    workTaskDb.Person.Id,
-                    workTaskDb.Person.Login,
-                    workTaskDb.Person.Password,
-                    workTaskDb.Person.Role,
-                    workTaskDb.Person.Name,
-                    workTaskDb.Person.Surname);
+               workTaskDb.Person.Id,
+               workTaskDb.Person.Login,
+               workTaskDb.Person.Password,
+               workTaskDb.Person.Role,
+               workTaskDb.Person.Name,
+               workTaskDb.Person.Surname);
 
             if (workTaskDb.Activities == null)
             {
@@ -64,7 +74,13 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 return activity;
             });
 
-            return new WorkTask(workTaskDb.Id, workTaskDb.Row, activities.ToList(), workTaskDb.IsStarted, workTaskDb.IsFinished, person);
+            return new WorkTask(
+                workTaskDb.Id,
+                workTaskDb.Row,
+                activities.ToList(),
+                workTaskDb.IsStarted,
+                workTaskDb.IsFinished,
+                person);
         }
 
         public WorkTask Update(WorkTask workTask)
@@ -82,8 +98,8 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 workTaskDb.Activities = new List<ActivityDb>();
 
             var activities = workTask.Activities.Select(activity =>
-            {                
-                var activityDb = workTaskDb.Activities.FirstOrDefault(a => a.Id == activity.Id);                
+            {
+                var activityDb = workTaskDb.Activities.FirstOrDefault(a => a.Id == activity.Id);
                 if (activityDb == null)
                 {
                     var newActivity = new ActivityDb()
@@ -101,7 +117,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 activityDb.Start = activity.Start;
                 activityDb.Stop = activity.Stop;
                 activityDb.PersonId = activity.PersonId;
-                
+
                 return activityDb;
             });
 
@@ -121,17 +137,12 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .Where(w => w.Person == null)
                 .ToList();
 
-            var listOfWorkTasks = workTasksDbList.Select(worktaskDb =>
-            {
-                var workTask = new WorkTask(worktaskDb.Id, worktaskDb.Row);
-
-                return workTask;
-            });
+            var listOfWorkTasks = _workTaskFactory.Create(workTasksDbList);
 
             return listOfWorkTasks.ToList();
         }
 
-        public List<WorkTask> GetAssign(Guid userId)
+        public List<WorkTask> GetAssigned(Guid userId)
         {
             var workTasksDbList = _context.WorkTasks
                 .Include(w => w.Person)
@@ -139,26 +150,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .Where(w => w.PersonId == userId)
                 .ToList();
 
-            var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
-            {
-                var person = new Person(
-                    workTaskDb.Person.Id,
-                    workTaskDb.Person.Login,
-                    workTaskDb.Person.Password,
-                    workTaskDb.Person.Role,
-                    workTaskDb.Person.Name,
-                    workTaskDb.Person.Surname);
-
-                var activities = workTaskDb.Activities.Select(activityDb =>
-                {
-                    var activity = new Activity(activityDb.Id, activityDb.Start, activityDb.Stop, activityDb.PersonId);
-                    return activity;
-                });
-
-                var worktask = new WorkTask(workTaskDb.Id, workTaskDb.Row, activities.ToList(), workTaskDb.IsStarted, workTaskDb.IsFinished, person);
-
-                return worktask;
-            });
+            var listOfWorkTasks = _workTaskFactory.Create(workTasksDbList);
 
             return listOfWorkTasks.ToList();
         }
@@ -171,32 +163,33 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .Where(w => w.Person != null)
                 .ToList();
 
-            var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
-            {
-                var person = new Person(
-                    workTaskDb.Person.Id,
-                    workTaskDb.Person.Login,
-                    workTaskDb.Person.Password,
-                    workTaskDb.Person.Role,
-                    workTaskDb.Person.Name,
-                    workTaskDb.Person.Surname);
+            var listOfWorkTasks = _workTaskFactory.Create(workTasksDbList);
 
-                var activities = workTaskDb.Activities.Select(activityDb =>
-                {
-                    var activity = new Activity(activityDb.Id, activityDb.Start, activityDb.Stop, activityDb.PersonId);
-                    return activity;
-                });
+            return listOfWorkTasks.ToList();
+        }
 
-                var workTask = new WorkTask(
-                    workTaskDb.Id,
-                    workTaskDb.Row,
-                    activities.ToList(),
-                    workTaskDb.IsStarted,
-                    workTaskDb.IsFinished,
-                    person);
+        public List<WorkTask> GetStarted()
+        {
+            var workTasksDbList = _context.WorkTasks
+                .Include(w => w.Person)
+                .Include(w => w.Activities)
+                .Where(w => w.IsStarted)
+                .ToList();
 
-                return workTask;
-            });
+            var listOfWorkTasks = _workTaskFactory.Create(workTasksDbList);
+
+            return listOfWorkTasks.ToList();
+        }
+
+        public List<WorkTask> GetFinished()
+        {
+            var workTasksDbList = _context.WorkTasks
+                .Include(w => w.Person)
+                .Include(w => w.Activities)
+                .Where(w => w.IsFinished)
+                .ToList();
+
+            var listOfWorkTasks = _workTaskFactory.Create(workTasksDbList);
 
             return listOfWorkTasks.ToList();
         }
