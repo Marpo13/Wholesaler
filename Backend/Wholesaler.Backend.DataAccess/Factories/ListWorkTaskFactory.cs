@@ -7,7 +7,7 @@ namespace Wholesaler.Backend.DataAccess.Factories
     {
         public List<WorkTask> Create(List<WorkTaskDb> workTasksDbList)
         {
-            var listOfWorkTasks = workTasksDbList.Select(workTaskDb =>
+            var workTasks = workTasksDbList.Select(workTaskDb =>
             {
                 if (workTaskDb.Person is null)
                     return new WorkTask(
@@ -45,7 +45,7 @@ namespace Wholesaler.Backend.DataAccess.Factories
                     person);
             });
 
-            return listOfWorkTasks.ToList();
+            return workTasks.ToList();
         }
     }
 }
