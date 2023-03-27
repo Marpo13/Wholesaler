@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
@@ -50,21 +51,24 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workTaskId = await JsonDeserializeHelper.Deserialize<Guid>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workTaskId = await JsonDeserializeHelper.DeserializeAsync<Guid>(response);
 
             var workTask = _dbContext.WorkTasks.First(w => w.Row == rowNumber);
             workTask.Id.Should().Be(workTaskId);
         }
 
-        [Fact]
-        public async Task Add_WithInvalidModel_ReturnsBadRequest()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-5)]
+        [InlineData(-100)]
+        public async Task Add_WithInvalidModel_ReturnsBadRequest(int row)
         {
             //Arrange
 
             var workTaskRequestModel = new AddTaskRequestModel()
             {
-                Row = 0
+                Row = row
             };
 
             var httpContent = workTaskRequestModel.ToJsonHttpContent();
@@ -75,7 +79,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -107,8 +111,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.Deserialize<WorkTaskDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
             workTaskDto.Row.Should().Be(workTask.Row);
             workTaskDto.IsStarted.Should().Be(workTask.IsStarted);
             workTaskDto.IsFinished.Should().Be(workTask.IsFinished);
@@ -151,7 +155,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -183,7 +187,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -215,7 +219,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -242,7 +246,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -280,8 +284,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.Deserialize<WorkTaskDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
             workTaskDto.UserId.Should().Be(person2.Id);
 
             var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
@@ -323,8 +327,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.Deserialize<WorkTaskDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
             workTaskDto.UserId.Should().Be(person2.Id);
 
             var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
@@ -360,7 +364,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -398,7 +402,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
                 
         [Fact]
@@ -430,8 +434,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.Deserialize<WorkTaskDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
             workTaskDto.UserId.Should().Be(person.Id);
             workTaskDto.IsStarted.Should().Be(true);
             workTaskDto.IsFinished.Should().Be(false);
@@ -465,7 +469,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -492,7 +496,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -519,7 +523,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
     }
 }

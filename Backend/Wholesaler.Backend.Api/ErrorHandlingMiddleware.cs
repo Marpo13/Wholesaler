@@ -24,8 +24,13 @@ namespace Wholesaler.Backend.Api
                         await context.Response.WriteAsync(ex.Message);
                         break;
 
-                    case InvalidProcedureException:
+                    case EntityNotFoundException:
                         context.Response.StatusCode = 404;
+                        await context.Response.WriteAsync(ex.Message);
+                        break;
+
+                    case InvalidProcedureException:
+                        context.Response.StatusCode = 500;
                         await context.Response.WriteAsync(ex.Message);
                         break;
 

@@ -26,7 +26,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workdayDb == null)
-                throw new InvalidProcedureException($"There is no workday with {id}");
+                throw new EntityNotFoundException($"There is no workday with {id}");
 
             var workday = _workdayFactory.Create(workdayDb);
 

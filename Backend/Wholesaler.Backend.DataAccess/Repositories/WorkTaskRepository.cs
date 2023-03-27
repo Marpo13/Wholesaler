@@ -11,9 +11,9 @@ namespace Wholesaler.Backend.DataAccess.Repositories
     public class WorkTaskRepository : IWorkTaskRepository
     {
         private readonly WholesalerContext _context;
-        private readonly IListWorkTaskFactory _workTaskFactory;
+        private readonly IWorkTaskFactory _workTaskFactory;
 
-        public WorkTaskRepository(WholesalerContext context, IListWorkTaskFactory workTaskFactory)
+        public WorkTaskRepository(WholesalerContext context, IWorkTaskFactory workTaskFactory)
         {
             _context = context;
             _workTaskFactory = workTaskFactory;
@@ -45,7 +45,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw new InvalidProcedureException($"There is no not assigned worktask with id: {id}");
+                throw new EntityNotFoundException($"There is no not assigned worktask with id: {id}");
 
             if (workTaskDb.Person is null)
                 return new WorkTask(

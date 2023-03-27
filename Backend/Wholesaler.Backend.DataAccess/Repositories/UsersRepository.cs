@@ -24,7 +24,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (personDb == null)
-                throw new InvalidProcedureException($"There is no person with id: {id}");
+                throw new EntityNotFoundException($"There is no person with id: {id}");
 
             var person = _personFactory.Create(personDb);
 

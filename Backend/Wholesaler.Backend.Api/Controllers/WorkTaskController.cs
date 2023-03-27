@@ -94,12 +94,7 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workday = _workTaskRepository.GetNotAssign();
 
-            var listOfWorkTasks = workday.Select(workTask =>
-            {
-                var workTaskDto = _workTaskFactory.Create(workTask);
-
-                return workTaskDto;
-            });
+            var listOfWorkTasks = workday.Select(workTask => _workTaskFactory.Create(workTask));
 
             return listOfWorkTasks.ToList();
         }
@@ -110,12 +105,7 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workday = _workTaskRepository.GetAssigned();
 
-            var listOfWorkTasks = workday.Select(workTask =>
-            {
-                var workTaskDto = _workTaskFactory.Create(workTask);
-
-                return workTaskDto;
-            });
+            var listOfWorkTasks = workday.Select(workTask => _workTaskFactory.Create(workTask));
 
             return listOfWorkTasks.ToList();
         }
@@ -126,12 +116,7 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workTasks = _workTaskRepository.GetAssigned(userId);
 
-            var listOfWorktasksDto = workTasks.Select(workTask =>
-            {
-                var workTaskDto = _workTaskFactory.Create(workTask);
-
-                return workTaskDto;
-            });
+            var listOfWorktasksDto = workTasks.Select(workTask => _workTaskFactory.Create(workTask));
 
             return listOfWorktasksDto.ToList();
         }
@@ -142,12 +127,7 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workTasks = _workTaskRepository.GetStarted();
 
-            var listOfWorktasksDto = workTasks.Select(workTask =>
-            {
-                var workTaskDto = _workTaskFactory.Create(workTask);
-
-                return workTaskDto;
-            });
+            var listOfWorktasksDto = workTasks.Select(workTask => _workTaskFactory.Create(workTask));
 
             return listOfWorktasksDto.ToList();
         }
@@ -158,12 +138,7 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workTasks = _workTaskRepository.GetFinished();
 
-            var listOfWorktasksDto = workTasks.Select(workTask =>
-            {
-                var workTaskDto = _workTaskFactory.Create(workTask);
-
-                return workTaskDto;
-            });
+            var listOfWorktasksDto = workTasks.Select(workTask => _workTaskFactory.Create(workTask));
 
             return listOfWorktasksDto.ToList();
         }

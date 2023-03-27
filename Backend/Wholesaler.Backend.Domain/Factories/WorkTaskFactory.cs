@@ -12,6 +12,9 @@ namespace Wholesaler.Backend.Domain.Factories
             if (request.Row == 0)
                 throw new InvalidDataProvidedException("You need to provide row value.");
 
+            if (request.Row < 0)
+                throw new InvalidDataProvidedException("You need to provide value more than 0.");
+
             var workTask = new WorkTask(request.Row);
 
             return workTask;

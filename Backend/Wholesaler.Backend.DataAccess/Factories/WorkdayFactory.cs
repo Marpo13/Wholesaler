@@ -5,15 +5,16 @@ namespace Wholesaler.Backend.DataAccess.Factories
 {
     public class WorkdayFactory : IWorkdayFactory
     {
+        private readonly IPersonDbFactory _personDbFactory;
+
+        public WorkdayFactory(IPersonDbFactory personDbFactory)
+        {
+            _personDbFactory = personDbFactory;
+        }
+
         public Workday Create(WorkdayDb workdayDb)
         {
-            var person = new Person(
-                workdayDb.Person.Id,
-                workdayDb.Person.Login,
-                workdayDb.Person.Password,
-                workdayDb.Person.Role,
-                workdayDb.Person.Name,
-                workdayDb.Person.Surname);
+            var person = _personDbFactory.Create(workdayDb.Person);
 
             var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
 

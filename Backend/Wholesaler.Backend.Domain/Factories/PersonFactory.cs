@@ -20,11 +20,18 @@ namespace Wholesaler.Backend.Domain.Factories
             if(request.Password == null)
                 throw new InvalidDataProvidedException("You need to provide password.");
 
+            Role role;
+
+            if (Enum.TryParse(request.Role, out Role result))
+                role = result;
+            else
+                throw new InvalidDataProvidedException("You entered an invalid value for role");
+
             var person = new Person(
                 request.Login,
                 request.Password,
-                Enum.Parse<Role>(request.Role),
-                request.Name,
+                role,
+                request.Name,   
                 request.Surname);
 
             return person;

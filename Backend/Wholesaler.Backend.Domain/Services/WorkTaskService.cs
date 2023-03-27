@@ -79,7 +79,7 @@ namespace Wholesaler.Backend.Domain.Services
                 throw new InvalidDataProvidedException($"Task with id {workTaskId} is not assigned and can not be started.");
 
             var openedActivities = _activityRepository.GetActiveByPerson(workTask.Person.Id);
-            if (openedActivities.Count != 0)
+            if (openedActivities.Any())
                 throw new UnpermittedActionPerformedException("You can not start another activity, because one is opened.");
 
             var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(workTask.Person.Id);

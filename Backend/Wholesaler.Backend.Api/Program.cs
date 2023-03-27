@@ -11,6 +11,10 @@ using Wholesaler.Backend.Domain.Providers.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Services;
 using Wholesaler.Barckend.Domain.Providers;
+using IWorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IWorkTaskFactory;
+using WorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.WorkTaskFactory;
+using IWorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.IWorkTaskFactory;
+using WorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.WorkTaskFactory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +30,8 @@ builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 builder.Services.AddTransient<IWorkdayRepository, WorkdayRepository>();
 builder.Services.AddTransient<IWorkTaskRepository, WorkTaskRepository>();
 builder.Services.AddTransient<IWorkTaskService, WorkTaskService>();
-builder.Services.AddTransient<IWorkTaskFactory, WorkTaskFactory>();
-builder.Services.AddTransient<IListWorkTaskFactory, ListWorkTaskFactory>();
+builder.Services.AddTransient<IWorkTaskFactoryDomain, WorkTaskFactoryDomain>();
+builder.Services.AddTransient<IWorkTaskFactoryDataAccess, WorkTaskFactoryDataAccess>();
 builder.Services.AddTransient<IWorkdayFactory, WorkdayFactory>();
 builder.Services.AddTransient<IPersonDbFactory, PersonDbFactory>();
 builder.Services.AddTransient<IWorkTaskDtoFactory, WorkTaskDtoFactory>();

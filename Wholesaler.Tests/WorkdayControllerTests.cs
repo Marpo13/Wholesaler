@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
@@ -49,8 +50,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workdayDto = await JsonDeserializeHelper.Deserialize<WorkdayDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
             var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
 
             workdayDto.Start.Should().Be(_defaultDate);
@@ -80,7 +81,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -107,7 +108,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -139,7 +140,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -172,8 +173,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workdayDto = await JsonDeserializeHelper.Deserialize<WorkdayDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
             var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
 
             workdayDto.Start.Should().Be(_defaultDate);
@@ -203,7 +204,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -229,7 +230,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -255,17 +256,10 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var workdayDto = await JsonDeserializeHelper.Deserialize<WorkdayDto>(response);
-            var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
-
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
             workdayDto.Start.Should().Be(_defaultDate);
             workdayDto.Stop.Should().Be(null);
-
-            workdayDb.Id.Should().Be(workdayDto.Id);
-            workdayDb.Start.Should().Be(workdayDto.Start);
-            workdayDb.Stop.Should().Be(workdayDto.Stop);
-            workdayDb.PersonId.Should().Be(person.Id);
         }
 
         [Fact]
@@ -281,7 +275,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }

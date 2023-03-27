@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
 using Wholesaler.Backend.DataAccess.Models;
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Core.Dto.RequestModels;
@@ -44,8 +45,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var personFromResponse = await JsonDeserializeHelper.Deserialize<UserDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var personFromResponse = await JsonDeserializeHelper.DeserializeAsync<UserDto>(response);
 
             personFromResponse.Id.Should().Be(person.Id);
             personFromResponse.Login.Should().Be(person.Login);
@@ -73,7 +74,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -101,7 +102,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
@@ -126,8 +127,8 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            var userDto = await JsonDeserializeHelper.Deserialize<UserDto>(response);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var userDto = await JsonDeserializeHelper.DeserializeAsync<UserDto>(response);
             var personDb = _dbContext.People.First(p => p.Login == addRequestModel.Login);
 
             personDb.Id.Should().Be(userDto.Id);
@@ -164,7 +165,7 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }

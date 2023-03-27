@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
 using Wholesaler.Tests.Helpers;
@@ -33,9 +34,9 @@ namespace Wholesaler.Tests
 
             //Assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var peopleFromResponse = await JsonDeserializeHelper.Deserialize<List<UserDto>>(response);
+            var peopleFromResponse = await JsonDeserializeHelper.DeserializeAsync<List<UserDto>>(response);
 
             var person1Check = peopleFromResponse.First(p => p.Id == person1.Id);
             person1Check.Role.Should().Be(person1.Role.ToString());
