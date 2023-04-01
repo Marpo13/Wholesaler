@@ -1,7 +1,10 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
+using Wholesaler.Backend.Domain.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
+using Wholesaler.Backend.Domain.Providers.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
+using Wholesaler.Backend.Domain.Requests.People;
 
 namespace Wholesaler.Backend.Domain.Services
 {
@@ -9,11 +12,19 @@ namespace Wholesaler.Backend.Domain.Services
     {
         private readonly IUsersRepository _usersRepository;
         private readonly IWorkdayRepository _workdayRepository;
+        private readonly IPersonFactory _personFactory;
+        private readonly ITimeProvider _timeProvider;
 
-        public UserService(IUsersRepository usersRepository, IWorkdayRepository workdayRepository)
+        public UserService(
+            IUsersRepository usersRepository,
+            IWorkdayRepository workdayRepository,
+            ITimeProvider timeProvider,
+            IPersonFactory personFactory)
         {
+            _timeProvider = timeProvider;
             _usersRepository = usersRepository;
             _workdayRepository = workdayRepository;
+            _personFactory = personFactory;
         }
 
         public Person Login(string loginFromUser, string passwordFromUser)
@@ -32,7 +43,7 @@ namespace Wholesaler.Backend.Domain.Services
         public Workday StartWorkday(Guid userId)
         {
             var person = _usersRepository.GetOrDefault(userId);
-            var time = DateTime.Now;
+            var time = _timeProvider.Now();
 
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");
@@ -55,6 +66,7 @@ namespace Wholesaler.Backend.Domain.Services
         public Workday FinishWorkday(Guid userId)
         {
             var person = _usersRepository.GetOrDefault(userId);
+            var time = _timeProvider.Now();
 
             if (person == null)
                 throw new InvalidDataProvidedException($"There is no person with id: {userId}");
@@ -64,10 +76,18 @@ namespace Wholesaler.Backend.Domain.Services
             if (activeWorkday == null)
                 throw new InvalidDataProvidedException($"There is no started workdays for person with id: {userId}");
 
-            activeWorkday.StopWorkday();
+            activeWorkday.StopWorkday(time);
             _workdayRepository.UpdateWorkday(activeWorkday);
 
             return activeWorkday;
+        }
+
+        public Person Add(CreatePersonRequest request)
+        {
+            var person = _personFactory.Create(request);
+            _usersRepository.AddPerson(person);
+
+            return person;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Wholesaler.Backend.Domain.Entities
 {
     public class Workday
-    {
+    {        
         public Guid Id { get; }
         public DateTime Start { get; }
         public DateTime? Stop { get; private set; }
@@ -12,7 +12,7 @@
             Id = id;
             Start = start;
             Stop = stop;
-            Person = person;
+            Person = person;            
         }
         public Workday(DateTime start, Person person)
         {
@@ -21,9 +21,8 @@
             Person = person;
         }
 
-        public void StopWorkday()
+        public void StopWorkday(DateTime time)
         {
-            var time = DateTime.Now;
             Stop = time;
         }
     }

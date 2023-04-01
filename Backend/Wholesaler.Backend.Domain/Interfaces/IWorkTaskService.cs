@@ -1,4 +1,5 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Requests.WorkTasks;
 
 namespace Wholesaler.Backend.Domain.Interfaces
 {
@@ -13,5 +14,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
         WorkTask Stop(Guid workTaskId);
 
         WorkTask Finish(Guid workTaskId);
+
+        WorkTask Add(CreateWorkTaskRequest request);
     }
 }

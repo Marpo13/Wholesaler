@@ -45,7 +45,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workTaskDb == null)
-                throw new InvalidProcedureException($"There is no not assigned worktask with id: {id}");
+                throw new EntityNotFoundException($"There is no not assigned worktask with id: {id}");
 
             if (workTaskDb.Person is null)
                 return new WorkTask(

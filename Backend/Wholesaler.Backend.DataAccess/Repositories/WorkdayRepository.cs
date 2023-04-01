@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Wholesaler.Backend.DataAccess.Factories;
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
@@ -9,12 +10,15 @@ namespace Wholesaler.Backend.DataAccess.Repositories
     public class WorkdayRepository : IWorkdayRepository
     {
         private readonly WholesalerContext _context;
-        public WorkdayRepository(WholesalerContext context)
+        private readonly IWorkdayFactory _workdayFactory;
+
+        public WorkdayRepository(WholesalerContext context, IWorkdayFactory workdayFactory)
         {
             _context = context;
+            _workdayFactory = workdayFactory;
         }
 
-        public Workday? GetOrDefault(Guid id)
+        public Workday Get(Guid id)
         {
             var workdayDb = _context.Workdays
                 .Include(w => w.Person)
@@ -22,17 +26,9 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault();
 
             if (workdayDb == null)
-                return default;
+                throw new EntityNotFoundException($"There is no workday with {id}");
 
-            var person = new Person(
-                workdayDb.Person.Id,
-                workdayDb.Person.Login,
-                workdayDb.Person.Password,
-                workdayDb.Person.Role,
-                workdayDb.Person.Name,
-                workdayDb.Person.Surname);
-
-            var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
+            var workday = _workdayFactory.Create(workdayDb);
 
             return workday;
         }
@@ -72,15 +68,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             if (workdayDb == null)
                 return default;
 
-            var person = new Person(
-                workdayDb.Person.Id,
-                workdayDb.Person.Login,
-                workdayDb.Person.Password,
-                workdayDb.Person.Role,
-                workdayDb.Person.Name,
-                workdayDb.Person.Surname);
-
-            var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
+            var workday = _workdayFactory.Create(workdayDb);
 
             return workday;
         }

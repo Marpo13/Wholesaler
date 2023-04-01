@@ -36,7 +36,7 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("{id}")]
         public async Task<ActionResult<WorkdayDto>> GetWorkdayAsync(Guid id)
         {
-            var workday = _workdayRepository.GetOrDefault(id);
+            var workday = _workdayRepository.Get(id);
             var workdayDto = _workdayDtoFactory.Create(workday);
 
             return Ok(workdayDto);

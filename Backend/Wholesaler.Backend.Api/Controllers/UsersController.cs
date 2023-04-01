@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.Domain.Interfaces;
-using Wholesaler.Backend.Domain.Repositories;
+using Wholesaler.Backend.Domain.Requests.People;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 
@@ -12,12 +12,12 @@ namespace Wholesaler.Backend.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _service;
-        private readonly IUsersRepository _repository;
+        private readonly IUserDtoFactory _userFactory;
 
-        public UsersController(IUserService service, IUsersRepository repository)
+        public UsersController(IUserService service, IUserDtoFactory userFactory)
         {
             _service = service;
-            _repository = repository;
+            _userFactory = userFactory;
         }
 
         [HttpPost]
@@ -25,25 +25,19 @@ namespace Wholesaler.Backend.Api.Controllers
         public async Task<ActionResult<UserDto>> LoginAsync([FromBody] LoginUserRequestModel loginUser)
         {
             var person = _service.Login(loginUser.Login, loginUser.Password);
+            var userDto = _userFactory.Create(person);
 
-            return Ok(new UserDto()
-            {
-                Id = person.Id,
-                Login = person.Login,
-                Name = person.Name,
-                Surname = person.Surname,
-                Role = person.Role.ToString(),
-            });
+            return userDto;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> AddPerson([FromBody] AddPersonReqestModel addPerson)
+        public async Task<ActionResult<UserDto>> AddPerson([FromBody] AddPersonReqestModel addPerson)
         {
-            var person = new Person(addPerson.Login, addPerson.Password, Enum.Parse<Role>(addPerson.Role), addPerson.Name, addPerson.Surname);
+            var request = new CreatePersonRequest(addPerson.Name, addPerson.Surname, addPerson.Role, addPerson.Login, addPerson.Password);
+            var person = _service.Add(request);
+            var userDto = _userFactory.Create(person);
 
-            var id = _repository.AddPerson(person);
-
-            return id;
+            return userDto;
         }
     }
 }
