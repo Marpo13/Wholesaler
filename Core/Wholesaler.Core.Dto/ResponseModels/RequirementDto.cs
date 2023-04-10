@@ -1,10 +1,9 @@
-﻿namespace Wholesaler.Backend.DataAccess.Models
+﻿namespace Wholesaler.Core.Dto.ResponseModels
 {
-    public class Requirement
+    public class RequirementDto
     {
         public Guid Id { get; set; }
         public int Quantity { get; set; }
-        public virtual Client Client { get; set; }
         public Guid ClientId { get; set; }
     }
 }

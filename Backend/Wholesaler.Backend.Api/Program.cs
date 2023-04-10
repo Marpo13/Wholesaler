@@ -15,6 +15,11 @@ using IWorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IW
 using WorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.WorkTaskFactory;
 using IWorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.IWorkTaskFactory;
 using WorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.WorkTaskFactory;
+using Wholesaler.Backend.Api.Factories.Interfaces;
+using IClientFactoryApi = Wholesaler.Backend.Api.Factories.Interfaces.IClientFactory;
+using ClientFactoryApi = Wholesaler.Backend.Api.Factories.ClientFactory;
+using IClientFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IClientFactory;
+using ClientFactoryDomain = Wholesaler.Backend.Domain.Factories.ClientFactory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +44,13 @@ builder.Services.AddTransient<IWorkdayDtoFactory, WorkdayDtoFactory>();
 builder.Services.AddTransient<IUserDtoFactory, UserDtoFactory>();
 builder.Services.AddTransient<IPersonDbFactory, PersonDbFactory>();
 builder.Services.AddTransient<IPersonFactory, PersonFactory>();
+builder.Services.AddTransient<IClientFactoryDomain, ClientFactoryDomain>();
+builder.Services.AddTransient<IClientFactoryApi, ClientFactoryApi>();
+builder.Services.AddTransient<IRequirementFactory, RequirementFactory>();
+builder.Services.AddTransient<IClientService, ClientService>();
+builder.Services.AddTransient<IRequirementService, RequirementService>();
+builder.Services.AddTransient<IClientRepository, ClientRepository>();
+builder.Services.AddTransient<IRequirementRepository, RequirementRepository>();
 builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
 builder.Services.AddTransient<ITimeProvider, TimeProvider>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();

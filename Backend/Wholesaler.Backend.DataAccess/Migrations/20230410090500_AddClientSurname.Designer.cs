@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wholesaler.Backend.DataAccess;
 
@@ -11,9 +12,10 @@ using Wholesaler.Backend.DataAccess;
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
     [DbContext(typeof(WholesalerContext))]
-    partial class WholesalerContextModelSnapshot : ModelSnapshot
+    [Migration("20230410090500_AddClientSurname")]
+    partial class AddClientSurname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +48,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("WorkTaskId");
 
-                    b.ToTable("Activities", (string)null);
+                    b.ToTable("Activities");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Client", b =>
@@ -65,7 +67,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Person", b =>
@@ -95,7 +97,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("People", (string)null);
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Requirement", b =>
@@ -114,7 +116,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Requirements", (string)null);
+                    b.ToTable("Requirements");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Workday", b =>
@@ -136,7 +138,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Workdays", (string)null);
+                    b.ToTable("Workdays");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.WorkTask", b =>
@@ -161,7 +163,7 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("WorkTasks", (string)null);
+                    b.ToTable("WorkTasks");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Activity", b =>

@@ -41,6 +41,8 @@ namespace Wholesaler.Backend.Domain.Services
                 throw new InvalidDataProvidedException($"Work task with id: {workTaskId} is assigned to employee: {workTask.Person.Id}");
 
             var person = _usersRepository.Get(userId);
+            if (person == null)
+                throw new EntityNotFoundException($"There is no person with id {userId}");
             if (person.Role != Role.Employee)
                 throw new UnpermittedActionPerformedException($"You can not assign task to {person.Role}. Valid role is employee");
 
@@ -60,6 +62,8 @@ namespace Wholesaler.Backend.Domain.Services
                 throw new InvalidDataProvidedException($"Task with id: {workTask.Id} is assigned to employee with id: {newOwnerId}");
 
             var person = _usersRepository.Get(newOwnerId);
+            if (person == null)
+                throw new EntityNotFoundException($"There is no person with id {newOwnerId}");
             if (person.Role != Role.Employee)
                 throw new UnpermittedActionPerformedException($"You can not assign task to {person.Role}. Valid role is employee");
 
