@@ -41,5 +41,14 @@ namespace Wholesaler.Backend.Domain.Services
 
             return client;
         }
+
+        public List<Client>? GetAll()
+        {
+            var clients = _clientRepository.GetAll();
+            if (clients == null)
+                throw new EntityNotFoundException("There are no clients in this base.");
+
+            return clients;
+        }
     }
 }

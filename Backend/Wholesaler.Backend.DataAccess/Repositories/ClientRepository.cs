@@ -41,6 +41,34 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             _context.SaveChanges();
         }
 
+        public List<Client>? GetAll()
+        {
+            var clientsDb = _context.Clients
+                .ToList();
+
+            var clients = clientsDb.Select(clientDb =>
+            {
+                if (clientDb.Requirements == null)
+                {
+                    var emptyRequirements = new List<Requirement>();
+                    return new Client(clientDb.Id, clientDb.Name, clientDb.Surname, emptyRequirements);
+                }
+
+                var requirements = clientDb.Requirements.Select(requirementDb =>
+                {
+                    var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId);
+
+                    return requirement;
+
+                }).ToList();
+
+                return new Client(clientDb.Id, clientDb.Name, clientDb.Surname, requirements);
+
+            });
+
+            return clients.ToList();
+        }
+
         public Client? GetOrDefault(Guid id)
         {
             var clientDb = _context.Clients

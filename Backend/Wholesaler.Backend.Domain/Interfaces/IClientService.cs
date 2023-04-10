@@ -10,5 +10,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
         void Delete(Guid id);
 
         Client Get(Guid id);
+
+        List<Client>? GetAll();
     }
 }

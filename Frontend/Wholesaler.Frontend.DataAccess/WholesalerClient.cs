@@ -6,7 +6,7 @@ using Wholesaler.Frontend.Domain.ValueObjects;
 
 namespace Wholesaler.Frontend.DataAccess
 {
-    public class WholesalerClient : RequestService, IUserService, IWorkDayRepository, IWorkTaskRepository, IUserRepository
+    public class WholesalerClient : RequestService, IUserService, IWorkDayRepository, IWorkTaskRepository, IUserRepository, IRequirementRepository, IClientRepository
     {
         private const string apiPath = $"http://localhost:5050";
 
@@ -191,6 +191,33 @@ namespace Wholesaler.Frontend.DataAccess
             {
                 Path = $"{apiPath}/worktasks/finished",
                 Method = HttpMethod.Get,
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<RequirementDto>> Add(int quantity, Guid clientId)
+        {
+            var request = new Request<AddRequirementRequestModel, RequirementDto>()
+            {
+                Path = $"{apiPath}/requirement",
+                Method = HttpMethod.Post,
+                Content = new AddRequirementRequestModel()
+                {
+                    ClientId = clientId,
+                    Quantity = quantity
+                }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAll()
+        {
+            var request = new Request<HttpRequestMessage, List<ClientDto>>()
+            {
+                Path = $"{apiPath}/clients",
+                Method = HttpMethod.Get
             };
 
             return await SendAsync(request);

@@ -10,14 +10,22 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
         private readonly ChangeOwnerOfTaskView _changeOwner;
         private readonly StartedTasksView _startedTasks;
         private readonly FinishedTasksView _finishedTasks;
+        private readonly AddRequirementView _addRequirement;
 
-        public ManagerView(ApplicationState state, AssignTaskView assignTask, ChangeOwnerOfTaskView changeOwner, StartedTasksView startedTasks, FinishedTasksView finishedTasks)
+        public ManagerView(
+            ApplicationState state, 
+            AssignTaskView assignTask, 
+            ChangeOwnerOfTaskView changeOwner, 
+            StartedTasksView startedTasks, 
+            FinishedTasksView finishedTasks,
+            AddRequirementView addRequirement)
             : base(state)
         {
             _assignTask = assignTask;
             _changeOwner = changeOwner;
             _startedTasks = startedTasks;
             _finishedTasks = finishedTasks;
+            _addRequirement = addRequirement;
         }
 
         protected override async Task RenderViewAsync()
@@ -53,6 +61,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
+                        await _addRequirement.RenderAsync();
                         Console.Clear();
                         continue;
 

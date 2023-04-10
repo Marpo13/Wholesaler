@@ -8,6 +8,8 @@ namespace Wholesaler.Backend.Domain.Repositories
 
         Client? GetOrDefault(Guid id);
 
+        List<Client>? GetAll();
+
         void Delete(Client client);
     }
 }

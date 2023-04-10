@@ -253,11 +253,13 @@ namespace Wholesaler.Frontend.Presentation.States
         public ChangeOwnerOfTaskState? ChangeOwnerOfTask { get; private set; }
         public StartedWorkTasksState StartedWorkTasks { get; private set; }
         public FinishedWorkTasksState FinishedWorkTasks { get; private set; }
+        public AddRequirementState? AddRequirement { get; private set; }
 
         public void Initialize()
         {
             AssignTask = null;
             ChangeOwnerOfTask = null;
+            AddRequirement = null;
         }
 
         public AssignTaskState GetAssignTask()
@@ -302,6 +304,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return FinishedWorkTasks;
+        }
+
+        public AddRequirementState GetAddRequirement()
+        {
+            if(AddRequirement == null)
+            {
+                AddRequirement = new AddRequirementState();
+                AddRequirement.Initialize();
+            }
+
+            return AddRequirement;
         }
     }
 
@@ -390,6 +403,24 @@ namespace Wholesaler.Frontend.Presentation.States
         public void GetWorkTasks(List<WorkTaskDto> workTasks)
         {
             WorkTasks = workTasks;
+        }
+    }
+
+    internal class AddRequirementState : IState
+    {
+        public int Quantity { get; private set; }
+        public Guid ClientId { get; private set; }
+
+        public void Initialize()
+        {
+            Quantity = 0;
+            ClientId = Guid.Empty;
+        }
+
+        public void GetValues(int quantity, Guid clientId)
+        {
+            Quantity = quantity;
+            ClientId = clientId;
         }
     }
 }

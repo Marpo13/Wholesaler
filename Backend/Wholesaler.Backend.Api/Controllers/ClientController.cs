@@ -42,6 +42,26 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult<List<ClientDto>>> GetAll()
+        {
+            var clients = _clientService.GetAll();
+
+            var clientsDto = clients.Select(client =>
+            {
+                var clientDto = new ClientDto()
+                {
+                    Id = client.Id,
+                    Name = client.Name,
+                    Surname = client.Surname,
+                };
+
+                return clientDto;
+            });
+
+            return clientsDto.ToList();
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<ClientDto>> Get(Guid id)
         {
