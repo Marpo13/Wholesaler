@@ -56,7 +56,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
                 var requirements = clientDb.Requirements.Select(requirementDb =>
                 {
-                    var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId);
+                    var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
 
                     return requirement;
 
@@ -86,7 +86,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             var requirements = clientDb.Requirements.Select(requirementDb =>
             {
-                var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId);
+                var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
 
                 return requirement;
 

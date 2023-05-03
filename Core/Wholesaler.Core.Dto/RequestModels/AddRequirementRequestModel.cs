@@ -4,5 +4,6 @@
     {
         public int Quantity { get; set; }
         public Guid ClientId { get; set; }
+        public Guid StorageId { get; set; }
     }
 }

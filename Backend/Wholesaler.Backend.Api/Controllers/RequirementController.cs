@@ -22,7 +22,8 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var request = new CreateRequirementRequest(
                 addRequirementRequest.Quantity,
-                addRequirementRequest.ClientId);
+                addRequirementRequest.ClientId,
+                addRequirementRequest.StorageId);
 
             var requirement = _requirementService.Add(request);
             var requirementDto = new RequirementDto()
@@ -30,6 +31,7 @@ namespace Wholesaler.Backend.Api.Controllers
                 Id = requirement.Id,
                 Quantity = requirement.Quantity,
                 ClientId = requirement.ClientId,
+                StorageId = requirement.StorageId
             };
 
             return requirementDto;

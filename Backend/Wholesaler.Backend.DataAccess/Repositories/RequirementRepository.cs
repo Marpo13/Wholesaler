@@ -20,6 +20,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 Id = requirement.Id,
                 Quantity = requirement.Quantity,
                 ClientId = requirement.ClientId,
+                StorageId = requirement.StorageId
             };
 
             _context.Add(requirementDb);

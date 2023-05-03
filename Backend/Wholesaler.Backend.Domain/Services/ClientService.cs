@@ -1,6 +1,5 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
-using Wholesaler.Backend.Domain.Factories;
 using Wholesaler.Backend.Domain.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;

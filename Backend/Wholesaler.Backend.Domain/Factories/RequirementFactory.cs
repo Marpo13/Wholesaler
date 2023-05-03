@@ -14,11 +14,14 @@ namespace Wholesaler.Backend.Domain.Factories
             if(request.Quantity < 0)
                 throw new InvalidDataProvidedException("You need to provide quantity more than 0.");
             if(request.ClientId == Guid.Empty)
-                throw new InvalidDataProvidedException("You need to provide quantity client.");
+                throw new InvalidDataProvidedException("You need to provide client id.");
+            if (request.StorageId == Guid.Empty)
+                throw new InvalidDataProvidedException("You need to provide storage id.");
 
             var requirement = new Requirement(
                 request.Quantity, 
-                request.ClientId);
+                request.ClientId,
+                request.StorageId);
 
             return requirement;
         }
