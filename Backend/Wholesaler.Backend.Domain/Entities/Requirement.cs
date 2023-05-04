@@ -3,7 +3,7 @@
     public class Requirement
     {
         public Guid Id { get; }
-        public int Quantity { get; }
+        public int Quantity { get; private set; }
         public Guid ClientId { get; }
         public Guid StorageId { get; }
 
@@ -21,6 +21,11 @@
             Quantity = quantity;
             ClientId = clientId;
             StorageId = storageId;
+        }
+
+        public void UpdateQuantity(int quantity)
+        {
+            Quantity = quantity;
         }
     }
 }

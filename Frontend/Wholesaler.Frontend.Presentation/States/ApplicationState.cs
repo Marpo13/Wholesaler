@@ -286,6 +286,7 @@ namespace Wholesaler.Frontend.Presentation.States
         public FinishedWorkTasksState FinishedWorkTasks { get; private set; }
         public AddRequirementState? AddRequirement { get; private set; }
         public MushroomsDepartureState? MushroomsDeparture { get; private set; }
+        public EditRequirementState? EditRequirement { get; private set; }
 
         public void Initialize()
         {
@@ -293,6 +294,7 @@ namespace Wholesaler.Frontend.Presentation.States
             ChangeOwnerOfTask = null;
             AddRequirement = null;
             MushroomsDeparture = null;
+            EditRequirement = null;
         }
 
         public AssignTaskState GetAssignTask()
@@ -359,6 +361,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return MushroomsDeparture;
+        }
+
+        public EditRequirementState GetEditRequirementState()
+        {
+            if(EditRequirement == null)
+            {
+                EditRequirement = new EditRequirementState();
+                EditRequirement.Initialize();
+            }
+
+            return EditRequirement;
         }
     }
 
@@ -482,6 +495,24 @@ namespace Wholesaler.Frontend.Presentation.States
         public void GetValues(Guid storageId, int quantity)
         {
             StorageId = storageId;
+            Quantity = quantity;
+        }
+    }
+
+    internal class EditRequirementState : IState
+    {
+        public Guid Id { get; private set; }
+        public int Quantity { get; private set; }
+
+        public void Initialize()
+        {
+            Id = Guid.Empty;
+            Quantity = 0;
+        }
+
+        public void GetValues(Guid id, int quantity)
+        {
+            Id = id;
             Quantity = quantity;
         }
     }

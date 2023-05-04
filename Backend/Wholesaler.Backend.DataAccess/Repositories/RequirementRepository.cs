@@ -1,4 +1,6 @@
-﻿using Wholesaler.Backend.Domain.Entities;
+﻿using Wholesaler.Backend.DataAccess.Factories;
+using Wholesaler.Backend.Domain.Entities;
+using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using RequirementDb = Wholesaler.Backend.DataAccess.Models.Requirement;
 
@@ -6,10 +8,12 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 {
     public class RequirementRepository : IRequirementRepository
     {
+        private readonly IRequirementDbFactory _factory;
         private readonly WholesalerContext _context;
 
-        public RequirementRepository(WholesalerContext context)
+        public RequirementRepository(IRequirementDbFactory factory, WholesalerContext context)
         {
+            _factory = factory;
             _context = context;
         }
 
@@ -24,6 +28,51 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             };
 
             _context.Add(requirementDb);
+            _context.SaveChanges();
+
+            return requirement;
+        }
+
+        public List<Requirement>? GetAll()
+        {
+            var requirementsDb = _context.Requirements
+                .ToList();
+
+            if (requirementsDb == null)
+                return new List<Requirement>();
+
+            var requirements = requirementsDb.Select(requirementDb =>
+            {
+                var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
+                return requirement;
+
+            }).ToList();
+
+            return requirements;
+        }
+
+        public Requirement? GetOrDefault(Guid id)
+        {
+            var requirementDb = _context.Requirements
+                .FirstOrDefault(r => r.Id == id);
+
+            if (requirementDb == null) 
+                return default;
+
+            var requirement = _factory.Create(requirementDb);
+
+            return requirement;
+        }
+
+        public Requirement Update(Requirement requirement)
+        {
+            var requirementDb = _context.Requirements
+                .FirstOrDefault(r => r.Id == requirement.Id);
+
+            if (requirementDb == null)
+                throw new EntityNotFoundException($"There is no requirement with id {requirement.Id}");
+
+            requirementDb.Quantity = requirement.Quantity;
             _context.SaveChanges();
 
             return requirement;

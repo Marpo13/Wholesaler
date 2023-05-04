@@ -12,6 +12,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
         private readonly FinishedTasksView _finishedTasks;
         private readonly AddRequirementView _addRequirement;
         private readonly MushroomsDepartureView _mushroomDeparture;
+        private readonly EditRequirementView _editRequirement;
 
         public ManagerView(
             ApplicationState state, 
@@ -20,7 +21,8 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
             StartedTasksView startedTasks, 
             FinishedTasksView finishedTasks,
             AddRequirementView addRequirement,
-            MushroomsDepartureView mushroomDeparture)
+            MushroomsDepartureView mushroomDeparture,
+            EditRequirementView editRequirement)
             : base(state)
         {
             _assignTask = assignTask;
@@ -29,6 +31,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
             _finishedTasks = finishedTasks;
             _addRequirement = addRequirement;
             _mushroomDeparture = mushroomDeparture;
+            _editRequirement = editRequirement;
         }
 
         protected override async Task RenderViewAsync()
@@ -71,6 +74,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
+                        await _editRequirement.RenderAsync();
                         Console.Clear();
                         continue;
 

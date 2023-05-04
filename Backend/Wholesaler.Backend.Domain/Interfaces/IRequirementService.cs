@@ -6,5 +6,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
     public interface IRequirementService
     {
         Requirement Add(CreateRequirementRequest request);
+        Requirement EditQuantity(Guid id, int quantity);
+        List<Requirement> GetAll();
     }
 }

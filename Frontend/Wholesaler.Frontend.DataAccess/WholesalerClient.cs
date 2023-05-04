@@ -7,12 +7,12 @@ using Wholesaler.Frontend.Domain.ValueObjects;
 
 namespace Wholesaler.Frontend.DataAccess
 {
-    public class WholesalerClient : RequestService, 
-        IUserService, 
-        IWorkDayRepository, 
-        IWorkTaskRepository, 
-        IUserRepository, 
-        IRequirementRepository, 
+    public class WholesalerClient : RequestService,
+        IUserService,
+        IWorkDayRepository,
+        IWorkTaskRepository,
+        IUserRepository,
+        IRequirementRepository,
         IClientRepository,
         IStorageRepository
     {
@@ -83,7 +83,7 @@ namespace Wholesaler.Frontend.DataAccess
                 Method = HttpMethod.Post,
                 Content = new AssignTaskRequestModel()
                 {
-                    UserId = userId,                    
+                    UserId = userId,
                 }
             };
 
@@ -106,7 +106,7 @@ namespace Wholesaler.Frontend.DataAccess
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
                 Path = $"{apiPath}/worktasks/assigned",
-                Method = HttpMethod.Get,                
+                Method = HttpMethod.Get,
             };
 
             return await SendAsync(request);
@@ -142,7 +142,7 @@ namespace Wholesaler.Frontend.DataAccess
                 Method = HttpMethod.Patch,
                 Content = new ChangeOwnerRequestModel()
                 {
-                    NewOwnerId = newOwnerId,                    
+                    NewOwnerId = newOwnerId,
                 }
             };
 
@@ -208,7 +208,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<AddRequirementRequestModel, RequirementDto>()
             {
-                Path = $"{apiPath}/requirement",
+                Path = $"{apiPath}/requirements",
                 Method = HttpMethod.Post,
                 Content = new AddRequirementRequestModel()
                 {
@@ -216,6 +216,31 @@ namespace Wholesaler.Frontend.DataAccess
                     Quantity = quantity,
                     StorageId = storageId
                 }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<RequirementDto>> EditQuantity(Guid id, int quantity)
+        {
+            var request = new Request<UdpateRequirementRequestModel, RequirementDto>()
+            {
+                Path = $"{apiPath}/requirements/{id}/actions/edit",
+                Method = HttpMethod.Patch,
+                Content = new UdpateRequirementRequestModel()
+                {
+                    Quantity = quantity
+                }
+            };
+
+            return await SendAsync(request);
+        }
+        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetAllRequirements()
+        {
+            var request = new Request<HttpRequestMessage, List<RequirementDto>>()
+            {
+                Path = $"{apiPath}/requirements",
+                Method = HttpMethod.Get
             };
 
             return await SendAsync(request);
@@ -286,7 +311,7 @@ namespace Wholesaler.Frontend.DataAccess
             };
 
             return await SendAsync(request);
-        }        
+        }
     }
 }
 
