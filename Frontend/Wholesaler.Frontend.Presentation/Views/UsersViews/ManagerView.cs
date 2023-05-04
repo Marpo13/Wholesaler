@@ -11,6 +11,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
         private readonly StartedTasksView _startedTasks;
         private readonly FinishedTasksView _finishedTasks;
         private readonly AddRequirementView _addRequirement;
+        private readonly MushroomsDepartureView _mushroomDeparture;
 
         public ManagerView(
             ApplicationState state, 
@@ -18,7 +19,8 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
             ChangeOwnerOfTaskView changeOwner, 
             StartedTasksView startedTasks, 
             FinishedTasksView finishedTasks,
-            AddRequirementView addRequirement)
+            AddRequirementView addRequirement,
+            MushroomsDepartureView mushroomDeparture)
             : base(state)
         {
             _assignTask = assignTask;
@@ -26,6 +28,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
             _startedTasks = startedTasks;
             _finishedTasks = finishedTasks;
             _addRequirement = addRequirement;
+            _mushroomDeparture = mushroomDeparture;
         }
 
         protected override async Task RenderViewAsync()
@@ -42,7 +45,8 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                     "\n[4] To edit customer requirement" +
                     "\n[5] To get information about ended tasks" +
                     "\n[6] To get information about started tasks" +
-                    "\n[7] To see progress of requirement" +
+                    "\n[7] To departure mushrooms" +
+                    "\n[8] To see progress of requirement" +
                     "\n[ESC] To quit");
 
                 var pressedKey = Console.ReadKey();
@@ -82,6 +86,11 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D7:
                     case ConsoleKey.NumPad7:
+                        await _mushroomDeparture.RenderAsync();
+                        continue;
+
+                    case ConsoleKey.D8:
+                    case ConsoleKey.NumPad8:
                         Console.Clear();
                         continue;
 

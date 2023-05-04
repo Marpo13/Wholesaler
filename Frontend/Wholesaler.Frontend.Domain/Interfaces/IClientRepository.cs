@@ -5,6 +5,6 @@ namespace Wholesaler.Frontend.Domain.Interfaces
 {
     public interface IClientRepository
     {
-        Task<ExecutionResultGeneric<List<ClientDto>>> GetAll();
+        Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients();
     }
 }

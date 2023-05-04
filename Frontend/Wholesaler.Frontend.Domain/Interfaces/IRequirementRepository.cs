@@ -5,6 +5,6 @@ namespace Wholesaler.Frontend.Domain.Interfaces
 {
     public interface IRequirementRepository
     {
-        Task<ExecutionResultGeneric<RequirementDto>> Add(int quantity, Guid clientId);
+        Task<ExecutionResultGeneric<RequirementDto>> Add(int quantity, Guid clientId, Guid storageId);
     }
 }

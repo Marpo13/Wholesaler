@@ -32,6 +32,26 @@ namespace Wholesaler.Backend.Api.Controllers
             return storageDto;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<StorageDto>>> GetAll()
+        {
+            var storages = _service.GetAll();
+            var storagesDto = storages.Select(storage =>
+            {
+                var storageDto = new StorageDto()
+                {
+                    Id = storage.Id,
+                    Name = storage.Name,
+                    State = storage.State,
+                };
+
+                return storageDto;
+
+            }).ToList();
+
+            return storagesDto;
+        }
+
         [HttpPatch]
         [Route("{id}/actions/delivery")]
         public async Task<ActionResult<StorageDto>> MushroomsDelivery(Guid id, [FromBody] UpdateStorageRequestModel updateStorageRequestModel)

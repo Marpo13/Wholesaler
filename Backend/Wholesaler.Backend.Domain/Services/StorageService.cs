@@ -26,12 +26,23 @@ namespace Wholesaler.Backend.Domain.Services
             return storage;
         }
 
+        public List<Storage>? GetAll()
+        {
+            var storages = _repository.GetAll();
+            if (storages == null)
+                throw new EntityNotFoundException("There are no storages in this base.");
+
+            return storages;
+        }
+
         public Storage Delivery(Guid storageId, int quantity)
         {
             var storage = _repository.GetOrDefault(storageId);
             if (storage == null)
                 throw new InvalidDataProvidedException($"There is no storage with id {storageId}");
 
+            if (quantity < 0)
+                throw new InvalidDataProvidedException($"Quantity must be more than 0.");
             var state = storage.State + quantity;
             storage.SetState(state);
             _repository.UpdateState(storage);
@@ -45,6 +56,8 @@ namespace Wholesaler.Backend.Domain.Services
             if (storage == null)
                 throw new InvalidDataProvidedException($"There is no storage with id {storageId}");
 
+            if (quantity < 0)
+                throw new InvalidDataProvidedException($"Quantity must be more than 0.");
             var state = storage.State - quantity;
 
             if(state < 0)

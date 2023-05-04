@@ -9,12 +9,17 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
     {
         private readonly IRequirementRepository _requirementRepository;
         private readonly IClientRepository _clientRepository;
+        private readonly IStorageRepository _storageRepository;
         private readonly AddRequirementState _state;
 
-        public AddRequirementView(IRequirementRepository requirementRepository, IClientRepository clientRepository, ApplicationState state) : base(state)
+        public AddRequirementView(IRequirementRepository requirementRepository, 
+            IClientRepository clientRepository,
+            IStorageRepository storageRepository,
+            ApplicationState state) : base(state)
         {
             _requirementRepository = requirementRepository;
             _clientRepository = clientRepository;
+            _storageRepository = storageRepository;
             _state = State.GetManagerViews().GetAddRequirement();
             _state.Initialize();
         }
@@ -27,7 +32,7 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
             {
                 Console.WriteLine("Quantity: ");
                 var quantityInput = Console.ReadLine();
-                var getClients = await _clientRepository.GetAll();
+                var getClients = await _clientRepository.GetAllClients();
 
                 if (!getClients.IsSuccess)
                 {
@@ -38,14 +43,27 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
                 var selectClient = new SelectClientComponent(getClients.Payload);
                 var client = selectClient.Render();
 
+                var getStorages = await _storageRepository.GetAllStorages();
+
+                if (!getStorages.IsSuccess)
+                {
+                    var errorPage = new ErrorPageComponent(getStorages.Message);
+                    errorPage.Render();
+                }
+
+                var selectStorage = new SelectStorageComponent(getStorages.Payload);
+                var storage = selectStorage.Render();
+
                 if (int.TryParse(quantityInput, out int quantity))
                 {
-                    var requirement = await _requirementRepository.Add(quantity, client.Id);
+                    var requirement = await _requirementRepository.Add(quantity, client.Id, storage.Id);
                     if (requirement.IsSuccess)
                     {
                         _state.GetValues(requirement.Payload.Quantity, requirement.Payload.ClientId);
                         Console.WriteLine("----------------------------");
-                        Console.WriteLine($"You add requirement to a client: {requirement.Payload.ClientId} quantity: {requirement.Payload.Quantity}");
+                        Console.WriteLine($"You add requirement to a client: {requirement.Payload.ClientId} " +
+                            $" in a storage: {requirement.Payload.StorageId}" +
+                            $" quantity: {requirement.Payload.Quantity}");
                         Console.ReadLine();
                         break;
                     }

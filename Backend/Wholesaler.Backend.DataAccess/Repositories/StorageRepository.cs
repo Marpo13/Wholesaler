@@ -45,6 +45,33 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return storage;
         }
 
+        public List<Storage> GetAll()
+        {
+            var storagesDb = _context.Storages
+                .ToList();
+
+            var storages = storagesDb.Select(storageDb =>
+            {
+                if (storageDb.Requirements == null)
+                {
+                    var emptyRequirements = new List<Requirement>();
+                    return new Storage(storageDb.Id, storageDb.State, storageDb.Name, emptyRequirements);
+                }
+
+                var requirements = storageDb.Requirements.Select(requirementDb =>
+                {
+                    var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
+                    return requirement;
+
+                }).ToList();
+
+                return new Storage(storageDb.Id, storageDb.State, storageDb.Name, requirements);
+
+            }).ToList();
+
+            return storages;
+        }
+
         public Storage UpdateState(Storage storage)
         {
             var storageDb = _context.Storages

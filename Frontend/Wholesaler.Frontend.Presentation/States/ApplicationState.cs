@@ -64,6 +64,7 @@ namespace Wholesaler.Frontend.Presentation.States
         public StartWorkTaskState? StartWorkTask { get; private set; }
         public StopWorkTaskState? StopWorkTask { get; private set; }
         public FinishWorkTaskState? FinishWorkTask { get; private set; }
+        public MushroomsDeliveryState? MushroomsDelivery { get; private set; }
 
         public void Initialize()
         {
@@ -72,6 +73,7 @@ namespace Wholesaler.Frontend.Presentation.States
             GetAssignedTasks = null;
             StopWorkTask = null;
             FinishWorkTask = null;
+            MushroomsDelivery = null;
         }
 
         public StartWorkdayState GetStartWorkday()
@@ -138,6 +140,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return FinishWorkTask;
+        }
+
+        public MushroomsDeliveryState GetMushroomsDelivery()
+        {
+            if(MushroomsDelivery == null)
+            {
+                MushroomsDelivery = new MushroomsDeliveryState();
+                MushroomsDelivery.Initialize();
+            }
+
+            return MushroomsDelivery;
         }
     }
 
@@ -247,6 +260,24 @@ namespace Wholesaler.Frontend.Presentation.States
         }
     }
 
+    internal class MushroomsDeliveryState : IState
+    {
+        public Guid StorageId { get; private set; }
+        public int Quantity { get; private set; }
+
+        public void Initialize()
+        {
+            StorageId = Guid.Empty;
+            Quantity = 0;
+        }
+
+        public void GetValues(Guid storageId, int quantity)
+        {
+            StorageId = storageId;
+            Quantity = quantity;
+        }
+    }
+
     internal class ManagerViews : IState
     {
         public AssignTaskState? AssignTask { get; private set; }
@@ -254,12 +285,14 @@ namespace Wholesaler.Frontend.Presentation.States
         public StartedWorkTasksState StartedWorkTasks { get; private set; }
         public FinishedWorkTasksState FinishedWorkTasks { get; private set; }
         public AddRequirementState? AddRequirement { get; private set; }
+        public MushroomsDepartureState? MushroomsDeparture { get; private set; }
 
         public void Initialize()
         {
             AssignTask = null;
             ChangeOwnerOfTask = null;
             AddRequirement = null;
+            MushroomsDeparture = null;
         }
 
         public AssignTaskState GetAssignTask()
@@ -315,6 +348,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return AddRequirement;
+        }
+
+        public MushroomsDepartureState GetMushroomsDeparture()
+        {
+            if(MushroomsDeparture == null)
+            {
+                MushroomsDeparture = new MushroomsDepartureState();
+                MushroomsDeparture.Initialize();
+            }
+
+            return MushroomsDeparture;
         }
     }
 
@@ -421,6 +465,24 @@ namespace Wholesaler.Frontend.Presentation.States
         {
             Quantity = quantity;
             ClientId = clientId;
+        }
+    }
+
+    internal class MushroomsDepartureState : IState
+    {
+        public Guid StorageId { get; private set; }
+        public int Quantity { get; private set; }
+
+        public void Initialize()
+        {
+            StorageId = Guid.Empty;
+            Quantity = 0;
+        }
+
+        public void GetValues(Guid storageId, int quantity)
+        {
+            StorageId = storageId;
+            Quantity = quantity;
         }
     }
 }
