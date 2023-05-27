@@ -64,7 +64,7 @@ namespace Wholesaler.Frontend.Presentation.States
         public StartWorkTaskState? StartWorkTask { get; private set; }
         public StopWorkTaskState? StopWorkTask { get; private set; }
         public FinishWorkTaskState? FinishWorkTask { get; private set; }
-        public MushroomsDeliveryState? MushroomsDelivery { get; private set; }
+        public MushroomsDeliverState? MushroomsDelivery { get; private set; }
 
         public void Initialize()
         {
@@ -142,11 +142,11 @@ namespace Wholesaler.Frontend.Presentation.States
             return FinishWorkTask;
         }
 
-        public MushroomsDeliveryState GetMushroomsDelivery()
+        public MushroomsDeliverState GetMushroomsDelivery()
         {
             if(MushroomsDelivery == null)
             {
-                MushroomsDelivery = new MushroomsDeliveryState();
+                MushroomsDelivery = new MushroomsDeliverState();
                 MushroomsDelivery.Initialize();
             }
 
@@ -260,7 +260,7 @@ namespace Wholesaler.Frontend.Presentation.States
         }
     }
 
-    internal class MushroomsDeliveryState : IState
+    internal class MushroomsDeliverState : IState
     {
         public Guid StorageId { get; private set; }
         public int Quantity { get; private set; }
@@ -285,7 +285,7 @@ namespace Wholesaler.Frontend.Presentation.States
         public StartedWorkTasksState StartedWorkTasks { get; private set; }
         public FinishedWorkTasksState FinishedWorkTasks { get; private set; }
         public AddRequirementState? AddRequirement { get; private set; }
-        public MushroomsDepartureState? MushroomsDeparture { get; private set; }
+        public MushroomsDepartState? MushroomsDepart { get; private set; }
         public EditRequirementState? EditRequirement { get; private set; }
 
         public void Initialize()
@@ -293,7 +293,7 @@ namespace Wholesaler.Frontend.Presentation.States
             AssignTask = null;
             ChangeOwnerOfTask = null;
             AddRequirement = null;
-            MushroomsDeparture = null;
+            MushroomsDepart = null;
             EditRequirement = null;
         }
 
@@ -352,15 +352,15 @@ namespace Wholesaler.Frontend.Presentation.States
             return AddRequirement;
         }
 
-        public MushroomsDepartureState GetMushroomsDeparture()
+        public MushroomsDepartState GetMushroomsDeparture()
         {
-            if(MushroomsDeparture == null)
+            if(MushroomsDepart == null)
             {
-                MushroomsDeparture = new MushroomsDepartureState();
-                MushroomsDeparture.Initialize();
+                MushroomsDepart = new MushroomsDepartState();
+                MushroomsDepart.Initialize();
             }
 
-            return MushroomsDeparture;
+            return MushroomsDepart;
         }
 
         public EditRequirementState GetEditRequirementState()
@@ -481,19 +481,22 @@ namespace Wholesaler.Frontend.Presentation.States
         }
     }
 
-    internal class MushroomsDepartureState : IState
+    internal class MushroomsDepartState : IState
     {
+        public Guid RequirementId { get; private set; }
         public Guid StorageId { get; private set; }
         public int Quantity { get; private set; }
 
         public void Initialize()
         {
+            RequirementId = Guid.Empty;
             StorageId = Guid.Empty;
             Quantity = 0;
         }
 
-        public void GetValues(Guid storageId, int quantity)
+        public void GetValues(Guid requirementId, int quantity, Guid storageId)
         {
+            RequirementId = requirementId;
             StorageId = storageId;
             Quantity = quantity;
         }

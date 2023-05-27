@@ -7,6 +7,6 @@ namespace Wholesaler.Backend.Domain.Interfaces
     {
         Requirement Add(CreateRequirementRequest request);
         Requirement EditQuantity(Guid id, int quantity);
-        List<Requirement> GetAll();
+        Requirement Complete(Guid id);
     }
 }

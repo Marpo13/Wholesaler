@@ -246,7 +246,18 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients()
+        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetRequirements(Guid storageId)
+        {
+            var request = new Request<HttpRequestMessage, List<RequirementDto>>()
+            {
+                Path = $"{apiPath}/requirements/{storageId}",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
+
+            public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients()
         {
             var request = new Request<HttpRequestMessage, List<ClientDto>>()
             {
@@ -283,11 +294,11 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<StorageDto>> Delivery(Guid id, int quantity)
+        public async Task<ExecutionResultGeneric<StorageDto>> Deliver(Guid id, int quantity)
         {
             var request = new Request<UpdateStorageRequestModel, StorageDto>()
             {
-                Path = $"{apiPath}/storages/{id}/actions/delivery",
+                Path = $"{apiPath}/storages/{id}/actions/deliver",
                 Method = HttpMethod.Patch,
                 Content = new UpdateStorageRequestModel()
                 {
@@ -298,16 +309,12 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<StorageDto>> Departure(Guid id, int quantity)
+        public async Task<ExecutionResultGeneric<RequirementDto>> CompleteRequirement(Guid id)
         {
-            var request = new Request<UpdateStorageRequestModel, StorageDto>()
+            var request = new Request<Guid, RequirementDto>()
             {
-                Path = $"{apiPath}/storages/{id}/actions/departure",
-                Method = HttpMethod.Patch,
-                Content = new UpdateStorageRequestModel()
-                {
-                    Quantity = quantity
-                }
+                Path = $"{apiPath}/requirements/{id}/actions/complete",
+                Method = HttpMethod.Patch
             };
 
             return await SendAsync(request);

@@ -28,26 +28,8 @@ namespace Wholesaler.Backend.Domain.Services
 
         public void Delete(Guid id)
         {
-            var client = _clientRepository.GetOrDefault(id);
+            var client = _clientRepository.Get(id);
             _clientRepository.Delete(client);
-        }
-
-        public Client Get(Guid id)
-        {
-            var client = _clientRepository.GetOrDefault(id);
-            if (client == null)
-                throw new InvalidDataProvidedException($"There is no client with id {id}");
-
-            return client;
-        }
-
-        public List<Client>? GetAll()
-        {
-            var clients = _clientRepository.GetAll();
-            if (clients == null)
-                throw new EntityNotFoundException("There are no clients in this base.");
-
-            return clients;
         }
     }
 }

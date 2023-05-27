@@ -2,30 +2,33 @@
 using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views.Components;
 using Wholesaler.Frontend.Presentation.Views.Generic;
+using Wholesaler.Frontend.Presentation.Views.ManagerViews.Components;
 
-namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
+namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
-    internal class MushroomsDepartureView : View
+    internal class MushroomsDeliverView : View
     {
         private readonly IStorageRepository _storageRepository;
-        private readonly MushroomsDepartureState _state;
+        private readonly IRequirementRepository _requirementRepository;
+        private readonly MushroomsDeliverState _state;
 
-        public MushroomsDepartureView(IStorageRepository storageRepository, ApplicationState state) : base(state)
+        public MushroomsDeliverView(IStorageRepository storageRepository, IRequirementRepository requirementRepository, ApplicationState state) : base(state)
         {
             _storageRepository = storageRepository;
-            _state = State.GetManagerViews().GetMushroomsDeparture();
+            _requirementRepository = requirementRepository;
+            _state = State.GetEmployeeViews().GetMushroomsDelivery();
             _state.Initialize();
         }
 
         protected async override Task RenderViewAsync()
         {
             var role = State.GetLoggedInUser().Role;
-            if (role != "Manager")
-                throw new InvalidOperationException($"You can not deliver mushrooms with role {role}. Valid role is Manager.");
+            if (role != "Employee")
+                throw new InvalidOperationException($"You can not deliver mushrooms with role {role}. Valid role is Employee.");
 
-            bool departureSuccess = false;
+            bool deliverySuccess = false;
 
-            while (departureSuccess is false)
+            while (deliverySuccess is false)
             {
                 var getStorages = await _storageRepository.GetAllStorages();
 
@@ -38,16 +41,16 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
                 var selectStorage = new SelectStorageComponent(getStorages.Payload);
                 var storage = selectStorage.Render();
 
-                Console.WriteLine("Enter quantity of mushrooms you want to departure: ");
+                Console.WriteLine("Enter quantity of mushrooms you want to deliver: ");
 
                 if (int.TryParse(Console.ReadLine(), out int quantity))
                 {
-                    var departure = await _storageRepository.Departure(storage.Id, quantity);
-                    if (departure.IsSuccess)
+                    var delivery = await _storageRepository.Deliver(storage.Id, quantity);
+                    if (delivery.IsSuccess)
                     {
-                        _state.GetValues(departure.Payload.Id, quantity);
+                        _state.GetValues(delivery.Payload.Id, quantity);
                         Console.WriteLine("----------------------------");
-                        Console.WriteLine($"You delivered {quantity} mushrooms to a storage: {departure.Payload.Id}");
+                        Console.WriteLine($"You delivered {quantity} mushrooms to a storage: {delivery.Payload.Id}");
                         Console.ReadLine();
                         break;
                     }

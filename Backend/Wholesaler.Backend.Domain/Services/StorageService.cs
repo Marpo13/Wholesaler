@@ -9,62 +9,53 @@ namespace Wholesaler.Backend.Domain.Services
 {
     public class StorageService : IStorageService
     {
-        private readonly IStorageRepository _repository;
+        private readonly IStorageRepository _storageRepository;
         private readonly IStorageFactory _factory;
+        private readonly IRequirementRepository _requirementRepository;
 
-        public StorageService(IStorageRepository repository, IStorageFactory factory)
+        public StorageService(IStorageRepository storageRepository, IStorageFactory factory, IRequirementRepository requirementRepository)
         {
-            _repository = repository;
+            _storageRepository = storageRepository;
             _factory = factory;
+            _requirementRepository = requirementRepository;
         }
 
         public Storage Add(CreateStorageRequest request)
         {
             var storage = _factory.Create(request);
-            _repository.Add(storage);
+            _storageRepository.Add(storage);
 
             return storage;
         }
 
-        public List<Storage>? GetAll()
+        public Storage Deliver(Guid storageId, int quantity)
         {
-            var storages = _repository.GetAll();
-            if (storages == null)
-                throw new EntityNotFoundException("There are no storages in this base.");
-
-            return storages;
-        }
-
-        public Storage Delivery(Guid storageId, int quantity)
-        {
-            var storage = _repository.GetOrDefault(storageId);
+            var storage = _storageRepository.GetOrDefault(storageId);
             if (storage == null)
                 throw new InvalidDataProvidedException($"There is no storage with id {storageId}");
 
-            if (quantity < 0)
-                throw new InvalidDataProvidedException($"Quantity must be more than 0.");
             var state = storage.State + quantity;
             storage.SetState(state);
-            _repository.UpdateState(storage);
+            _storageRepository.UpdateState(storage);
 
             return storage;
         }
 
-        public Storage Departure(Guid storageId, int quantity)
+        public Storage Depart(Guid storageId, Requirement requirement)
         {
-            var storage = _repository.GetOrDefault(storageId);
+            var storage = _storageRepository.GetOrDefault(storageId);
             if (storage == null)
                 throw new InvalidDataProvidedException($"There is no storage with id {storageId}");
 
-            if (quantity < 0)
-                throw new InvalidDataProvidedException($"Quantity must be more than 0.");
+            var quantity = requirement.Quantity;
+
             var state = storage.State - quantity;
 
             if(state < 0)
                 throw new InvalidDataProvidedException($"There are not enough mushrooms. You can only take {storage.State}");
 
             storage.SetState(state);
-            _repository.UpdateState(storage);
+            _storageRepository.UpdateState(storage);
 
             return storage;
         }

@@ -6,13 +6,17 @@
         public int Quantity { get; private set; }
         public Guid ClientId { get; }
         public Guid StorageId { get; }
+        public Status Status { get; private set; }
+        public DateTime? DeliveryDate { get; private set; }
 
-        public Requirement(Guid id, int quantity, Guid clientId, Guid storageId)
+        public Requirement(Guid id, int quantity, Guid clientId, Guid storageId, Status status, DateTime? deliveryDate)
         {
             Id = id;
             Quantity = quantity;
             ClientId = clientId;
             StorageId = storageId;
+            Status = status;
+            DeliveryDate = deliveryDate;
         }
 
         public Requirement(int quantity, Guid clientId, Guid storageId)
@@ -21,11 +25,23 @@
             Quantity = quantity;
             ClientId = clientId;
             StorageId = storageId;
+            Status = Status.Processed;
+            DeliveryDate = null;
         }
 
         public void UpdateQuantity(int quantity)
         {
             Quantity = quantity;
+        }
+
+        public void Complete()
+        {
+            Status = Status.Completed;
+        }
+
+        public void SetDate(DateTime time)
+        {
+            DeliveryDate = time;
         }
     }
 }

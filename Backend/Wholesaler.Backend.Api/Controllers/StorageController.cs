@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Api.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
+using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Requests.Storage;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
@@ -14,11 +15,13 @@ namespace Wholesaler.Backend.Api.Controllers
     {
         private readonly IStorageService _service;
         private readonly IStorageDtoFactory _storageDtoFactory;
+        private readonly IStorageRepository _repository;
 
-        public StorageController(IStorageService serivce, IStorageDtoFactory storageDtoFactory)
+        public StorageController(IStorageService serivce, IStorageDtoFactory storageDtoFactory, IStorageRepository repository)
         {
             _service = serivce;
             _storageDtoFactory = storageDtoFactory;
+            _repository = repository;
         }
 
         [HttpPost]
@@ -35,17 +38,10 @@ namespace Wholesaler.Backend.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<StorageDto>>> GetAll()
         {
-            var storages = _service.GetAll();
+            var storages = _repository.GetAll();
             var storagesDto = storages.Select(storage =>
-            {
-                var storageDto = new StorageDto()
-                {
-                    Id = storage.Id,
-                    Name = storage.Name,
-                    State = storage.State,
-                };
-
-                return storageDto;
+            {                
+                return _storageDtoFactory.Create(storage);
 
             }).ToList();
 
@@ -53,20 +49,10 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPatch]
-        [Route("{id}/actions/delivery")]
+        [Route("{id}/actions/deliver")]
         public async Task<ActionResult<StorageDto>> MushroomsDelivery(Guid id, [FromBody] UpdateStorageRequestModel updateStorageRequestModel)
         {
-            var storageDelivery = _service.Delivery(id, updateStorageRequestModel.Quantity);
-            var storageDto = _storageDtoFactory.Create(storageDelivery);
-
-            return storageDto;
-        }
-
-        [HttpPatch]
-        [Route("{id}/actions/departure")]
-        public async Task<ActionResult<StorageDto>> MushroomsDeparture(Guid id, [FromBody] UpdateStorageRequestModel updateStorageRequestModel)
-        {
-            var storageDelivery = _service.Departure(id, updateStorageRequestModel.Quantity);
+            var storageDelivery = _service.Deliver(id, updateStorageRequestModel.Quantity);
             var storageDto = _storageDtoFactory.Create(storageDelivery);
 
             return storageDto;

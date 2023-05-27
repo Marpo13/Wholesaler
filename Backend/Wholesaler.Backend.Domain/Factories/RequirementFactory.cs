@@ -9,14 +9,8 @@ namespace Wholesaler.Backend.Domain.Factories
     {
         public Requirement Create(CreateRequirementRequest request)
         {
-            if(request.Quantity == 0)
-                throw new InvalidDataProvidedException("You need to provide quantity more than 0.");
-            if(request.Quantity < 0)
-                throw new InvalidDataProvidedException("You need to provide quantity more than 0.");
-            if(request.ClientId == Guid.Empty)
-                throw new InvalidDataProvidedException("You need to provide client id.");
-            if (request.StorageId == Guid.Empty)
-                throw new InvalidDataProvidedException("You need to provide storage id.");
+            if(request.Quantity <= 0)
+                throw new InvalidDataProvidedException("You need to provide quantity more than 0.");            
 
             var requirement = new Requirement(
                 request.Quantity, 

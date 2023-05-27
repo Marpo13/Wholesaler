@@ -14,6 +14,8 @@ namespace Wholesaler.Backend.Api.Factories
                 Quantity = requirement.Quantity,
                 ClientId = requirement.ClientId,
                 StorageId = requirement.StorageId,
+                Status = requirement.Status.ToString(),
+                DeliveryDate = requirement.DeliveryDate,
             };
                 
         }

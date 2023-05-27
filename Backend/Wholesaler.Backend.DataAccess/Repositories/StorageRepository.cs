@@ -50,22 +50,12 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             var storagesDb = _context.Storages
                 .ToList();
 
+            if (storagesDb == null)
+                return new List<Storage>();
+
             var storages = storagesDb.Select(storageDb =>
             {
-                if (storageDb.Requirements == null)
-                {
-                    var emptyRequirements = new List<Requirement>();
-                    return new Storage(storageDb.Id, storageDb.State, storageDb.Name, emptyRequirements);
-                }
-
-                var requirements = storageDb.Requirements.Select(requirementDb =>
-                {
-                    var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
-                    return requirement;
-
-                }).ToList();
-
-                return new Storage(storageDb.Id, storageDb.State, storageDb.Name, requirements);
+                return _storageDbFactory.Create(storageDb);
 
             }).ToList();
 
@@ -82,6 +72,19 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             storageDb.State = storage.State;
             _context.SaveChanges();
+
+            return storage;
+        }
+
+        public Storage Get(Guid storageId)
+        {
+            var storageDb = _context.Storages
+                .FirstOrDefault(s => s.Id == storageId);
+
+            if (storageDb == null)
+                throw new InvalidDataProvidedException($"There is no storage with id {storageId}.");
+
+            var storage = _storageDbFactory.Create(storageDb);
 
             return storage;
         }

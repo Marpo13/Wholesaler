@@ -10,13 +10,6 @@ namespace Wholesaler.Backend.DataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "StorageId",
-                table: "Requirements",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
-
             migrationBuilder.CreateTable(
                 name: "Storages",
                 columns: table => new
@@ -32,6 +25,13 @@ namespace Wholesaler.Backend.DataAccess.Migrations
 
             var sql = "INSERT INTO Storages (Id, Name, State) VALUES ('00000000-0000-0000-0000-000000000000', 'default', 0)";
             migrationBuilder.Sql(sql);
+
+            migrationBuilder.AddColumn<Guid>(
+                name: "StorageId",
+                table: "Requirements",
+                type: "uniqueidentifier",
+                nullable: false,
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requirements_StorageId",

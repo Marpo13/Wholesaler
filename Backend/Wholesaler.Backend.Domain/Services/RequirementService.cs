@@ -2,6 +2,7 @@
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
+using Wholesaler.Backend.Domain.Providers.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Requests.Requirements;
 
@@ -11,11 +12,16 @@ namespace Wholesaler.Backend.Domain.Services
     {
         private readonly IRequirementFactory _factory;
         private readonly IRequirementRepository _repository;
+        private readonly IStorageService _storageService;
+        private readonly ITimeProvider _timeProvider;
 
-        public RequirementService(IRequirementFactory requirementFactory, IRequirementRepository requirementRepository)
+        public RequirementService(IRequirementFactory requirementFactory, IRequirementRepository requirementRepository, IStorageService storageService,
+            ITimeProvider timeProvider)
         {
             _factory = requirementFactory;
             _repository = requirementRepository;
+            _storageService = storageService;
+            _timeProvider = timeProvider;
         }
 
         public Requirement Add(CreateRequirementRequest request)
@@ -41,13 +47,23 @@ namespace Wholesaler.Backend.Domain.Services
             return requirement;
         }
 
-        public List<Requirement> GetAll()
+        public Requirement Complete(Guid id)
         {
-            var requirements = _repository.GetAll();
-            if (requirements == null)
-                throw new EntityNotFoundException("There are no requirements in this base.");
+            var time = _timeProvider.Now();
 
-            return requirements;
+            var requirement = _repository.GetOrDefault(id);
+            if (requirement == null)
+                throw new EntityNotFoundException($"There is no requirement with id {id}.");
+            if (requirement.Status == Status.Completed)
+                throw new InvalidDataProvidedException($"Requirement with id {id} is completed.");
+
+            requirement.Complete();
+            requirement.SetDate(time);
+
+            _repository.Complete(requirement);
+            _storageService.Depart(requirement.StorageId, requirement);
+
+            return requirement;
         }
     }
 }

@@ -50,6 +50,7 @@ builder.Services.AddTransient<IStorageDbFactory, StorageDbFactory>();
 builder.Services.AddTransient<IStorageRepository, StorageRepository>();
 builder.Services.AddTransient<IStorageFactory, StorageFactory>();
 builder.Services.AddTransient<IStorageDtoFactory, StorageDtoFactory>();
+builder.Services.AddTransient<IClientDbFactory, ClientDbFactory>();
 builder.Services.AddTransient<IStorageService, StorageService>();
 builder.Services.AddTransient<IRequirementFactory, RequirementFactory>();
 builder.Services.AddTransient<IRequirementDtoFactory, RequirementDtoFactory>();

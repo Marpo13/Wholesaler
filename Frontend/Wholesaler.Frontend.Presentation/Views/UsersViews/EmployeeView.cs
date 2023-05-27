@@ -10,7 +10,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
         private readonly FinishWorkdayView _finishWorkday;
         private readonly StartWorkTaskView _startWorkTask;
         private readonly WorkTaskMenuView _workTaskMenu;
-        private readonly MushroomsDeliveryView _mushroomsDelivery;
+        private readonly MushroomsDeliverView _mushroomsDeliver;
 
         public EmployeeView(
             StartWorkdayView startWorkday,
@@ -18,14 +18,14 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
             FinishWorkdayView finishWorkday,
             StartWorkTaskView startworkTask,
             WorkTaskMenuView workTaskMenu,
-            MushroomsDeliveryView mushroomsDelivery)
+            MushroomsDeliverView mushroomsDeliver)
             : base(state)
         {
             _startWorkday = startWorkday;
             _finishWorkday = finishWorkday; 
             _startWorkTask = startworkTask;
             _workTaskMenu = workTaskMenu;
-            _mushroomsDelivery = mushroomsDelivery;
+            _mushroomsDeliver = mushroomsDeliver;
         }
 
         protected override async Task RenderViewAsync()
@@ -37,7 +37,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                 Console.WriteLine("---Welcome in Wholesaler---");
                 Console.WriteLine
                     ("\n[1] To see worktask menu" +
-                    "\n[2] To register mushrooms delivery" +
+                    "\n[2] To register mushrooms deliver" +
                     "\n[3] To start work" +
                     "\n[4] To finish work" +
                     "\n[ESC] To quit");
@@ -53,7 +53,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        await _mushroomsDelivery.RenderAsync();
+                        await _mushroomsDeliver.RenderAsync();
                         continue;
 
                     case ConsoleKey.D3:

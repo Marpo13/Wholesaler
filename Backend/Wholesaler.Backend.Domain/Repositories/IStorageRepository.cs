@@ -6,7 +6,8 @@ namespace Wholesaler.Backend.Domain.Repositories
     {
         Storage Add(Storage storage);
         Storage? GetOrDefault(Guid storageId);
-        List<Storage>? GetAll();
+        Storage Get(Guid storageId);
+        List<Storage> GetAll();
         Storage UpdateState(Storage storage);
     }
 }

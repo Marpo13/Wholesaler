@@ -9,13 +9,9 @@ namespace Wholesaler.Backend.Domain.Factories
     {
         public Client Create(CreateClientRequest request)
         {
-            if(request.Name == null)
+            if(request.Name == null || request.Name == string.Empty)
                 throw new InvalidDataProvidedException("You need to provide name.");
-            if(request.Surname == null)
-                throw new InvalidDataProvidedException("You need to provide surname.");
-            if(request.Name == string.Empty)
-                throw new InvalidDataProvidedException("You need to provide name.");
-            if (request.Surname == string.Empty)
+            if(request.Surname == null || request.Surname == string.Empty)
                 throw new InvalidDataProvidedException("You need to provide surname.");
 
             var client = new Client(

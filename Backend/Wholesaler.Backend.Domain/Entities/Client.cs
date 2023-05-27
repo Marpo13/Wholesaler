@@ -5,22 +5,19 @@
         public Guid Id { get; }
         public string Name { get; }
         public string Surname { get; }
-        public IReadOnlyList<Requirement>? Requirements { get; }
 
-        public Client(Guid id, string name, string surname, IReadOnlyList<Requirement> requirements)
+        public Client(Guid id, string name, string surname)
         {
             Id = id;
             Name = name;
             Surname = surname;
-            Requirements = requirements;
         }
 
         public Client(string name, string surname)
         {
             Id = Guid.NewGuid();
             Name = name;
-            Surname = surname;
-            Requirements = new List<Requirement>();            
+            Surname = surname;       
         }
     }
 }

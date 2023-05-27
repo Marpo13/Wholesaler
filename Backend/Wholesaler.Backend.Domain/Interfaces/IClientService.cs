@@ -8,9 +8,5 @@ namespace Wholesaler.Backend.Domain.Interfaces
         Client Add(CreateClientRequest request);
 
         void Delete(Guid id);
-
-        Client Get(Guid id);
-
-        List<Client>? GetAll();
     }
 }

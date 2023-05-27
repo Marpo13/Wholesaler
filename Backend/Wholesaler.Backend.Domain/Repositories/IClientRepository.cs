@@ -6,9 +6,9 @@ namespace Wholesaler.Backend.Domain.Repositories
     {
         Client Add(Client client);
 
-        Client? GetOrDefault(Guid id);
+        Client Get(Guid id);
 
-        List<Client>? GetAll();
+        List<Client> GetAll();
 
         void Delete(Client client);
     }

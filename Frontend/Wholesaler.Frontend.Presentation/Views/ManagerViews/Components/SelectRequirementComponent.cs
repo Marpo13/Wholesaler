@@ -24,8 +24,9 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
 
                 foreach (var requirement in _requirements)
                     Console.WriteLine($"{_requirements.IndexOf(requirement) + 1}: {requirement.Id}");
+
                 Console.WriteLine("----------------------------");
-                Console.WriteLine("Enter an id of a requirement you want to choose: ");
+                Console.WriteLine("Enter an index of a requirement you want to choose: ");
                 if (!int.TryParse(Console.ReadLine(), out int requirementNumber))
                 {
                     Console.WriteLine("You entered an invalid value.");

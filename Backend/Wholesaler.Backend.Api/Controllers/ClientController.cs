@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Api.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
+using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Requests.People;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
@@ -13,11 +14,13 @@ namespace Wholesaler.Backend.Api.Controllers
     {
         private readonly IClientService _clientService;
         private readonly IClientFactory _clientFactory;
+        private readonly IClientRepository _clientRepository;
 
-        public ClientController(IClientService clientService, IClientFactory clientFactory)
+        public ClientController(IClientService clientService, IClientFactory clientFactory, IClientRepository clientRepository)
         {
             _clientService = clientService;
             _clientFactory = clientFactory;
+            _clientRepository = clientRepository;
         }
 
         [HttpPost]
@@ -44,18 +47,11 @@ namespace Wholesaler.Backend.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ClientDto>>> GetAll()
         {
-            var clients = _clientService.GetAll();
+            var clients = _clientRepository.GetAll();
 
             var clientsDto = clients.Select(client =>
-            {
-                var clientDto = new ClientDto()
-                {
-                    Id = client.Id,
-                    Name = client.Name,
-                    Surname = client.Surname,
-                };
-
-                return clientDto;
+            {               
+                return _clientFactory.Create(client);
             });
 
             return clientsDto.ToList();
@@ -65,7 +61,7 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("{id}")]
         public async Task<ActionResult<ClientDto>> Get(Guid id)
         {
-            var client = _clientService.Get(id);
+            var client = _clientRepository.Get(id);
 
             return _clientFactory.Create(client);
         }

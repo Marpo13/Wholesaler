@@ -1,4 +1,5 @@
-﻿using Wholesaler.Backend.Domain.Entities;
+﻿using Wholesaler.Backend.DataAccess.Factories;
+using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using ClientDb = Wholesaler.Backend.DataAccess.Models.Client;
@@ -8,10 +9,12 @@ namespace Wholesaler.Backend.DataAccess.Repositories
     public class ClientRepository : IClientRepository
     {
         private readonly WholesalerContext _context;
+        private readonly IClientDbFactory _clientFactory;
 
-        public ClientRepository(WholesalerContext context)
+        public ClientRepository(IClientDbFactory clientFactory, WholesalerContext context)
         {
             _context = context;
+            _clientFactory = clientFactory;
         }
 
         public Client Add(Client client)
@@ -41,58 +44,32 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             _context.SaveChanges();
         }
 
-        public List<Client>? GetAll()
+        public List<Client> GetAll()
         {
             var clientsDb = _context.Clients
                 .ToList();
 
+            if (clientsDb == null)
+                return new List<Client>();
+
             var clients = clientsDb.Select(clientDb =>
             {
-                if (clientDb.Requirements == null)
-                {
-                    var emptyRequirements = new List<Requirement>();
-                    return new Client(clientDb.Id, clientDb.Name, clientDb.Surname, emptyRequirements);
-                }
-
-                var requirements = clientDb.Requirements.Select(requirementDb =>
-                {
-                    var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
-
-                    return requirement;
-
-                }).ToList();
-
-                return new Client(clientDb.Id, clientDb.Name, clientDb.Surname, requirements);
+                return _clientFactory.Create(clientDb);
 
             });
 
             return clients.ToList();
         }
 
-        public Client? GetOrDefault(Guid id)
+        public Client Get(Guid id)
         {
             var clientDb = _context.Clients
                 .FirstOrDefault(c => c.Id == id);
 
             if (clientDb == null)
-                return default;
-
-            if (clientDb.Requirements == null)
-            {
-                var emptyRequirements = new List<Requirement>();
-
-                return new Client(clientDb.Id,clientDb.Name,clientDb.Surname, emptyRequirements);
-            }
-
-            var requirements = clientDb.Requirements.Select(requirementDb =>
-            {
-                var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
-
-                return requirement;
-
-            }).ToList();
-
-            return new Client(clientDb.Id, clientDb.Name, clientDb.Surname, requirements);
+                throw new InvalidDataProvidedException($"There is no client with id {id}");
+            
+            return _clientFactory.Create(clientDb);
         }
     }
 }

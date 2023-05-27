@@ -11,7 +11,9 @@ namespace Wholesaler.Backend.DataAccess.Factories
                 requirement.Id,
                 requirement.Quantity,
                 requirement.ClientId,
-                requirement.StorageId);
+                requirement.StorageId,
+                requirement.Status,
+                requirement.DeliveryDate);
         }
     }
 }

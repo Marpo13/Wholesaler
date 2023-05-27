@@ -5,6 +5,6 @@
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public ICollection<Requirement>? Requirements { get; set; }
+        public virtual ICollection<Requirement>? Requirements { get; set; }
     }
 }

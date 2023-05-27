@@ -33,7 +33,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return requirement;
         }
 
-        public List<Requirement>? GetAll()
+        public List<Requirement> GetAll()
         {
             var requirementsDb = _context.Requirements
                 .ToList();
@@ -43,8 +43,25 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             var requirements = requirementsDb.Select(requirementDb =>
             {
-                var requirement = new Requirement(requirementDb.Id, requirementDb.Quantity, requirementDb.ClientId, requirementDb.StorageId);
-                return requirement;
+                return _factory.Create(requirementDb);
+
+            }).ToList();
+
+            return requirements;
+        }
+
+        public List<Requirement> Get(Guid storageId)
+        {
+            var requirementsDb = _context.Requirements
+                .Where(r => r.StorageId == storageId)
+                .ToList();
+
+            if (requirementsDb == null)
+                return new List<Requirement>();
+
+            var requirements = requirementsDb.Select(requirementDb =>
+            {
+                return _factory.Create(requirementDb);
 
             }).ToList();
 
@@ -73,6 +90,21 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 throw new EntityNotFoundException($"There is no requirement with id {requirement.Id}");
 
             requirementDb.Quantity = requirement.Quantity;
+            _context.SaveChanges();
+
+            return requirement;
+        }
+
+        public Requirement Complete(Requirement requirement)
+        {
+            var requirementDb = _context.Requirements
+                .FirstOrDefault(r => r.Id == requirement.Id);
+
+            if (requirementDb == null)
+                throw new EntityNotFoundException($"There is no requirement with id {requirement.Id}");
+
+            requirementDb.Status = requirement.Status;
+            requirementDb.DeliveryDate = requirement.DeliveryDate;
             _context.SaveChanges();
 
             return requirement;
