@@ -2,7 +2,7 @@
 {
     public enum Status
     {
-        Processed = 0,
+        Ongoing = 0,
         Completed = 1
     }
 }

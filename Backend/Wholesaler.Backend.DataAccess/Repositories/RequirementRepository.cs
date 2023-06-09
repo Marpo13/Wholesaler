@@ -90,19 +90,8 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 throw new EntityNotFoundException($"There is no requirement with id {requirement.Id}");
 
             requirementDb.Quantity = requirement.Quantity;
-            _context.SaveChanges();
-
-            return requirement;
-        }
-
-        public Requirement Complete(Requirement requirement)
-        {
-            var requirementDb = _context.Requirements
-                .FirstOrDefault(r => r.Id == requirement.Id);
-
-            if (requirementDb == null)
-                throw new EntityNotFoundException($"There is no requirement with id {requirement.Id}");
-
+            requirementDb.ClientId =requirement.ClientId;
+            requirementDb.StorageId = requirement.StorageId;
             requirementDb.Status = requirement.Status;
             requirementDb.DeliveryDate = requirement.DeliveryDate;
             _context.SaveChanges();

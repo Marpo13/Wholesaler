@@ -47,7 +47,7 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpPatch]
-        [Route("{id}/actions/edit")]
+        [Route("{id}")]
         public async Task<ActionResult<RequirementDto>> EditQuantity(Guid id, [FromBody] UdpateRequirementRequestModel updateRequirementRequest)
         {
             var editedRequirement = _service.EditQuantity(id, updateRequirementRequest.Quantity);

@@ -60,7 +60,7 @@ namespace Wholesaler.Backend.Domain.Services
             requirement.Complete();
             requirement.SetDate(time);
 
-            _repository.Complete(requirement);
+            _repository.Update(requirement);
             _storageService.Depart(requirement.StorageId, requirement);
 
             return requirement;

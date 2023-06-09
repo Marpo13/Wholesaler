@@ -9,6 +9,5 @@ namespace Wholesaler.Backend.Domain.Repositories
         Requirement Update(Requirement requirement);
         List<Requirement> GetAll();
         List<Requirement> Get(Guid storageId);
-        Requirement Complete(Requirement requirement);
     }
 }

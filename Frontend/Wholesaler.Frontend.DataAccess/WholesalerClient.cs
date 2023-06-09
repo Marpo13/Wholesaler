@@ -225,7 +225,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<UdpateRequirementRequestModel, RequirementDto>()
             {
-                Path = $"{apiPath}/requirements/{id}/actions/edit",
+                Path = $"{apiPath}/requirements/{id}",
                 Method = HttpMethod.Patch,
                 Content = new UdpateRequirementRequestModel()
                 {

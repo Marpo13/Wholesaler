@@ -25,7 +25,7 @@
             Quantity = quantity;
             ClientId = clientId;
             StorageId = storageId;
-            Status = Status.Processed;
+            Status = Status.Ongoing;
             DeliveryDate = null;
         }
 
