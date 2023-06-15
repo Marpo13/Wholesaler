@@ -4,13 +4,20 @@
     {
         public Guid Id { get; }
         public string Name { get; }
-        public IReadOnlyList<Requirement> Requirements { get; }
+        public string Surname { get; }
 
-        public Client(string name)
+        public Client(Guid id, string name, string surname)
+        {
+            Id = id;
+            Name = name;
+            Surname = surname;
+        }
+
+        public Client(string name, string surname)
         {
             Id = Guid.NewGuid();
             Name = name;
-            Requirements = new List<Requirement>();
+            Surname = surname;       
         }
     }
 }

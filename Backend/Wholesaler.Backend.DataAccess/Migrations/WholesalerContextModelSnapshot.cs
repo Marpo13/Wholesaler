@@ -59,6 +59,10 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
@@ -103,11 +107,43 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("StorageId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("StorageId");
+
                     b.ToTable("Requirements");
+                });
+
+            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Storage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Storages");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Workday", b =>
@@ -184,7 +220,15 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Wholesaler.Backend.DataAccess.Models.Storage", "Storage")
+                        .WithMany("Requirements")
+                        .HasForeignKey("StorageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Client");
+
+                    b.Navigation("Storage");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Workday", b =>
@@ -219,6 +263,11 @@ namespace Wholesaler.Backend.DataAccess.Migrations
                     b.Navigation("WorkTasks");
 
                     b.Navigation("Workdays");
+                });
+
+            modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.Storage", b =>
+                {
+                    b.Navigation("Requirements");
                 });
 
             modelBuilder.Entity("Wholesaler.Backend.DataAccess.Models.WorkTask", b =>

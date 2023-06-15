@@ -1,20 +1,11 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Wholesaler
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+Wholesaler is an application that simulates the real operation of the warehouse. There are three roles in my application, which are recognized,when user is logged. First of them is the employee, who has the ability to register the beginning and end of work. He can see assigned tasks and after starting work, he can start selected task. He can also stop the task or complete it when it is ended. Second role is the manager, who can assign tasks to the employee and control their progress. Last role is owner, who can see costs, profits and productivity of employees.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# Technologies used
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- Backend: C#, .NET
+- Database: MSSQL
+- Tests: xUnit
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+To explore backend repository, click [here](https://github.com/marlenapiotrowska/Wholesaler/tree/main/Backend).

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wholesaler.Backend.Api.Factories;
+using Wholesaler.Backend.Api.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Core.Dto.RequestModels;

@@ -1,4 +1,5 @@
-﻿using Wholesaler.Core.Dto.RequestModels;
+﻿using System.Xml.Linq;
+using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.DataAccess.Http;
 using Wholesaler.Frontend.Domain.Interfaces;
@@ -6,7 +7,14 @@ using Wholesaler.Frontend.Domain.ValueObjects;
 
 namespace Wholesaler.Frontend.DataAccess
 {
-    public class WholesalerClient : RequestService, IUserService, IWorkDayRepository, IWorkTaskRepository, IUserRepository
+    public class WholesalerClient : RequestService,
+        IUserService,
+        IWorkDayRepository,
+        IWorkTaskRepository,
+        IUserRepository,
+        IRequirementRepository,
+        IClientRepository,
+        IStorageRepository
     {
         private const string apiPath = $"http://localhost:5050";
 
@@ -75,7 +83,7 @@ namespace Wholesaler.Frontend.DataAccess
                 Method = HttpMethod.Post,
                 Content = new AssignTaskRequestModel()
                 {
-                    UserId = userId,                    
+                    UserId = userId,
                 }
             };
 
@@ -98,7 +106,7 @@ namespace Wholesaler.Frontend.DataAccess
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
                 Path = $"{apiPath}/worktasks/assigned",
-                Method = HttpMethod.Get,                
+                Method = HttpMethod.Get,
             };
 
             return await SendAsync(request);
@@ -134,7 +142,7 @@ namespace Wholesaler.Frontend.DataAccess
                 Method = HttpMethod.Patch,
                 Content = new ChangeOwnerRequestModel()
                 {
-                    NewOwnerId = newOwnerId,                    
+                    NewOwnerId = newOwnerId,
                 }
             };
 
@@ -191,6 +199,122 @@ namespace Wholesaler.Frontend.DataAccess
             {
                 Path = $"{apiPath}/worktasks/finished",
                 Method = HttpMethod.Get,
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<RequirementDto>> Add(int quantity, Guid clientId, Guid storageId)
+        {
+            var request = new Request<AddRequirementRequestModel, RequirementDto>()
+            {
+                Path = $"{apiPath}/requirements",
+                Method = HttpMethod.Post,
+                Content = new AddRequirementRequestModel()
+                {
+                    ClientId = clientId,
+                    Quantity = quantity,
+                    StorageId = storageId
+                }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<RequirementDto>> EditQuantity(Guid id, int quantity)
+        {
+            var request = new Request<UdpateRequirementRequestModel, RequirementDto>()
+            {
+                Path = $"{apiPath}/requirements/{id}",
+                Method = HttpMethod.Patch,
+                Content = new UdpateRequirementRequestModel()
+                {
+                    Quantity = quantity
+                }
+            };
+
+            return await SendAsync(request);
+        }
+        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetAllRequirements()
+        {
+            var request = new Request<HttpRequestMessage, List<RequirementDto>>()
+            {
+                Path = $"{apiPath}/requirements",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetRequirements(Guid storageId)
+        {
+            var request = new Request<HttpRequestMessage, List<RequirementDto>>()
+            {
+                Path = $"{apiPath}/requirements/{storageId}",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
+
+            public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients()
+        {
+            var request = new Request<HttpRequestMessage, List<ClientDto>>()
+            {
+                Path = $"{apiPath}/clients",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<StorageDto>> Add(string name)
+        {
+            var request = new Request<AddStorageRequestModel, StorageDto>()
+            {
+                Path = $"{apiPath}/storages",
+                Method = HttpMethod.Post,
+                Content = new AddStorageRequestModel()
+                {
+                    Name = name
+                }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<List<StorageDto>>> GetAllStorages()
+        {
+            var request = new Request<HttpRequestMessage, List<StorageDto>>()
+            {
+                Path = $"{apiPath}/storages",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<StorageDto>> Deliver(Guid id, int quantity)
+        {
+            var request = new Request<UpdateStorageRequestModel, StorageDto>()
+            {
+                Path = $"{apiPath}/storages/{id}/actions/deliver",
+                Method = HttpMethod.Patch,
+                Content = new UpdateStorageRequestModel()
+                {
+                    Quantity = quantity
+                }
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<RequirementDto>> CompleteRequirement(Guid id)
+        {
+            var request = new Request<Guid, RequirementDto>()
+            {
+                Path = $"{apiPath}/requirements/{id}/actions/complete",
+                Method = HttpMethod.Patch
             };
 
             return await SendAsync(request);

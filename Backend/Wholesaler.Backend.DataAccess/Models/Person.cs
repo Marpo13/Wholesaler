@@ -10,9 +10,9 @@ namespace Wholesaler.Backend.DataAccess.Models
         public string Password { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public ICollection<Workday> Workdays { get; set; }
-        public ICollection<WorkTask> WorkTasks { get; set; } 
-        public ICollection<Activity> Activities { get; set; }
+        public virtual ICollection<Workday> Workdays { get; set; }
+        public virtual ICollection<WorkTask> WorkTasks { get; set; } 
+        public virtual ICollection<Activity> Activities { get; set; }
         
     }
 }

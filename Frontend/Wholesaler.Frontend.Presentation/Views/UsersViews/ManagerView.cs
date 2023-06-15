@@ -10,14 +10,28 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
         private readonly ChangeOwnerOfTaskView _changeOwner;
         private readonly StartedTasksView _startedTasks;
         private readonly FinishedTasksView _finishedTasks;
+        private readonly AddRequirementView _addRequirement;
+        private readonly MushroomsDepartView _mushroomDepart;
+        private readonly EditRequirementView _editRequirement;
 
-        public ManagerView(ApplicationState state, AssignTaskView assignTask, ChangeOwnerOfTaskView changeOwner, StartedTasksView startedTasks, FinishedTasksView finishedTasks)
+        public ManagerView(
+            ApplicationState state, 
+            AssignTaskView assignTask, 
+            ChangeOwnerOfTaskView changeOwner, 
+            StartedTasksView startedTasks, 
+            FinishedTasksView finishedTasks,
+            AddRequirementView addRequirement,
+            MushroomsDepartView mushroomDepart,
+            EditRequirementView editRequirement)
             : base(state)
         {
             _assignTask = assignTask;
             _changeOwner = changeOwner;
             _startedTasks = startedTasks;
             _finishedTasks = finishedTasks;
+            _addRequirement = addRequirement;
+            _mushroomDepart = mushroomDepart;
+            _editRequirement = editRequirement;
         }
 
         protected override async Task RenderViewAsync()
@@ -34,7 +48,8 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                     "\n[4] To edit customer requirement" +
                     "\n[5] To get information about ended tasks" +
                     "\n[6] To get information about started tasks" +
-                    "\n[7] To see progress of requirement" +
+                    "\n[7] To depart mushrooms" +
+                    "\n[8] To see progress of requirement" +
                     "\n[ESC] To quit");
 
                 var pressedKey = Console.ReadKey();
@@ -53,11 +68,13 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
+                        await _addRequirement.RenderAsync();
                         Console.Clear();
                         continue;
 
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
+                        await _editRequirement.RenderAsync();
                         Console.Clear();
                         continue;
 
@@ -73,6 +90,11 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 
                     case ConsoleKey.D7:
                     case ConsoleKey.NumPad7:
+                        await _mushroomDepart.RenderAsync();
+                        continue;
+
+                    case ConsoleKey.D8:
+                    case ConsoleKey.NumPad8:
                         Console.Clear();
                         continue;
 

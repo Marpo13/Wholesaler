@@ -12,6 +12,7 @@ namespace Wholesaler.Backend.DataAccess
         public DbSet<Workday> Workdays { get; set; }
         public DbSet<WorkTask> WorkTasks { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<Storage> Storages { get; set; }
         
         public WholesalerContext(DbContextOptions<WholesalerContext> options)
         : base(options)

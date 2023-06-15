@@ -16,6 +16,9 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<IWorkDayRepository, WholesalerClient>();
     services.AddTransient<IWorkTaskRepository, WholesalerClient>();
     services.AddTransient<IUserRepository, WholesalerClient>();
+    services.AddTransient<IRequirementRepository, WholesalerClient>();
+    services.AddTransient<IClientRepository, WholesalerClient>();
+    services.AddTransient<IStorageRepository, WholesalerClient>();
     services.AddTransient<ILoginView, LoginView>();
     services.AddTransient<IMenuView, MenuView>();
     services.AddTransient<EmployeeView>();
@@ -32,6 +35,10 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<WorkTaskMenuView>();
     services.AddTransient<StartedTasksView>();
     services.AddTransient<FinishedTasksView>();
+    services.AddTransient<AddRequirementView>();
+    services.AddTransient<MushroomsDeliverView>();
+    services.AddTransient<MushroomsDepartView>();
+    services.AddTransient<EditRequirementView>();
     services.AddSingleton<ApplicationState>();
     });
 

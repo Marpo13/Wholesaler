@@ -11,6 +11,10 @@ namespace Wholesaler.Backend.DataAccess.Configurations
             builder.HasOne(r => r.Client)
                  .WithMany(c => c.Requirements)
                  .HasForeignKey(r => r.ClientId);
+
+            builder.HasOne(r => r.Storage)
+                .WithMany(s => s.Requirements)
+                .HasForeignKey(r => r.StorageId);
         }
     }
 }
