@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using Wholesaler.Backend.DataAccess.Models;
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
