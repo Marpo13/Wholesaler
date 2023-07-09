@@ -98,5 +98,41 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             return requirement;
         }
+
+        public List<Requirement> GetCompleted()
+        {
+            var requirementsDb = _context.Requirements
+                .Where(r => r.Status == Status.Completed)
+                .ToList();
+
+            if (requirementsDb == null)
+                return new List<Requirement>();
+
+            var requirements = requirementsDb.Select(requirementDb =>
+            {
+                return _factory.Create(requirementDb);
+
+            }).ToList();
+
+            return requirements;
+        }
+
+        public List<Requirement> GetOngoing()
+        {
+            var requirementsDb = _context.Requirements
+                .Where(r => r.Status == Status.Ongoing)
+                .ToList();
+
+            if (requirementsDb == null)
+                return new List<Requirement>();
+
+            var requirements = requirementsDb.Select(requirementDb =>
+            {
+                return _factory.Create(requirementDb);
+
+            }).ToList();
+
+            return requirements;
+        }
     }
 }

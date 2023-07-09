@@ -93,5 +93,33 @@ namespace Wholesaler.Backend.Api.Controllers
 
             return requirementsDto;
         }
+
+        [HttpGet]
+        [Route("completed")]
+        public async Task<ActionResult<List<RequirementDto>>> GetCompleted()
+        {
+            var requirements = _requirementRepository.GetCompleted();
+            var requirementsDto = requirements.Select(requirement =>
+            {
+                return _factory.Create(requirement);
+
+            }).ToList();
+
+            return requirementsDto;
+        }
+
+        [HttpGet]
+        [Route("ongoing")]
+        public async Task<ActionResult<List<RequirementDto>>> GetOngoing()
+        {
+            var requirements = _requirementRepository.GetOngoing();
+            var requirementsDto = requirements.Select(requirement =>
+            {
+                return _factory.Create(requirement);
+
+            }).ToList();
+
+            return requirementsDto;
+        }
     }
 }

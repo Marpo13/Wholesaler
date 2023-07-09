@@ -10,6 +10,7 @@ namespace Wholesaler.Frontend.Domain.Interfaces
         Task<ExecutionResultGeneric<List<RequirementDto>>> GetAllRequirements();
         Task<ExecutionResultGeneric<List<RequirementDto>>> GetRequirements(Guid storageId);
         Task<ExecutionResultGeneric<RequirementDto>> CompleteRequirement(Guid id);
-
+        Task<ExecutionResultGeneric<List<RequirementDto>>> GetCompletedRequirements();
+        Task<ExecutionResultGeneric<List<RequirementDto>>> GetOngoingRequirements();
     }
 }

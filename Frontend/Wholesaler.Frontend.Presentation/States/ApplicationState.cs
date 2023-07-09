@@ -287,6 +287,7 @@ namespace Wholesaler.Frontend.Presentation.States
         public AddRequirementState? AddRequirement { get; private set; }
         public MushroomsDepartState? MushroomsDepart { get; private set; }
         public EditRequirementState? EditRequirement { get; private set; }
+        public RequirementProgressState? RequirementProgress { get; private set; }
 
         public void Initialize()
         {
@@ -295,6 +296,7 @@ namespace Wholesaler.Frontend.Presentation.States
             AddRequirement = null;
             MushroomsDepart = null;
             EditRequirement = null;
+            RequirementProgress = null;
         }
 
         public AssignTaskState GetAssignTask()
@@ -372,6 +374,17 @@ namespace Wholesaler.Frontend.Presentation.States
             }
 
             return EditRequirement;
+        }
+
+        public RequirementProgressState GetRequirementProgress()
+        {
+            if(RequirementProgress == null)
+            {
+                RequirementProgress = new RequirementProgressState();
+                RequirementProgress.Initialize();
+            }
+
+            return RequirementProgress;
         }
     }
 
@@ -517,6 +530,28 @@ namespace Wholesaler.Frontend.Presentation.States
         {
             Id = id;
             Quantity = quantity;
+        }
+    }
+
+    internal class RequirementProgressState : IState
+    {
+        public List<RequirementDto>? CompletedRequirement { get; private set; }
+        public List<RequirementDto>? OngoingRequirement { get; private set; }
+
+        public void Initialize()
+        {
+            CompletedRequirement = new List<RequirementDto>();
+            OngoingRequirement = new List<RequirementDto>();
+        }
+
+        public void GetOngoingRequirements(List<RequirementDto> requirements)
+        {
+            OngoingRequirement = requirements;
+        }
+
+        public void GetCompletedRequirements(List<RequirementDto> requirements) 
+        { 
+            CompletedRequirement = requirements;
         }
     }
 }
