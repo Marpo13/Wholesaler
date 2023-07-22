@@ -5,20 +5,18 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
 {
     internal class DisplayRequirementsComponent : Component
     {
-        private readonly List<RequirementDto> _completedRequirements;
-        private readonly List<RequirementDto> _ongoingRequirements;
+        private readonly List<RequirementDto> _requirements;
 
-        public DisplayRequirementsComponent(List<RequirementDto> completedRequirements, List<RequirementDto> ongoingRequirements)
+        public DisplayRequirementsComponent(List<RequirementDto> requirements)
         {
-            _completedRequirements = completedRequirements;
-            _ongoingRequirements = ongoingRequirements;
+            _requirements = requirements;
         }
 
         public override void Render()
         {
             Console.WriteLine("Ongoing requirements:");
 
-            foreach(var requirement in _ongoingRequirements)
+            foreach(var requirement in _requirements)
             {
                 Console.WriteLine(
                     $"\nId: {requirement.Id}," +
@@ -26,19 +24,6 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews.Components
                     $"\nClientId: {requirement.ClientId}," +
                     $"\nStorageId: {requirement.StorageId}," +
                     $"\nStatus: {requirement.Status}");
-            }
-
-            Console.WriteLine("\nCompleted requirements:");
-
-            foreach (var requirement in _completedRequirements)
-            {
-                Console.WriteLine(
-                    $"\nId: {requirement.Id}," +
-                    $"\nQuantity: {requirement.Quantity}," +
-                    $"\nClientId: {requirement.ClientId}," +
-                    $"\nStorageId: {requirement.StorageId}," +
-                    $"\nStatus: {requirement.Status}" +
-                    $"\nDeliveryDate: {requirement.DeliveryDate}");
             }
 
             Console.ReadLine();

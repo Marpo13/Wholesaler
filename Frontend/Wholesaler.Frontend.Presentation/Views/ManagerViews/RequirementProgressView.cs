@@ -20,26 +20,20 @@ namespace Wholesaler.Frontend.Presentation.Views.ManagerViews
 
         protected async override Task RenderViewAsync()
         {
-            var ongoingRequirements = await _requirementRepository.GetOngoingRequirements();
+            var chooseStatus = new SelectStatusComponent();
+            var status = chooseStatus.Render();
+            _state.GetStatus(status);
+
+            var reqirementsWithStatus = await _requirementRepository.GetRequirementsByStatus(status);
            
-            if (!ongoingRequirements.IsSuccess)
+            if (!reqirementsWithStatus.IsSuccess)
             {
-                var errorPage = new ErrorPageComponent(ongoingRequirements.Message);
+                var errorPage = new ErrorPageComponent(reqirementsWithStatus.Message);
                 errorPage.Render();
             }
-
-            var completedRequirements = await _requirementRepository.GetCompletedRequirements();
-
-            if (!completedRequirements.IsSuccess)
-            {
-                var errorPage = new ErrorPageComponent(completedRequirements.Message);
-                errorPage.Render();
-            }
-
-            _state.GetOngoingRequirements(ongoingRequirements.Payload);
-            _state.GetCompletedRequirements(completedRequirements.Payload);
-
-            var displayRequirements = new DisplayRequirementsComponent(completedRequirements.Payload, ongoingRequirements.Payload);
+            
+            _state.GetRequirements(reqirementsWithStatus.Payload);
+            var displayRequirements = new DisplayRequirementsComponent(reqirementsWithStatus.Payload);
             displayRequirements.Render();
         }
     }

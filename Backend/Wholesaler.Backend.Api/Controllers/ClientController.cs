@@ -49,12 +49,11 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var clients = _clientRepository.GetAll();
 
-            var clientsDto = clients.Select(client =>
-            {               
-                return _clientFactory.Create(client);
-            });
+            var clientsDto = clients
+                .Select(c => _clientFactory.Create(c))
+                .ToList();
 
-            return clientsDto.ToList();
+            return clientsDto;
         }
 
         [HttpGet]

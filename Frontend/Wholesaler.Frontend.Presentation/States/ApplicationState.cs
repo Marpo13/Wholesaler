@@ -535,23 +535,23 @@ namespace Wholesaler.Frontend.Presentation.States
 
     internal class RequirementProgressState : IState
     {
-        public List<RequirementDto>? CompletedRequirement { get; private set; }
-        public List<RequirementDto>? OngoingRequirement { get; private set; }
+        public List<RequirementDto>? Requirements { get; private set; }
+        public string? Status { get; private set; }
 
         public void Initialize()
         {
-            CompletedRequirement = new List<RequirementDto>();
-            OngoingRequirement = new List<RequirementDto>();
+            Requirements = new List<RequirementDto>();
+            Status = null;
         }
 
-        public void GetOngoingRequirements(List<RequirementDto> requirements)
+        public void GetRequirements(List<RequirementDto> requirements)
         {
-            OngoingRequirement = requirements;
+            Requirements = requirements;
         }
 
-        public void GetCompletedRequirements(List<RequirementDto> requirements) 
+        public void GetStatus(string status) 
         { 
-            CompletedRequirement = requirements;
+            Status = status;
         }
     }
 }

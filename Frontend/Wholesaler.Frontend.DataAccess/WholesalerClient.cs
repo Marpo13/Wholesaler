@@ -257,22 +257,11 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetCompletedRequirements()
+        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetRequirementsByStatus(string status)
         {
             var request = new Request<HttpRequestMessage, List<RequirementDto>>()
             {
-                Path = $"{apiPath}/requirements/completed",
-                Method = HttpMethod.Get
-            };
-
-            return await SendAsync(request);
-        }
-
-        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetOngoingRequirements()
-        {
-            var request = new Request<HttpRequestMessage, List<RequirementDto>>()
-            {
-                Path = $"{apiPath}/requirements/ongoing",
+                Path = $"{apiPath}/requirements/byStatus?status={status}",
                 Method = HttpMethod.Get
             };
 
