@@ -81,8 +81,8 @@ namespace Wholesaler.Backend.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{storageId}")]
-        public async Task<ActionResult<List<RequirementDto>>> Get(Guid storageId)
+        [Route("withStorageId")]
+        public async Task<ActionResult<List<RequirementDto>>> Get([FromQuery] Guid storageId)
         {
             var requirements = _requirementRepository.Get(storageId);
             var requirementsDto = requirements.Select(requirement =>

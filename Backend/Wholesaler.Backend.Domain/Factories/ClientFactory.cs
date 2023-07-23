@@ -9,10 +9,22 @@ namespace Wholesaler.Backend.Domain.Factories
     {
         public Client Create(CreateClientRequest request)
         {
-            if(request.Name == null || request.Name == string.Empty)
+            if(request.Name == null || request.Name == string.Empty || request.Name.Contains(" "))
                 throw new InvalidDataProvidedException("You need to provide name.");
-            if(request.Surname == null || request.Surname == string.Empty)
+            if(request.Surname == null || request.Surname == string.Empty || request.Surname.Contains(" "))
                 throw new InvalidDataProvidedException("You need to provide surname.");
+
+            foreach (char letter in request.Name)
+            {
+                if (char.IsDigit(letter))
+                    throw new InvalidDataProvidedException("You provided an invalid value.");                
+            }
+
+            foreach (char letter in request.Surname)
+            {
+                if (char.IsDigit(letter))
+                    throw new InvalidDataProvidedException("You provided an invalid value.");
+            }
 
             var client = new Client(
                 request.Name,

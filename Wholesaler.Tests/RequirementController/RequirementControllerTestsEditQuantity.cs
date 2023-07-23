@@ -14,12 +14,17 @@ namespace Wholesaler.Tests.RequirementController
         private readonly ClientBuilder _clientBuilder;
         private readonly StorageBuilder _storageBuilder;
         private readonly RequirementBuilder _requirementBuilder;
+        private readonly DateTime _defaultDate = new(2023, 02, 13, 12, 0, 0);
 
         public RequirementControllerTestsEditQuantity(WebApplicationFactory<Program> factory) : base(factory)
         {
             _clientBuilder = new ClientBuilder();
             _storageBuilder = new StorageBuilder();
             _requirementBuilder = new RequirementBuilder();
+
+            _timeProviderMock
+                .Setup(m => m.Now())
+                .Returns(_defaultDate);
         }
 
         [Fact]
@@ -121,6 +126,39 @@ namespace Wholesaler.Tests.RequirementController
             //Act
 
             var response = await _client.PatchAsync($"requirements/{id}", httpContent);
+
+            //Assert
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Edit_WithCompletedStatus_ReturnsBadRequest()
+        {
+            //Arrange
+
+            var client = _clientBuilder.Build();
+            var storage = _storageBuilder.Build();
+            var requirement = _requirementBuilder
+                .WithClientId(client.Id)
+                .WithStorageId(storage.Id)
+                .Completed(_defaultDate)
+                .Build();
+
+            Seed(client);
+            Seed(storage);
+            Seed(requirement);
+
+            var updateRequestModel = new UdpateRequirementRequestModel()
+            {
+                Quantity = 50
+            };
+
+            var httpContent = updateRequestModel.ToJsonHttpContent();
+
+            //Act
+
+            var response = await _client.PatchAsync($"requirements/{requirement.Id}", httpContent);
 
             //Assert
 

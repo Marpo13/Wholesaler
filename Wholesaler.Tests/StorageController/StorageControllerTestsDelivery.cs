@@ -59,7 +59,7 @@ namespace Wholesaler.Tests.StorageController
         [InlineData(100)]
         [InlineData(215)]
         [InlineData(600)]
-        public async Task Deliver_WithInvalidStorageId_ReturnsBadRequest(int quantity)
+        public async Task Deliver_WithInvalidStorageId_ReturnsNotFound(int quantity)
         {
             //Arrange
 
@@ -71,7 +71,7 @@ namespace Wholesaler.Tests.StorageController
                 Quantity = quantity
             };
 
-            var id = Guid.NewGuid;
+            var id = Guid.NewGuid();
 
             var httpContent = updateStorageRequestModel.ToJsonHttpContent();
 
@@ -81,7 +81,7 @@ namespace Wholesaler.Tests.StorageController
 
             //Assert
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Theory]
@@ -90,6 +90,8 @@ namespace Wholesaler.Tests.StorageController
         [InlineData(-100)]
         [InlineData(-215)]
         [InlineData(-600)]
+        [InlineData(0)]
+        [InlineData(0.2)]
         public async Task Deliver_WithInvalidQuantity_ReturnsBadRequest(int quantity)
         {
             //Arrange

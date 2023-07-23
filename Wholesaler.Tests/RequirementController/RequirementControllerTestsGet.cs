@@ -53,7 +53,7 @@ namespace Wholesaler.Tests.RequirementController
 
             //Act
 
-            var response = await _client.GetAsync($"requirements/{id}");
+            var response = await _client.GetAsync($"requirements/withStorageId?storageId={id}");
 
             //Assert
 

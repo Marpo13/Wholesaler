@@ -52,9 +52,11 @@ namespace Wholesaler.Tests.RequirementController
             //Assert
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var requirementDto = JsonDeserializeHelper.DeserializeAsync<RequirementDto>(response);
+            var requirementDto = await JsonDeserializeHelper.DeserializeAsync<RequirementDto>(response);
 
-            //requirementDto.Status.Should().Be(Status.Completed.ToString());
+            var requirementDtoStatus = requirementDto.Status.ToString();
+            var status = Status.Completed.ToString();
+            requirementDtoStatus.Should().Be(status);
         }
                 
         public async Task Complete_WithInvalidId_ReturnsNotFound()

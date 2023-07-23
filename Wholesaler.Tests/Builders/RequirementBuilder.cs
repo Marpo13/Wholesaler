@@ -47,6 +47,7 @@ namespace Wholesaler.Tests.Builders
         public RequirementBuilder Completed(DateTime time)
         {
             _deliveryDate = time;
+            _status = Status.Completed;
             return this;
         }
 

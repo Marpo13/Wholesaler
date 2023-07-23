@@ -57,7 +57,7 @@ namespace Wholesaler.Tests.RequirementController
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var requirements = await JsonDeserializeHelper.DeserializeAsync<List<RequirementDto>>(response);
-            //requirements.Count.Should().Be(3);
+            requirements.Count.Should().Be(3);
 
             var requirementDto1 = requirements.First(r => r.Id == requirement1.Id);
             requirementDto1.Quantity.Should().Be(requirement1.Quantity);

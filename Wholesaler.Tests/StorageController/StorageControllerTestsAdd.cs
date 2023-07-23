@@ -67,5 +67,26 @@ namespace Wholesaler.Tests.StorageController
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
+        [Fact]
+        public async Task Add_WithEmptyName_ReturnsBadRequest()
+        {
+            //Arrange
+
+            var storageRequestModel = new AddStorageRequestModel()
+            {
+                Name = " "
+            };
+
+            var httpContent = storageRequestModel.ToJsonHttpContent();
+
+            //Act
+
+            var response = await _client.PostAsync("storages", httpContent);
+
+            //Assert
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
     }
 }

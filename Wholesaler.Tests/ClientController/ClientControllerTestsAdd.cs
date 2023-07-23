@@ -4,7 +4,6 @@ using System.Net;
 using Wholesaler.Backend.DataAccess.Models;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
-using Wholesaler.Tests.Builders;
 using Wholesaler.Tests.Helpers;
 using Xunit;
 
@@ -25,7 +24,7 @@ namespace Wholesaler.Tests.ClientController
         public async Task AddClient_WithValidData_ReturnsClientDto(string name, string surname)
         {
             //Arrange
-                        
+
             var addClientRequestModel = new AddClientRequestModel()
             {
                 Name = name,
@@ -45,8 +44,7 @@ namespace Wholesaler.Tests.ClientController
             var clientDb = _dbContext.Clients.First(c => c.Surname == addClientRequestModel.Surname);
 
             clientDb.Id.Should().Be(clientDto.Id);
-            clientDb.Name.Should().Be(clientDto.Name);
-            clientDb.Surname.Should().Be(clientDto.Surname);
+            clientDb.Name.Should().Be(addClientRequestModel.Name);
 
             clientDto.Name.Should().Be(addClientRequestModel.Name);
             clientDto.Surname.Should().Be(addClientRequestModel.Surname);
@@ -89,17 +87,10 @@ namespace Wholesaler.Tests.ClientController
         {
             //Arrange
 
-            var client = new Client()
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Surname = ""
-            };
-
             var addClientRequestModel = new AddClientRequestModel()
             {
-                Name = client.Name,
-                Surname = client.Surname,
+                Name = name,
+                Surname = "",
             };
 
             var httpContent = addClientRequestModel.ToJsonHttpContent();
@@ -113,22 +104,112 @@ namespace Wholesaler.Tests.ClientController
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
+        [Theory]
+        [InlineData("Patrycja")]
+        [InlineData("Nadia")]
+        public async Task AddClient_WithEmptySurname_ReturnsBadRequest(string name)
+        {
+            //Arrange
+
+            var addClientRequestModel = new AddClientRequestModel
+            {
+                Name = name,
+                Surname = " ",
+            };
+
+            var httpContent = addClientRequestModel.ToJsonHttpContent();
+
+            //Act
+
+            var response = await _client.PostAsync("clients", httpContent);
+
+            //Assert
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineData("Ptak")]
+        [InlineData("Nowak")]
+        public async Task AddClient_WithEmptyName_ReturnsBadRequest(string surname)
+        {
+            //Arrange
+
+            var addClientRequestModel = new AddClientRequestModel
+            {
+                Name = " ",
+                Surname = surname,
+            };
+
+            var httpContent = addClientRequestModel.ToJsonHttpContent();
+
+            //Act
+
+            var response = await _client.PostAsync("clients", httpContent);
+
+            //Assert
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineData("3283h29b32783gb28", "Nowak")]
+        [InlineData("56446131hgd1568", "Kowalski")]
+        public async Task AddClient_WitInvalidName_ReturnsBadRequest(string name, string surname)
+        {
+            //Arrange
+
+            var addClientRequestModel = new AddClientRequestModel()
+            {
+                Name = name,
+                Surname = surname,
+            };
+
+            var httpContent = addClientRequestModel.ToJsonHttpContent();
+
+            //Act
+
+            var response = await _client.PostAsync("clients", httpContent);
+
+            //Assert
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineData("Anna", "3283h29b32783gb28")]
+        [InlineData("Marek", "56446131hgd1568")]
+        public async Task AddClient_WitInvalidSurame_ReturnsBadRequest(string name, string surname)
+        {
+            //Arrange
+
+            var addClientRequestModel = new AddClientRequestModel()
+            {
+                Name = name,
+                Surname = surname,
+            };
+
+            var httpContent = addClientRequestModel.ToJsonHttpContent();
+
+            //Act
+
+            var response = await _client.PostAsync("clients", httpContent);
+
+            //Assert
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+
         [Fact]
         public async Task AddClient_WithoutNameAndSurname_ReturnsBadRequest()
         {
             //Arrange
 
-            var client = new Client()
-            {
-                Id = Guid.NewGuid(),
-                Name = "",
-                Surname = ""
-            };
-
             var addClientRequestModel = new AddClientRequestModel()
             {
-                Name = client.Name,
-                Surname = client.Surname,
+                Name = "",
+                Surname = "",
             };
 
             var httpContent = addClientRequestModel.ToJsonHttpContent();

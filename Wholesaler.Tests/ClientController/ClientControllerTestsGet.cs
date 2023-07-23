@@ -42,14 +42,14 @@ namespace Wholesaler.Tests.ClientController
         }
 
         [Fact]
-        public async Task GetClient_WithInvalidId_ReturnsBadRequest()
+        public async Task GetClient_WithInvalidId_ReturnsNotFound()
         {
             //Arrange
 
             var client = _clientBuilder.Build();
             Seed(client);
 
-            var id = Guid.NewGuid;
+            var id = Guid.NewGuid();
 
             //Act
 
@@ -57,7 +57,7 @@ namespace Wholesaler.Tests.ClientController
 
             //Assert
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }

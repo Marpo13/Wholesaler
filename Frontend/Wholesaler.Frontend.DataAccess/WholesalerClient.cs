@@ -250,14 +250,14 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<RequirementDto>>()
             {
-                Path = $"{apiPath}/requirements/{storageId}",
+                Path = $"{apiPath}/requirements/withStorageId?storageId={storageId}",
                 Method = HttpMethod.Get
             };
 
             return await SendAsync(request);
         }
 
-            public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients()
+        public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients()
         {
             var request = new Request<HttpRequestMessage, List<ClientDto>>()
             {

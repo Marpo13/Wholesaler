@@ -29,12 +29,13 @@ namespace Wholesaler.Backend.Domain.Services
         }
 
         public Storage Deliver(Guid storageId, int quantity)
-        {
+        {            
             var storage = _storageRepository.GetOrDefault(storageId);
-            if (storage == null)
-                throw new InvalidDataProvidedException($"There is no storage with id {storageId}");
 
-            if (quantity < 0)
+            if (storage == null)
+                throw new EntityNotFoundException($"There is no storage with id {storageId}");
+
+            if (quantity <= 0)
                 throw new InvalidDataProvidedException($"Quantity must be more than 0.");
 
             var state = storage.State + quantity;

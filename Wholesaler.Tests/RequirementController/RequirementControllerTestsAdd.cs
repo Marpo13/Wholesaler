@@ -54,13 +54,13 @@ namespace Wholesaler.Tests.RequirementController
             requirementDto.StorageId.Should().Be(requirementRequestModel.StorageId);
             requirementDto.ClientId.Should().Be(requirementRequestModel.ClientId);
 
-            requirementDto.Quantity.Should().Be(requirementDb.Quantity);
-            requirementDto.StorageId.Should().Be(requirementDb.StorageId);
-            requirementDto.ClientId.Should().Be(requirementDb.ClientId);
+            requirementDb.Quantity.Should().Be(requirementRequestModel.Quantity);
+            requirementDb.StorageId.Should().Be(requirementRequestModel.StorageId);
+            requirementDb.ClientId.Should().Be(requirementRequestModel.ClientId);
         }
 
         [Fact]
-        public async Task Add_WithInvalidClientId_ReturnsBadRequest()
+        public async Task Add_WithInvalidClientId_ReturnsNotFound()
         {
             //Arrange
 
@@ -85,10 +85,10 @@ namespace Wholesaler.Tests.RequirementController
 
             //Assert
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        public async Task Add_WithInvalidStorageId_ReturnsBadRequest()
+        public async Task Add_WithInvalidStorageId_ReturnsNotFound()
         {
             //Arrange
 
@@ -113,7 +113,7 @@ namespace Wholesaler.Tests.RequirementController
 
             //Assert
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         public async Task Add_WithInvalidQuantity_ReturnsBadRequest()
