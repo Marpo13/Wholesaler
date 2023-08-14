@@ -71,11 +71,9 @@ namespace Wholesaler.Backend.Api.Controllers
         public async Task<ActionResult<List<RequirementDto>>> GetAll()
         {
             var requirements = _requirementRepository.GetAll();
-            var requirementsDto = requirements.Select(requirement =>
-            {                
-                return _factory.Create(requirement);
-
-            }).ToList();
+            var requirementsDto = requirements
+                .Select(r => _factory.Create(r))
+                .ToList();
 
             return requirementsDto;
         }
@@ -85,11 +83,21 @@ namespace Wholesaler.Backend.Api.Controllers
         public async Task<ActionResult<List<RequirementDto>>> Get(Guid storageId)
         {
             var requirements = _requirementRepository.Get(storageId);
-            var requirementsDto = requirements.Select(requirement =>
-            {
-                return _factory.Create(requirement);
+            var requirementsDto = requirements
+                .Select(r => _factory.Create(r))
+                .ToList();
 
-            }).ToList();
+            return requirementsDto;
+        }
+
+        [HttpGet]
+        [Route("byStatus")]
+        public async Task<ActionResult<List<RequirementDto>>> GetByStatus([FromQuery] string status)
+        {
+            var requirements = _requirementRepository.GetByStatus(status);
+            var requirementsDto = requirements
+                .Select(r => _factory.Create(r))
+                .ToList();
 
             return requirementsDto;
         }

@@ -39,11 +39,9 @@ namespace Wholesaler.Backend.Api.Controllers
         public async Task<ActionResult<List<StorageDto>>> GetAll()
         {
             var storages = _repository.GetAll();
-            var storagesDto = storages.Select(storage =>
-            {                
-                return _storageDtoFactory.Create(storage);
-
-            }).ToList();
+            var storagesDto = storages
+                .Select(s => _storageDtoFactory.Create(s))
+                .ToList();
 
             return storagesDto;
         }

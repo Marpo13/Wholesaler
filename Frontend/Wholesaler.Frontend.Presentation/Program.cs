@@ -39,6 +39,7 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<MushroomsDeliverView>();
     services.AddTransient<MushroomsDepartView>();
     services.AddTransient<EditRequirementView>();
+    services.AddTransient<RequirementProgressView>();
     services.AddSingleton<ApplicationState>();
     });
 

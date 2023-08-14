@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Api.Factories.Interfaces;
-using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Requests.WorkTasks;
@@ -94,9 +93,11 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workday = _workTaskRepository.GetNotAssign();
 
-            var listOfWorkTasks = workday.Select(workTask => _workTaskFactory.Create(workTask));
+            var listOfWorkTasks = workday
+                .Select(w => _workTaskFactory.Create(w))
+                .ToList();
 
-            return listOfWorkTasks.ToList();
+            return listOfWorkTasks;
         }
 
         [HttpGet]
@@ -105,9 +106,11 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workday = _workTaskRepository.GetAssigned();
 
-            var listOfWorkTasks = workday.Select(workTask => _workTaskFactory.Create(workTask));
+            var listOfWorkTasks = workday
+                .Select(w => _workTaskFactory.Create(w))
+                .ToList();
 
-            return listOfWorkTasks.ToList();
+            return listOfWorkTasks;
         }
 
         [HttpGet]
@@ -116,9 +119,11 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workTasks = _workTaskRepository.GetAssigned(userId);
 
-            var listOfWorktasksDto = workTasks.Select(workTask => _workTaskFactory.Create(workTask));
+            var listOfWorktasksDto = workTasks
+                .Select(w => _workTaskFactory.Create(w))
+                .ToList();
 
-            return listOfWorktasksDto.ToList();
+            return listOfWorktasksDto;
         }
 
         [HttpGet]
@@ -127,9 +132,11 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workTasks = _workTaskRepository.GetStarted();
 
-            var listOfWorktasksDto = workTasks.Select(workTask => _workTaskFactory.Create(workTask));
+            var listOfWorktasksDto = workTasks
+                .Select(w => _workTaskFactory.Create(w))
+                .ToList(); ;
 
-            return listOfWorktasksDto.ToList();
+            return listOfWorktasksDto;
         }
 
         [HttpGet]
@@ -138,9 +145,11 @@ namespace Wholesaler.Backend.Api.Controllers
         {
             var workTasks = _workTaskRepository.GetFinished();
 
-            var listOfWorktasksDto = workTasks.Select(workTask => _workTaskFactory.Create(workTask));
+            var listOfWorktasksDto = workTasks
+                .Select(w => _workTaskFactory.Create(w))
+                .ToList();
 
-            return listOfWorktasksDto.ToList();
+            return listOfWorktasksDto;
         }
     }
 }
