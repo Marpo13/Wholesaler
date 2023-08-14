@@ -82,7 +82,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault(s => s.Id == storageId);
 
             if (storageDb == null)
-                throw new InvalidDataProvidedException($"There is no storage with id {storageId}.");
+                throw new EntityNotFoundException($"There is no storage with id {storageId}.");
 
             var storage = _storageDbFactory.Create(storageDb);
 

@@ -67,7 +67,7 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .FirstOrDefault(c => c.Id == id);
 
             if (clientDb == null)
-                throw new InvalidDataProvidedException($"There is no client with id {id}");
+                throw new EntityNotFoundException($"There is no client with id {id}");
             
             return _clientFactory.Create(clientDb);
         }

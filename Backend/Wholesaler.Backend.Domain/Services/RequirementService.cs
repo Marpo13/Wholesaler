@@ -34,12 +34,14 @@ namespace Wholesaler.Backend.Domain.Services
 
         public Requirement EditQuantity(Guid id, int quantity)
         {
-            if (quantity < 0)
+            if (quantity <= 0)
                 throw new InvalidDataProvidedException("Quantity must be more than 0.");
 
             var requirement = _repository.GetOrDefault(id);
             if (requirement == null)
                 throw new EntityNotFoundException($"There is no requirement with id {id}.");
+            if (requirement.Status == Status.Completed)
+                throw new InvalidDataProvidedException($"Requirement with id {id} is completed.");
 
             requirement.UpdateQuantity(quantity);
             _repository.Update(requirement);

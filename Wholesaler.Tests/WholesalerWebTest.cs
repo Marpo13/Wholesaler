@@ -22,7 +22,7 @@ namespace Wholesaler.Tests
                     builder.ConfigureServices(services =>
                     {
                         var optionsBuilder = new DbContextOptionsBuilder<WholesalerContext>();
-                        optionsBuilder.UseInMemoryDatabase("WholesalerDb");
+                        optionsBuilder.UseInMemoryDatabase($"WholesalerDb_{Guid.NewGuid()}");
                         var options = optionsBuilder.Options;
 
                         var context = new WholesalerContext(options);

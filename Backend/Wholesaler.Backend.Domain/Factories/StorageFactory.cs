@@ -13,6 +13,8 @@ namespace Wholesaler.Backend.Domain.Factories
                 throw new InvalidDataProvidedException("You need to provide positive state.");
             if (string.IsNullOrEmpty(request.Name))
                 throw new InvalidDataProvidedException("You need to provide name.");
+            if (request.Name.Contains(" "))
+                throw new InvalidDataProvidedException("You need to provide name without whitespaces.");
 
             var storage = new Storage(request.State, request.Name);
 

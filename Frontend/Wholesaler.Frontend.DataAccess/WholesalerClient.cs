@@ -250,7 +250,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<RequirementDto>>()
             {
-                Path = $"{apiPath}/requirements/{storageId}",
+                Path = $"{apiPath}/requirements/withStorageId?storageId={storageId}",
                 Method = HttpMethod.Get
             };
 
