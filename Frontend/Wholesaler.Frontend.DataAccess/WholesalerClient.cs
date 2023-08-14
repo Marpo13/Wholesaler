@@ -257,6 +257,28 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
+        public async Task<ExecutionResultGeneric<List<RequirementDto>>> GetRequirementsByStatus(string status)
+        {
+            var request = new Request<HttpRequestMessage, List<RequirementDto>>()
+            {
+                Path = $"{apiPath}/requirements/byStatus?status={status}",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
+
+        public async Task<ExecutionResultGeneric<RequirementDto>> CompleteRequirement(Guid id)
+        {
+            var request = new Request<Guid, RequirementDto>()
+            {
+                Path = $"{apiPath}/requirements/{id}/actions/complete",
+                Method = HttpMethod.Patch
+            };
+
+            return await SendAsync(request);
+        }
+
         public async Task<ExecutionResultGeneric<List<ClientDto>>> GetAllClients()
         {
             var request = new Request<HttpRequestMessage, List<ClientDto>>()
@@ -307,18 +329,7 @@ namespace Wholesaler.Frontend.DataAccess
             };
 
             return await SendAsync(request);
-        }
-
-        public async Task<ExecutionResultGeneric<RequirementDto>> CompleteRequirement(Guid id)
-        {
-            var request = new Request<Guid, RequirementDto>()
-            {
-                Path = $"{apiPath}/requirements/{id}/actions/complete",
-                Method = HttpMethod.Patch
-            };
-
-            return await SendAsync(request);
-        }
+        }             
     }
 }
 

@@ -98,5 +98,25 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             return requirement;
         }
+
+        public List<Requirement> GetByStatus(string status)
+        {
+            var statusWord = char.ToUpper(status[0]) + status.Substring(1).ToLower();
+            if (!Enum.TryParse(statusWord, out Status requirementStatus))
+                throw new InvalidDataProvidedException("You entered an invalid value of status.");
+
+            var requirementsDb = _context.Requirements
+                .Where(r => r.Status == requirementStatus)
+                .ToList();
+
+            if (requirementsDb == null)
+                return new List<Requirement>();
+
+            var requirements = requirementsDb
+                .Select(requirementDb => _factory.Create(requirementDb))
+                .ToList();
+
+            return requirements;
+        }
     }
 }
