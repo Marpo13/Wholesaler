@@ -8,5 +8,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
         Storage Add (CreateStorageRequest request);
         Storage Deliver (Guid storageId, int quantity);
         Storage Depart(Guid storageId, Requirement requirement);
+        int GetSumOfStates();
+        int GetCosts(int sumOfStates);
     }
 }

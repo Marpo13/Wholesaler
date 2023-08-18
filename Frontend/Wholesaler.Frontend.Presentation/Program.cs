@@ -8,6 +8,7 @@ using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views;
 using Wholesaler.Frontend.Presentation.Views.EmployeeViews;
 using Wholesaler.Frontend.Presentation.Views.ManagerViews;
+using Wholesaler.Frontend.Presentation.Views.OwnerViews;
 using Wholesaler.Frontend.Presentation.Views.UsersViews;
 
 var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
@@ -40,6 +41,7 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<MushroomsDepartView>();
     services.AddTransient<EditRequirementView>();
     services.AddTransient<RequirementProgressView>();
+    services.AddTransient<CheckCostsView>();
     services.AddSingleton<ApplicationState>();
     });
 

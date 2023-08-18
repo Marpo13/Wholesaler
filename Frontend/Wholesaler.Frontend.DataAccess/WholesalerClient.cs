@@ -329,7 +329,18 @@ namespace Wholesaler.Frontend.DataAccess
             };
 
             return await SendAsync(request);
-        }             
+        }
+
+        public async Task<ExecutionResultGeneric<int>> GetCosts()
+        {
+            var request = new Request<HttpRequestMessage, int>()
+            {
+                Path = $"{apiPath}/storages/costs",
+                Method = HttpMethod.Get
+            };
+
+            return await SendAsync(request);
+        }
     }
 }
 

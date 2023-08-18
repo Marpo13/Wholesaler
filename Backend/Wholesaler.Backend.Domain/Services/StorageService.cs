@@ -63,5 +63,23 @@ namespace Wholesaler.Backend.Domain.Services
 
             return storage;
         }
+
+        public int GetSumOfStates()
+        {
+            var storages = _storageRepository.GetAll();
+            int sumOfStates = 0;
+            foreach (var storage in storages)
+                sumOfStates += storage.State;
+
+            return sumOfStates;
+        }
+
+        public int GetCosts(int sumOfStates)
+        {
+            var multiplier = 5;
+            var costs = multiplier * sumOfStates;
+
+            return costs;
+        }
     }
 }
