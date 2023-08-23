@@ -68,6 +68,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseDatabase();
+
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapControllers();
