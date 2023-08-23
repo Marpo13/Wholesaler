@@ -13,7 +13,7 @@ namespace Wholesaler.Backend.DataAccess
         public DbSet<WorkTask> WorkTasks { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Storage> Storages { get; set; }
-        
+
         public WholesalerContext(DbContextOptions<WholesalerContext> options)
         : base(options)
         {
@@ -27,6 +27,45 @@ namespace Wholesaler.Backend.DataAccess
             modelBuilder.ApplyConfiguration(new WorkdayConfiguration());
             modelBuilder.ApplyConfiguration(new WorkTaskConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityConfiguration());
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            UpdateDate();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            UpdateDate();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void UpdateDate()
+        {
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.Entity is TrackedEntity);
+
+            foreach (var entry in entries)
+            {
+                if (entry.State is EntityState.Unchanged)
+                    continue;
+
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        ((TrackedEntity)entry.Entity).CreatedDate = DateTime.Now;
+                        break;
+
+                    case EntityState.Modified:
+                        ((TrackedEntity)entry.Entity).UpdatedDate = DateTime.Now;
+                        break;
+
+                    case EntityState.Deleted:
+                        ((TrackedEntity)entry.Entity).DeletedDate = DateTime.Now;
+                        break;
+                }
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Wholesaler.Backend.DataAccess.Models
 {
-    public class Requirement
+    public class Requirement : TrackedEntity
     {
         public Guid Id { get; set; }
         public int Quantity { get; set; }
