@@ -1,5 +1,4 @@
-﻿using System.Transactions;
-using Wholesaler.Backend.Domain.Exceptions;
+﻿using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Interfaces;
 
 namespace Wholesaler.Backend.Api
@@ -21,7 +20,7 @@ namespace Wholesaler.Backend.Api
             }
             catch (Exception ex)
             {
-                if(_transaction.IsStarted == true)
+                if(_transaction.IsStarted)
                     _transaction.Rollback();
 
                 switch (ex)
