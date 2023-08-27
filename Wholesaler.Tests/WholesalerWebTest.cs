@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using Wholesaler.Backend.DataAccess;
 using Wholesaler.Backend.Domain.Providers.Interfaces;
@@ -22,7 +23,8 @@ namespace Wholesaler.Tests
                     builder.ConfigureServices(services =>
                     {
                         var optionsBuilder = new DbContextOptionsBuilder<WholesalerContext>();
-                        optionsBuilder.UseInMemoryDatabase($"WholesalerDb_{Guid.NewGuid()}");
+                        optionsBuilder.UseInMemoryDatabase($"WholesalerDb_{Guid.NewGuid()}")
+                        .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                         var options = optionsBuilder.Options;
 
                         var context = new WholesalerContext(options);

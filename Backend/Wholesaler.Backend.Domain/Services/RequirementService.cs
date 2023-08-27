@@ -13,14 +13,19 @@ namespace Wholesaler.Backend.Domain.Services
         private readonly IRequirementFactory _factory;
         private readonly IRequirementRepository _repository;
         private readonly IStorageService _storageService;
+        private readonly ITransaction _transaction;
         private readonly ITimeProvider _timeProvider;
 
-        public RequirementService(IRequirementFactory requirementFactory, IRequirementRepository requirementRepository, IStorageService storageService,
+        public RequirementService(IRequirementFactory requirementFactory,
+            IRequirementRepository requirementRepository, 
+            IStorageService storageService,
+            ITransaction transaction,
             ITimeProvider timeProvider)
         {
             _factory = requirementFactory;
             _repository = requirementRepository;
             _storageService = storageService;
+            _transaction = transaction;
             _timeProvider = timeProvider;
         }
 
@@ -53,17 +58,25 @@ namespace Wholesaler.Backend.Domain.Services
         {
             var time = _timeProvider.Now();
 
+            _transaction.Begin();
+
             var requirement = _repository.GetOrDefault(id);
             if (requirement == null)
+            {
                 throw new EntityNotFoundException($"There is no requirement with id {id}.");
+            }
             if (requirement.Status == Status.Completed)
+            {
                 throw new InvalidDataProvidedException($"Requirement with id {id} is completed.");
+            }
 
             requirement.Complete();
             requirement.SetDate(time);
 
             _repository.Update(requirement);
             _storageService.Depart(requirement.StorageId, requirement);
+
+            _transaction.Commit();
 
             return requirement;
         }

@@ -61,12 +61,16 @@ builder.Services.AddTransient<IClientRepository, ClientRepository>();
 builder.Services.AddTransient<IRequirementRepository, RequirementRepository>();
 builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
 builder.Services.AddTransient<ITimeProvider, TimeProvider>();
+builder.Services.AddScoped<ITransaction, Transaction>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
+builder.Services.AddHostedService<TimedHostedService>();
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseDatabase();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
