@@ -88,6 +88,7 @@ namespace Wholesaler.Tests.RequirementController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
+        [Fact]
         public async Task Add_WithInvalidStorageId_ReturnsNotFound()
         {
             //Arrange
@@ -116,6 +117,7 @@ namespace Wholesaler.Tests.RequirementController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
+        [Fact]
         public async Task Add_WithInvalidQuantity_ReturnsBadRequest()
         {
             //Arrange

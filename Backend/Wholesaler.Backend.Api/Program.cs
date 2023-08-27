@@ -61,6 +61,7 @@ builder.Services.AddTransient<IClientRepository, ClientRepository>();
 builder.Services.AddTransient<IRequirementRepository, RequirementRepository>();
 builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
 builder.Services.AddTransient<ITimeProvider, TimeProvider>();
+builder.Services.AddScoped<ITransaction, Transaction>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
 
 var app = builder.Build();

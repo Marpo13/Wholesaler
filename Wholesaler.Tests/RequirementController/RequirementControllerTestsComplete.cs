@@ -58,7 +58,8 @@ namespace Wholesaler.Tests.RequirementController
             var status = Status.Completed.ToString();
             requirementDtoStatus.Should().Be(status);
         }
-                
+
+        [Fact]
         public async Task Complete_WithInvalidId_ReturnsNotFound()
         {
             //Arrange
@@ -85,6 +86,7 @@ namespace Wholesaler.Tests.RequirementController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
+        [Fact]
         public async Task Complete_WithCompletedRequirement_ReturnsBadRequest()
         {
             //Arrange
