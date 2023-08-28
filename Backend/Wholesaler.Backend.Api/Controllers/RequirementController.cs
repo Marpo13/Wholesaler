@@ -101,5 +101,15 @@ namespace Wholesaler.Backend.Api.Controllers
 
             return requirementsDto;
         }
+
+        [HttpGet]
+        [Route("incomes")]
+        public async Task<ActionResult<int>> GetIncomes()
+        {
+            var quantity = _service.GetSumOfCompletedRequirements();
+            var incomes = _service.GetIncomes(quantity);
+
+            return incomes;
+        }
     }
 }

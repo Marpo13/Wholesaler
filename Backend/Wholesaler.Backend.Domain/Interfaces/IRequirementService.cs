@@ -8,5 +8,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
         Requirement Add(CreateRequirementRequest request);
         Requirement EditQuantity(Guid id, int quantity);
         Requirement Complete(Guid id);
+        int GetSumOfCompletedRequirements();
+        int GetIncomes(int quantity);
     }
 }
