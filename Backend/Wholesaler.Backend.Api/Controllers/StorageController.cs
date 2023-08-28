@@ -55,15 +55,5 @@ namespace Wholesaler.Backend.Api.Controllers
 
             return storageDto;
         }
-
-        [HttpGet]
-        [Route("costs")]
-        public async Task<ActionResult<int>> GetCosts()
-        {
-            var sumOfStates = _service.GetSumOfStates();
-            var costs = _service.GetCosts(sumOfStates);
-
-            return costs;
-        }
     }
 }

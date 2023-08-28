@@ -3,6 +3,7 @@ using Wholesaler.Backend.Api.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Requests.Requirements;
+using Wholesaler.Backend.Domain.Services;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 
@@ -17,15 +18,21 @@ namespace Wholesaler.Backend.Api.Controllers
         private readonly IRequirementRepository _requirementRepository;
         private readonly IClientRepository _clientRepository;
         private readonly IStorageRepository _storageRepository;
+        private readonly IStorageService _storageService;
 
-        public RequirementController(IRequirementService service, IRequirementDtoFactory factory, IRequirementRepository requirementRepository, IClientRepository clientRepository, 
-            IStorageRepository storageRepository)
+        public RequirementController(IRequirementService service, 
+            IRequirementDtoFactory factory, 
+            IRequirementRepository requirementRepository, 
+            IClientRepository clientRepository, 
+            IStorageRepository storageRepository,
+            IStorageService storageService)
         {
             _service = service;
             _factory = factory;
             _requirementRepository = requirementRepository;
             _clientRepository = clientRepository;
             _storageRepository = storageRepository;
+            _storageService = storageService;
         }
 
         [HttpPost]
@@ -100,6 +107,16 @@ namespace Wholesaler.Backend.Api.Controllers
                 .ToList();
 
             return requirementsDto;
+        }
+
+        [HttpGet]
+        [Route("costs")]
+        public async Task<ActionResult<int>> GetCosts()
+        {
+            var sumOfStates = _storageService.GetSumOfStates();
+            var costs = _storageService.GetCosts(sumOfStates);
+
+            return costs;
         }
     }
 }
