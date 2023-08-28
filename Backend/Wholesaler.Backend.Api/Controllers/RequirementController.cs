@@ -113,8 +113,8 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("costs")]
         public async Task<ActionResult<int>> GetCosts()
         {
-            var sumOfStates = _storageService.GetSumOfStates();
-            var costs = _storageService.GetCosts(sumOfStates);
+            var quantity = _storageService.GetQuantity();
+            var costs = _storageService.GetCosts(quantity);
 
             return costs;
         }

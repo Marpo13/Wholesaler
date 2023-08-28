@@ -64,20 +64,25 @@ namespace Wholesaler.Backend.Domain.Services
             return storage;
         }
 
-        public int GetSumOfStates()
+        public int GetQuantity()
         {
             var storages = _storageRepository.GetAll();
+            var quantityOfCompletedRequirements = _requirementRepository.GetByStatus("Completed");
+
             int sumOfStates = 0;
             foreach (var storage in storages)
                 sumOfStates += storage.State;
 
+            foreach (var requirement in quantityOfCompletedRequirements)
+                sumOfStates += requirement.Quantity;
+
             return sumOfStates;
         }
 
-        public int GetCosts(int sumOfStates)
+        public int GetCosts(int quantity)
         {
             var multiplier = 5;
-            var costs = multiplier * sumOfStates;
+            var costs = multiplier * quantity;
 
             return costs;
         }
