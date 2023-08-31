@@ -1,0 +1,42 @@
+2023-08-30 10:15:45.524 +02:00 [INF] Entity Framework Core 6.0.11 initialized 'WholesalerContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.11' with options: None
+2023-08-30 10:15:46.377 +02:00 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-08-30 10:15:46.425 +02:00 [INF] Executed DbCommand (24ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2023-08-30 10:15:46.429 +02:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-08-30 10:15:46.430 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2023-08-30 10:15:46.455 +02:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2023-08-30 10:15:46.474 +02:00 [INF] No migrations were applied. The database is already up to date.
+2023-08-30 10:15:46.789 +02:00 [INF] Entity Framework Core 6.0.11 initialized 'WholesalerContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.11' with options: None
+2023-08-30 10:15:46.980 +02:00 [INF] Now listening on: http://localhost:5050
+2023-08-30 10:15:46.984 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-08-30 10:15:46.984 +02:00 [INF] Hosting environment: Development
+2023-08-30 10:15:46.984 +02:00 [INF] Content root path: D:\4 - Maja sie uczy\4 - My apps\Wholesaler\Backend\Wholesaler.Backend.Api\
+2023-08-30 10:15:47.152 +02:00 [INF] Executed DbCommand (42ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Guid), @p2='?' (DbType = DateTime2), @p3='?' (DbType = DateTime2), @p4='?' (DbType = DateTime2), @p5='?' (DbType = Int32), @p6='?' (DbType = Int32), @p7='?' (DbType = Guid), @p8='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [Requirements] ([Id], [ClientId], [CreatedDate], [DeletedDate], [DeliveryDate], [Quantity], [Status], [StorageId], [UpdatedDate])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+2023-08-30 10:15:47.703 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5050/swagger/index.html - -
+2023-08-30 10:15:48.112 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5050/swagger/index.html - - - 200 - text/html;charset=utf-8 412.1375ms
+2023-08-30 10:15:48.120 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5050/_vs/browserLink - -
+2023-08-30 10:15:48.143 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5050/_framework/aspnetcore-browser-refresh.js - -
+2023-08-30 10:15:48.148 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5050/_framework/aspnetcore-browser-refresh.js - - - 200 12376 application/javascript;+charset=utf-8 5.3089ms
+2023-08-30 10:15:48.164 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5050/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 43.3097ms
+2023-08-30 10:15:48.233 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5050/swagger/v1/swagger.json - -
+2023-08-30 10:15:48.356 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5050/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 123.4668ms
+2023-08-30 10:15:51.816 +02:00 [INF] Request starting HTTP/1.1 GET http://localhost:5050/clients - -
+2023-08-30 10:15:51.827 +02:00 [INF] Executing endpoint 'Wholesaler.Backend.Api.Controllers.ClientController.GetAll (Wholesaler.Backend.Api)'
+2023-08-30 10:15:51.846 +02:00 [INF] Route matched with {action = "GetAll", controller = "Client"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Wholesaler.Core.Dto.ResponseModels.ClientDto]]] GetAll() on controller Wholesaler.Backend.Api.Controllers.ClientController (Wholesaler.Backend.Api).
+2023-08-30 10:15:51.896 +02:00 [INF] Entity Framework Core 6.0.11 initialized 'WholesalerContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.11' with options: None
+2023-08-30 10:15:52.167 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[Name], [c].[Surname]
+FROM [Clients] AS [c]
+2023-08-30 10:15:52.188 +02:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[Wholesaler.Core.Dto.ResponseModels.ClientDto, Wholesaler.Core.Dto, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2023-08-30 10:15:52.199 +02:00 [INF] Executed action Wholesaler.Backend.Api.Controllers.ClientController.GetAll (Wholesaler.Backend.Api) in 348.8769ms
+2023-08-30 10:15:52.199 +02:00 [INF] Executed endpoint 'Wholesaler.Backend.Api.Controllers.ClientController.GetAll (Wholesaler.Backend.Api)'
+2023-08-30 10:15:52.206 +02:00 [INF] Request finished HTTP/1.1 GET http://localhost:5050/clients - - - 200 - application/json;+charset=utf-8 389.4644ms
