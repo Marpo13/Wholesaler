@@ -34,6 +34,10 @@ namespace Wholesaler.Backend.DataAccess.Configurations
             builder
                 .HasMany(p => p.Activities)
                 .WithOne(a => a.Person);
+
+            builder
+                .HasMany(p => p.Deliveries)
+                .WithOne(d => d.Person);
         }
     }
 }

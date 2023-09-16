@@ -13,6 +13,6 @@ namespace Wholesaler.Backend.DataAccess.Models
         public virtual ICollection<Workday> Workdays { get; set; }
         public virtual ICollection<WorkTask> WorkTasks { get; set; } 
         public virtual ICollection<Activity> Activities { get; set; }
-        
+        public virtual ICollection<Delivery> Deliveries { get; set; }        
     }
 }

@@ -50,7 +50,7 @@ namespace Wholesaler.Backend.Api.Controllers
         [Route("{id}/actions/deliver")]
         public async Task<ActionResult<StorageDto>> MushroomsDelivery(Guid id, [FromBody] UpdateStorageRequestModel updateStorageRequestModel)
         {
-            var storageDelivery = _service.Deliver(id, updateStorageRequestModel.Quantity);
+            var storageDelivery = _service.Deliver(id, updateStorageRequestModel.Quantity, updateStorageRequestModel.PersonId);
             var storageDto = _storageDtoFactory.Create(storageDelivery);
 
             return storageDto;

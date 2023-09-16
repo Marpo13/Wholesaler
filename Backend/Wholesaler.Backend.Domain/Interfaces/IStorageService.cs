@@ -6,9 +6,7 @@ namespace Wholesaler.Backend.Domain.Interfaces
     public interface IStorageService
     {
         Storage Add (CreateStorageRequest request);
-        Storage Deliver (Guid storageId, int quantity);
+        Storage Deliver(Guid storageId, int quantity, Guid personId);
         Storage Depart(Guid storageId, Requirement requirement);
-        int GetQuantity();
-        int GetCosts(int sumOfStates);
     }
 }

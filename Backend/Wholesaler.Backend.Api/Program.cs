@@ -60,6 +60,8 @@ builder.Services.AddTransient<IRequirementService, RequirementService>();
 builder.Services.AddTransient<IClientRepository, ClientRepository>();
 builder.Services.AddTransient<IRequirementRepository, RequirementRepository>();
 builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
+builder.Services.AddTransient<IDeliveryRepository, DeliveryRepository>();
+builder.Services.AddTransient<IRaportService, RaportService>();
 builder.Services.AddTransient<ITimeProvider, TimeProvider>();
 builder.Services.AddScoped<ITransaction, Transaction>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
