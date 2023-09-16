@@ -3,5 +3,6 @@
     public interface IRaportService
     {
         float GetCosts();
+        float GetCostsForEmployee(Guid employeeId);
     }
 }

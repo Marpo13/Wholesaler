@@ -6,5 +6,6 @@ namespace Wholesaler.Backend.Domain.Repositories
     {
         Delivery Add(Delivery delivery);
         List<Delivery> GetAll();
+        List<Delivery> GetForEmployee(Guid personId);
     }
 }

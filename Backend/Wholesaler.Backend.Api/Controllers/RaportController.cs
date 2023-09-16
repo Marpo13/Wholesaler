@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Domain.Interfaces;
-using Wholesaler.Backend.Domain.Repositories;
 
 namespace Wholesaler.Backend.Api.Controllers
 {
@@ -22,6 +21,15 @@ namespace Wholesaler.Backend.Api.Controllers
             var costs = _raportService.GetCosts();
 
             return costs;
+        }
+
+        [HttpGet]
+        [Route("costs/employee/{id}")]
+        public async Task<ActionResult<float>> GetCostsForEmployee(Guid id)
+        {
+            var costsForEmployee = _raportService.GetCostsForEmployee(id);
+
+            return costsForEmployee;
         }
     }
 }

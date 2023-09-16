@@ -1,4 +1,5 @@
-﻿using Wholesaler.Backend.Domain.Entities;
+﻿using Wholesaler.Backend.DataAccess.Factories;
+using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Backend.Domain.Repositories;
 using DeliveryDb = Wholesaler.Backend.DataAccess.Models.Delivery;
 
@@ -7,10 +8,12 @@ namespace Wholesaler.Backend.DataAccess.Repositories
     public class DeliveryRepository : IDeliveryRepository
     {
         private readonly WholesalerContext _context;
+        private readonly IDeliveryFactory _deliveryFactory;
 
-        public DeliveryRepository(WholesalerContext context)
+        public DeliveryRepository(WholesalerContext context, IDeliveryFactory deliveryFactory)
         {
             _context = context;
+            _deliveryFactory = deliveryFactory;
         }
 
         public Delivery Add(Delivery delivery)
@@ -36,16 +39,21 @@ namespace Wholesaler.Backend.DataAccess.Repositories
 
             if (deliveriesDb.Any())
             {
-                var delivery = deliveriesDb.Select(deliveryDb =>
-                {
-                    return new Delivery(
-                        deliveryDb.Id,
-                        deliveryDb.Quantity,
-                        deliveryDb.DeliveryDate,
-                        deliveryDb.PersonId);
-                });
+                return _deliveryFactory.Create(deliveriesDb);
+            }
 
-                return delivery.ToList();
+            return new List<Delivery>();
+        }
+
+        public List<Delivery> GetForEmployee(Guid personId)
+        {
+            var deliveriesDb = _context.Delivery
+                .Where(d => d.PersonId == personId)
+                .ToList();
+
+            if (deliveriesDb.Any())
+            {
+                return _deliveryFactory.Create(deliveriesDb);
             }
 
             return new List<Delivery>();
