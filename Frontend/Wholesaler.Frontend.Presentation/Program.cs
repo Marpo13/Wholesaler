@@ -20,6 +20,7 @@ var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddTransient<IRequirementRepository, WholesalerClient>();
     services.AddTransient<IClientRepository, WholesalerClient>();
     services.AddTransient<IStorageRepository, WholesalerClient>();
+    services.AddTransient<IDeliveryRepository, WholesalerClient>();
     services.AddTransient<ILoginView, LoginView>();
     services.AddTransient<IMenuView, MenuView>();
     services.AddTransient<EmployeeView>();

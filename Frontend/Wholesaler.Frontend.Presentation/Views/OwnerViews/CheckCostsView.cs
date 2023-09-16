@@ -7,10 +7,10 @@ namespace Wholesaler.Frontend.Presentation.Views.OwnerViews
 {
     internal class CheckCostsView : View
     {
-        private readonly IStorageRepository _repository;
+        private readonly IDeliveryRepository _repository;
         private readonly CheckCostsState _state;
 
-        public CheckCostsView(IStorageRepository repository, ApplicationState state) : base(state)
+        public CheckCostsView(IDeliveryRepository repository, ApplicationState state) : base(state)
         {
             _repository = repository;
             _state = state.GetOwnerViews().GetCheckCostsState();

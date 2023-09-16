@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Wholesaler.Core.Dto.RequestModels;
+﻿using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Frontend.DataAccess.Http;
 using Wholesaler.Frontend.Domain.Interfaces;
@@ -14,7 +13,8 @@ namespace Wholesaler.Frontend.DataAccess
         IUserRepository,
         IRequirementRepository,
         IClientRepository,
-        IStorageRepository
+        IStorageRepository,
+        IDeliveryRepository
     {
         private const string apiPath = $"http://localhost:5050";
 
@@ -316,7 +316,7 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<StorageDto>> Deliver(Guid id, int quantity)
+        public async Task<ExecutionResultGeneric<StorageDto>> Deliver(Guid id, int quantity, Guid personId)
         {
             var request = new Request<UpdateStorageRequestModel, StorageDto>()
             {
@@ -324,7 +324,8 @@ namespace Wholesaler.Frontend.DataAccess
                 Method = HttpMethod.Patch,
                 Content = new UpdateStorageRequestModel()
                 {
-                    Quantity = quantity
+                    Quantity = quantity,
+                    PersonId = personId
                 }
             };
 
@@ -335,7 +336,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, int>()
             {
-                Path = $"{apiPath}/storages/costs",
+                Path = $"{apiPath}/raports/costs",
                 Method = HttpMethod.Get
             };
 
