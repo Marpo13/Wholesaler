@@ -2,7 +2,6 @@
 {
     public interface IRaportService
     {
-        float GetCosts();
-        float GetCostsForEmployee(Guid employeeId);
+        float GetCosts(DateTimeOffset dateFrom, DateTimeOffset dateTo);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Domain.Interfaces;
+using Wholesaler.Backend.Domain.Requests.Delivery;
 
 namespace Wholesaler.Backend.Api.Controllers
 {
@@ -16,20 +17,13 @@ namespace Wholesaler.Backend.Api.Controllers
 
         [HttpGet]
         [Route("costs")]
-        public async Task<ActionResult<float>> GetCosts()
+        public async Task<ActionResult<float>> GetCostsDeclaredByTimespan(long from, long to)
         {
-            var costs = _raportService.GetCosts();
+            var fromDate = DateTimeOffset.FromUnixTimeMilliseconds(from);
+            var toDate = DateTimeOffset.FromUnixTimeMilliseconds(to);
+            var costs = _raportService.GetCosts(fromDate, toDate);
 
             return costs;
-        }
-
-        [HttpGet]
-        [Route("costs/employee/{id}")]
-        public async Task<ActionResult<float>> GetCostsForEmployee(Guid id)
-        {
-            var costsForEmployee = _raportService.GetCostsForEmployee(id);
-
-            return costsForEmployee;
         }
     }
 }

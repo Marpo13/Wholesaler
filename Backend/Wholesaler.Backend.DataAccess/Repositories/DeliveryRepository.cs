@@ -32,9 +32,10 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return delivery;
         }
 
-        public List<Delivery> GetAll()
+        public List<Delivery> GetForTimespan(DateTimeOffset dateFrom, DateTimeOffset dateTo)
         {
             var deliveriesDb = _context.Delivery
+                .Where(d => d.DeliveryDate >= dateFrom && d.DeliveryDate <= dateTo)
                 .ToList();
 
             if (deliveriesDb.Any())
@@ -45,18 +46,17 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             return new List<Delivery>();
         }
 
-        public List<Delivery> GetForEmployee(Guid personId)
-        {
-            var deliveriesDb = _context.Delivery
-                .Where(d => d.PersonId == personId)
-                .ToList();
+        //public List<Delivery> GetAll()
+        //{
+        //    var deliveriesDb = _context.Delivery
+        //        .ToList();
 
-            if (deliveriesDb.Any())
-            {
-                return _deliveryFactory.Create(deliveriesDb);
-            }
+        //    if (deliveriesDb.Any())
+        //    {
+        //        return _deliveryFactory.Create(deliveriesDb);
+        //    }
 
-            return new List<Delivery>();
-        }
+        //    return new List<Delivery>();
+        //}
     }
 }

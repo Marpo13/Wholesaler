@@ -14,17 +14,11 @@ namespace Wholesaler.Backend.Domain.Services
             _deliveryRepository = deliveryRepository;
         }
 
-        public float GetCosts()
-        {
-            var deliveries = _deliveryRepository.GetAll();
-            var costs = GetCosts(deliveries);
+        public IDeliveryRepository DeliveryRepository { get; }
 
-            return costs;
-        }
-
-        public float GetCostsForEmployee(Guid employeeId)
+        public float GetCosts(DateTimeOffset dateFrom, DateTimeOffset dateTo)
         {
-            var deliveries = _deliveryRepository.GetForEmployee(employeeId);
+            var deliveries = _deliveryRepository.GetForTimespan(dateFrom, dateTo);
             var costs = GetCosts(deliveries);
 
             return costs;
@@ -38,6 +32,7 @@ namespace Wholesaler.Backend.Domain.Services
                 quantity += delivery.Quantity;
 
             var costs = _multiplier * quantity;
+
             return costs;
         }
     }

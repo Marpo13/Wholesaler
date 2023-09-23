@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Wholesaler.Backend.Api;
 using Wholesaler.Backend.Api.Factories;
+using Wholesaler.Backend.Api.Factories.Interfaces;
 using Wholesaler.Backend.DataAccess;
 using Wholesaler.Backend.DataAccess.Factories;
 using Wholesaler.Backend.DataAccess.Repositories;
@@ -11,15 +12,14 @@ using Wholesaler.Backend.Domain.Providers.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Services;
 using Wholesaler.Barckend.Domain.Providers;
-using IWorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IWorkTaskFactory;
-using WorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.WorkTaskFactory;
-using IWorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.IWorkTaskFactory;
-using WorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.WorkTaskFactory;
-using Wholesaler.Backend.Api.Factories.Interfaces;
-using IClientFactoryApi = Wholesaler.Backend.Api.Factories.Interfaces.IClientFactory;
 using ClientFactoryApi = Wholesaler.Backend.Api.Factories.ClientFactory;
-using IClientFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IClientFactory;
 using ClientFactoryDomain = Wholesaler.Backend.Domain.Factories.ClientFactory;
+using IClientFactoryApi = Wholesaler.Backend.Api.Factories.Interfaces.IClientFactory;
+using IClientFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IClientFactory;
+using IWorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.IWorkTaskFactory;
+using IWorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.Interfaces.IWorkTaskFactory;
+using WorkTaskFactoryDataAccess = Wholesaler.Backend.DataAccess.Factories.WorkTaskFactory;
+using WorkTaskFactoryDomain = Wholesaler.Backend.Domain.Factories.WorkTaskFactory;
 
 var builder = WebApplication.CreateBuilder(args);
 
