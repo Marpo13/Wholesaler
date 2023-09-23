@@ -592,14 +592,14 @@ namespace Wholesaler.Frontend.Presentation.States
 
         internal class CheckCostsState : IState
         {
-            public int Costs { get; private set; }
+            public float Costs { get; private set; }
 
             public void Initialize()
             {
                 Costs = 0;
             }
 
-            public void GetCosts(int costs)
+            public void GetCosts(float costs)
             {
                 Costs = costs;
             }

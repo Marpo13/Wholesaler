@@ -332,11 +332,11 @@ namespace Wholesaler.Frontend.DataAccess
             return await SendAsync(request);
         }
 
-        public async Task<ExecutionResultGeneric<int>> GetCosts()
+        public async Task<ExecutionResultGeneric<float>> GetCosts(long from, long to)
         {
-            var request = new Request<HttpRequestMessage, int>()
+            var request = new Request<HttpRequestMessage, float>()
             {
-                Path = $"{apiPath}/raports/costs",
+                Path = $"{apiPath}/raports/costs?from={from}&to={to}",
                 Method = HttpMethod.Get
             };
 

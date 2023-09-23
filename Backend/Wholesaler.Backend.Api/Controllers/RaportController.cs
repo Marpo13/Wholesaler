@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wholesaler.Backend.Domain.Interfaces;
-using Wholesaler.Backend.Domain.Requests.Delivery;
 
 namespace Wholesaler.Backend.Api.Controllers
 {

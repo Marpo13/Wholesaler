@@ -19,7 +19,11 @@ namespace Wholesaler.Frontend.Presentation.Views.OwnerViews
 
         protected async override Task RenderViewAsync()
         {
-            var getCosts = await _repository.GetCosts();
+            var dates = GetDates();
+            var from = dates[0].ToUnixTimeMilliseconds();
+            var to = dates[1].ToUnixTimeMilliseconds();
+
+            var getCosts = await _repository.GetCosts(from, to);
 
             if (!getCosts.IsSuccess)
             {
@@ -29,8 +33,41 @@ namespace Wholesaler.Frontend.Presentation.Views.OwnerViews
 
             _state.GetCosts(getCosts.Payload);
 
-            Console.WriteLine($"Costs of mushrooms: {getCosts.Payload} zł");
+            Console.WriteLine($"Costs of mushrooms from {dates[0]} to {dates[1]}: {getCosts.Payload} zł");
             Console.ReadLine();
+        }
+
+        private List<DateTimeOffset> GetDates()
+        {
+            var validValueProvided = false;
+            var dates = new List<DateTimeOffset>();
+
+            while (validValueProvided is false)
+            {
+                Console.WriteLine("Enter the start and the end date." +
+                "\nStart date: ");
+
+                if (!DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset dateFrom))
+                {
+                    Console.WriteLine("You entered an invalid value.");
+                    continue;
+                }
+
+                Console.WriteLine("End date: ");
+
+                if (!DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset dateTo))
+                {
+                    Console.WriteLine("You entered an invalid value.");
+                    continue;
+                }
+
+                dates.Add(dateFrom);
+                dates.Add(dateTo);
+
+                validValueProvided = true;
+            }
+
+            return dates;
         }
     }
 }

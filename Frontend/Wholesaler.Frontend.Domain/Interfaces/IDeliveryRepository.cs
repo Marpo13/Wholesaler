@@ -4,6 +4,6 @@ namespace Wholesaler.Frontend.Domain.Interfaces
 {
     public interface IDeliveryRepository
     {
-        Task<ExecutionResultGeneric<int>> GetCosts();
+        Task<ExecutionResultGeneric<float>> GetCosts(long from, long to);
     }
 }
