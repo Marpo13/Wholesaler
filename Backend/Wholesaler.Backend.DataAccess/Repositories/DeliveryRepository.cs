@@ -37,26 +37,9 @@ namespace Wholesaler.Backend.DataAccess.Repositories
             var deliveriesDb = _context.Delivery
                 .Where(d => d.DeliveryDate >= dateFrom && d.DeliveryDate <= dateTo)
                 .ToList();
-
-            if (deliveriesDb.Any())
-            {
-                return _deliveryFactory.Create(deliveriesDb);
-            }
-
-            return new List<Delivery>();
+            
+                return deliveriesDb.Select(d => _deliveryFactory.Create(d))
+                       .ToList();
         }
-
-        //public List<Delivery> GetAll()
-        //{
-        //    var deliveriesDb = _context.Delivery
-        //        .ToList();
-
-        //    if (deliveriesDb.Any())
-        //    {
-        //        return _deliveryFactory.Create(deliveriesDb);
-        //    }
-
-        //    return new List<Delivery>();
-        //}
     }
 }

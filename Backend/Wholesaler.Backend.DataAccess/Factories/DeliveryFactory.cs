@@ -5,17 +5,13 @@ namespace Wholesaler.Backend.DataAccess.Factories
 {
     public class DeliveryFactory : IDeliveryFactory
     {
-        public List<Delivery> Create(List<DeliveryDb> deliveriesDb)
+        public Delivery Create(DeliveryDb deliveryDb)
         {
-            return deliveriesDb.Select(deliveryDb =>
-            {
-                return new Delivery(
+            return new Delivery(
                     deliveryDb.Id,
                     deliveryDb.Quantity,
                     deliveryDb.DeliveryDate,
                     deliveryDb.PersonId);
-
-            }).ToList();
         }
     }
 }

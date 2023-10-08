@@ -5,6 +5,6 @@ namespace Wholesaler.Backend.DataAccess.Factories
 {
     public interface IDeliveryFactory
     {
-        List<Delivery> Create(List<DeliveryDb> deliveriesDb);
+        Delivery Create(DeliveryDb deliveryDb);
     }
 }

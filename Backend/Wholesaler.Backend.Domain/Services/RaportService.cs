@@ -14,8 +14,6 @@ namespace Wholesaler.Backend.Domain.Services
             _deliveryRepository = deliveryRepository;
         }
 
-        public IDeliveryRepository DeliveryRepository { get; }
-
         public float GetCosts(DateTimeOffset dateFrom, DateTimeOffset dateTo)
         {
             var deliveries = _deliveryRepository.GetForTimespan(dateFrom, dateTo);
