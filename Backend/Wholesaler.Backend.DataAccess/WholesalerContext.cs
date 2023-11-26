@@ -13,6 +13,7 @@ namespace Wholesaler.Backend.DataAccess
         public DbSet<WorkTask> WorkTasks { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Storage> Storages { get; set; }
+        public DbSet<Delivery> Delivery { get; set; }
 
         public WholesalerContext(DbContextOptions<WholesalerContext> options)
         : base(options)
@@ -27,6 +28,7 @@ namespace Wholesaler.Backend.DataAccess
             modelBuilder.ApplyConfiguration(new WorkdayConfiguration());
             modelBuilder.ApplyConfiguration(new WorkTaskConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityConfiguration());
+            modelBuilder.ApplyConfiguration(new DeliveryConfiguration());
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

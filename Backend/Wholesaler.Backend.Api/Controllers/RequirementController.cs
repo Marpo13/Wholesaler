@@ -18,7 +18,10 @@ namespace Wholesaler.Backend.Api.Controllers
         private readonly IClientRepository _clientRepository;
         private readonly IStorageRepository _storageRepository;
 
-        public RequirementController(IRequirementService service, IRequirementDtoFactory factory, IRequirementRepository requirementRepository, IClientRepository clientRepository, 
+        public RequirementController(IRequirementService service, 
+            IRequirementDtoFactory factory, 
+            IRequirementRepository requirementRepository, 
+            IClientRepository clientRepository, 
             IStorageRepository storageRepository)
         {
             _service = service;
