@@ -7,6 +7,6 @@ namespace Wholesaler.Frontend.Domain.Interfaces
     {
         Task<ExecutionResultGeneric<StorageDto>> Add(string name);
         Task<ExecutionResultGeneric<List<StorageDto>>> GetAllStorages();
-        Task<ExecutionResultGeneric<StorageDto>> Deliver(Guid id, int quantity);
+        Task<ExecutionResultGeneric<StorageDto>> Deliver(Guid id, int quantity, Guid personId);
     }
 }

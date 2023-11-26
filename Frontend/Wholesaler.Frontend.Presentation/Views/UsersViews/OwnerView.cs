@@ -1,17 +1,20 @@
 ﻿using Wholesaler.Frontend.Domain.Interfaces;
 using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views.Generic;
+using Wholesaler.Frontend.Presentation.Views.OwnerViews;
 
 namespace Wholesaler.Frontend.Presentation.Views.UsersViews
 {
     internal class OwnerView : View
     {
-        private readonly IUserService _service;
+        private readonly CheckCostsView _checkCosts;
 
-        public OwnerView(IUserService service, ApplicationState state)
+        public OwnerView(
+            CheckCostsView checkcosts,
+            ApplicationState state)
             : base(state)
         {
-            _service = service;
+            _checkCosts = checkcosts;
         }
 
         protected override async Task RenderViewAsync()
@@ -33,7 +36,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        Console.Clear();
+                        await _checkCosts.RenderAsync();
                         continue;
 
                     case ConsoleKey.D2:
@@ -47,6 +50,7 @@ namespace Wholesaler.Frontend.Presentation.Views.UsersViews
                         continue;
 
                     case ConsoleKey.Escape:
+                        wasExitKeyPressed = true;
                         break;
 
                     default: continue;

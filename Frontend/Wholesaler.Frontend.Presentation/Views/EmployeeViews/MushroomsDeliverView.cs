@@ -2,20 +2,17 @@
 using Wholesaler.Frontend.Presentation.States;
 using Wholesaler.Frontend.Presentation.Views.Components;
 using Wholesaler.Frontend.Presentation.Views.Generic;
-using Wholesaler.Frontend.Presentation.Views.ManagerViews.Components;
 
 namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 {
     internal class MushroomsDeliverView : View
     {
         private readonly IStorageRepository _storageRepository;
-        private readonly IRequirementRepository _requirementRepository;
         private readonly MushroomsDeliverState _state;
 
-        public MushroomsDeliverView(IStorageRepository storageRepository, IRequirementRepository requirementRepository, ApplicationState state) : base(state)
+        public MushroomsDeliverView(IStorageRepository storageRepository, ApplicationState state) : base(state)
         {
             _storageRepository = storageRepository;
-            _requirementRepository = requirementRepository;
             _state = State.GetEmployeeViews().GetMushroomsDelivery();
             _state.Initialize();
         }
@@ -23,6 +20,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
         protected async override Task RenderViewAsync()
         {
             var role = State.GetLoggedInUser().Role;
+            var personId = State.GetLoggedInUser().Id;
             if (role != "Employee")
                 throw new InvalidOperationException($"You can not deliver mushrooms with role {role}. Valid role is Employee.");
 
@@ -45,7 +43,7 @@ namespace Wholesaler.Frontend.Presentation.Views.EmployeeViews
 
                 if (int.TryParse(Console.ReadLine(), out int quantity))
                 {
-                    var delivery = await _storageRepository.Deliver(storage.Id, quantity);
+                    var delivery = await _storageRepository.Deliver(storage.Id, quantity, personId);
                     if (delivery.IsSuccess)
                     {
                         _state.GetValues(delivery.Payload.Id, quantity);
