@@ -1,0 +1,226 @@
+2023-12-10 13:33:16.173 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients
+2023-12-10 13:33:16.217 +01:00 [INF] Request Body: {
+  "name": "Anna",
+  "surname": "Wanna"
+}
+2023-12-10 13:34:08.375 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients
+2023-12-10 13:34:08.377 +01:00 [INF] Request Body: {
+  "name": "Anna",
+  "surname": "Wanna"
+}
+2023-12-10 13:34:13.651 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients
+2023-12-10 13:34:13.652 +01:00 [INF] Request Body: {
+  "name": "Anna",
+  "surname": "Wanna"
+}
+2023-12-10 13:34:22.024 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients
+2023-12-10 13:34:22.024 +01:00 [INF] Request Body: {
+  "name": "Anna",
+  "surname": "Wanna"
+}
+2023-12-10 13:35:11.629 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients
+2023-12-10 13:35:11.629 +01:00 [INF] Request Body: {
+  "name": "Tomasz",
+  "surname": "Kozak"
+}
+2023-12-10 13:35:40.624 +01:00 [INF] CorrelationId: 
+Request method: DELETE 
+Request path: /clients/2D8BEEF1-04A6-42CC-833D-1C3AA025829F
+2023-12-10 13:35:40.624 +01:00 [INF] Request Body: 
+2023-12-10 13:36:06.635 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients
+2023-12-10 13:36:06.637 +01:00 [INF] Request Body: 
+2023-12-10 13:38:13.392 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients
+2023-12-10 13:38:13.434 +01:00 [INF] Request Body: 
+2023-12-10 13:39:47.034 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients 
+Request parameters: Microsoft.AspNetCore.Http.QueryCollection
+2023-12-10 13:39:47.068 +01:00 [INF] Request Body: 
+2023-12-10 13:39:58.037 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients/f1e6ac41-701e-4050-aaae-5ab32e644a3d 
+Request parameters: Microsoft.AspNetCore.Http.QueryCollection
+2023-12-10 13:39:58.037 +01:00 [INF] Request Body: 
+2023-12-10 13:40:12.579 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients/f1e6ac41-701e-4050-aaae-5ab32e644a3d 
+Request parameters: Microsoft.AspNetCore.Http.QueryCollection
+2023-12-10 13:40:12.579 +01:00 [INF] Request Body: 
+2023-12-10 13:41:06.858 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients/f1e6ac41-701e-4050-aaae-5ab32e644a3d 
+Request parameters: 
+2023-12-10 13:41:06.892 +01:00 [INF] Request Body: 
+2023-12-10 13:42:21.379 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients 
+2023-12-10 13:42:21.415 +01:00 [INF] Request Body: 
+2023-12-10 13:42:39.346 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /storages 
+2023-12-10 13:42:39.346 +01:00 [INF] Request Body: 
+2023-12-10 13:42:56.076 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /requirements 
+2023-12-10 13:42:56.079 +01:00 [INF] Request Body: {
+  "quantity": 20,
+  "clientId": "46d6e424-b86a-4ac6-8a13-41a22f985c22",
+  "storageId": "60de6110-39fa-45eb-91fa-11ac2b543941"
+}
+2023-12-10 13:43:19.621 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /requirements 
+2023-12-10 13:43:19.626 +01:00 [INF] Request Body: {
+  "quantity": 20,
+  "clientId": "46d6e424-b86a-4ac6-8a13-41a22f985c22",
+  "storageId": "60de6110-39fa-45eb-91fa-11ac2b543941"
+}
+2023-12-10 13:45:11.912 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /requirements 
+2023-12-10 13:45:11.957 +01:00 [INF] Request Body: 
+{
+  "quantity": 20,
+  "clientId": "46d6e424-b86a-4ac6-8a13-41a22f985c22",
+  "storageId": "60de6110-39fa-45eb-91fa-11ac2b543941"
+}
+2023-12-10 13:45:22.748 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /requirements 
+2023-12-10 13:45:22.748 +01:00 [INF] Request Body: 
+{
+  "quantity": 20,
+  "clientId": "46d6e424-b86a-4ac6-8a13-41a22f985c22",
+  "storageId": "60de6110-39fa-45eb-91fa-11ac2b543941"
+}
+2023-12-10 13:47:24.150 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /requirements 
+2023-12-10 13:47:24.151 +01:00 [INF] Request Body: 
+2023-12-10 13:48:31.641 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /requirements 
+2023-12-10 13:48:31.690 +01:00 [INF] Request Body: 
+2023-12-10 13:48:55.053 +01:00 [INF] CorrelationId: 
+Request method: PATCH 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:48:55.063 +01:00 [INF] Request Body: {
+  "quantity": 45
+}
+2023-12-10 13:49:38.064 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:49:38.064 +01:00 [INF] Request Body: ----------------------------689168765011501269714112
+Content-Disposition: form-data; name="quantity"
+
+45
+----------------------------689168765011501269714112--
+
+2023-12-10 13:50:03.239 +01:00 [INF] CorrelationId: 
+Request method: PATCH 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:50:03.239 +01:00 [INF] Request Body: ----------------------------191458491788104258299850
+Content-Disposition: form-data; name="quantity"
+
+45
+----------------------------191458491788104258299850--
+
+2023-12-10 13:50:29.900 +01:00 [INF] CorrelationId: 
+Request method: PATCH 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:50:29.900 +01:00 [INF] Request Body: quantity=45
+2023-12-10 13:50:42.718 +01:00 [INF] CorrelationId: 
+Request method: PATCH 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:50:42.718 +01:00 [INF] Request Body: {
+  "quantity": 45
+}
+
+2023-12-10 13:50:59.370 +01:00 [INF] CorrelationId: 
+Request method: PATCH 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:50:59.371 +01:00 [INF] Request Body: {
+  "quantity": 45
+}
+
+2023-12-10 13:51:03.513 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /requirements/8bab69f9-4efa-4efc-a156-01282fa0a172 
+2023-12-10 13:51:03.516 +01:00 [INF] Request Body: {"query":"\n    query IntrospectionQuery {\n      __schema {\n        \n        queryType { name }\n        mutationType { name }\n        subscriptionType { name }\n        types {\n          ...FullType\n        }\n        directives {\n          name\n          description\n          \n          locations\n          args {\n            ...InputValue\n          }\n        }\n      }\n    }\n\n    fragment FullType on __Type {\n      kind\n      name\n      description\n      \n      fields(includeDeprecated: true) {\n        name\n        description\n        args {\n          ...InputValue\n        }\n        type {\n          ...TypeRef\n        }\n        isDeprecated\n        deprecationReason\n      }\n      inputFields {\n        ...InputValue\n      }\n      interfaces {\n        ...TypeRef\n      }\n      enumValues(includeDeprecated: true) {\n        name\n        description\n        isDeprecated\n        deprecationReason\n      }\n      possibleTypes {\n        ...TypeRef\n      }\n    }\n\n    fragment InputValue on __InputValue {\n      name\n      description\n      type { ...TypeRef }\n      defaultValue\n      \n      \n    }\n\n    fragment TypeRef on __Type {\n      kind\n      name\n      ofType {\n        kind\n        name\n        ofType {\n          kind\n          name\n          ofType {\n            kind\n            name\n            ofType {\n              kind\n              name\n              ofType {\n                kind\n                name\n                ofType {\n                  kind\n                  name\n                  ofType {\n                    kind\n                    name\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  "}
+2023-12-10 14:15:09.720 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:15:09.755 +01:00 [INF] Request Body: {
+  "name": "Tomasz",
+  "surname": "Wpierdol"
+}
+2023-12-10 14:18:14.082 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:18:14.118 +01:00 [INF] Request Body: {
+  "name": "string",
+  "surname": "string"
+}
+2023-12-10 14:18:41.466 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:18:41.467 +01:00 [INF] Request Body: {
+  "name": "string",
+  "surname": "string"
+}
+2023-12-10 14:20:26.474 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:20:26.508 +01:00 [INF] Request Body: ----------------------------945360576133659884899544
+Content-Disposition: form-data; name="quantity"
+
+45
+----------------------------945360576133659884899544--
+
+2023-12-10 14:20:46.858 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:20:46.859 +01:00 [INF] Request Body: {
+  "name": "xd",
+  "surname": "dupa"
+}
+
+2023-12-10 14:24:35.171 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:24:35.208 +01:00 [INF] Request Body: {
+  "name": "xd",
+  "surname": "dupa"
+}
+
+2023-12-10 14:25:13.219 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:25:17.535 +01:00 [INF] Request Body: {
+  "name": "xd",
+  "surname": "dupa"
+}
+
+2023-12-10 14:27:34.447 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 14:29:27.520 +01:00 [INF] CorrelationId: 
+Request method: POST 
+Request path: /clients 
+2023-12-10 15:27:38.389 +01:00 [INF] CorrelationId: 
+Request method: GET 
+Request path: /clients 
