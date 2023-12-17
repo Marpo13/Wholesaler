@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging;
-using Serilog;
 using Wholesaler.Backend.DataAccess.Configurations;
 using Wholesaler.Backend.DataAccess.Models;
 

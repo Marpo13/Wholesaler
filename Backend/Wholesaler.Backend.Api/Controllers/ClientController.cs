@@ -47,15 +47,11 @@ namespace Wholesaler.Backend.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ClientDto>>> GetAll()
         {
-            _logger.LogInformation("Start");
-
             var clients = _clientRepository.GetAll();
 
             var clientsDto = clients
                 .Select(c => _clientFactory.Create(c))
                 .ToList();
-
-            _logger.LogInformation("Stop");
 
             return clientsDto;
         }
