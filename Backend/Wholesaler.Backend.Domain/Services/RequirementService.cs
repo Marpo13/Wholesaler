@@ -80,24 +80,5 @@ namespace Wholesaler.Backend.Domain.Services
 
             return requirement;
         }
-
-        public int GetSumOfCompletedRequirements()
-        {
-            var completedRequirements = _repository.GetByStatus("Completed");
-            var quantity = 0;
-
-            foreach (var requirement in completedRequirements)
-                quantity += requirement.Quantity;
-
-            return quantity;
-        }
-
-        public int GetIncomes(int quantity)
-        {
-            var multiplier = 5;
-            var incomes = multiplier * quantity;
-
-            return incomes;
-        }
     }
 }
