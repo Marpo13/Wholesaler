@@ -1,4 +1,6 @@
 ﻿using Serilog;
+using Serilog.Context;
+using Serilog.Core.Enrichers;
 using System.Diagnostics;
 
 namespace Wholesaler.Backend.Api
@@ -18,14 +20,17 @@ namespace Wholesaler.Backend.Api
                     requestBody = await reader.ReadToEndAsync();
                 }
 
-                Log.Information(
-                    $"\nTrace ID: {traceId}" +
-                    $"\nRequest method: {context.Request.Method} " +
-                    $"\nRequest path: {context.Request.Path} {context.Request.QueryString}" +
-                    $"\nRequest body: {requestBody}");
+                using (LogContext.Push(
+                    new PropertyEnricher("TraceId", Guid.NewGuid()),
+                    new PropertyEnricher("CorrelationId", traceId),
+                    new PropertyEnricher("RequestMethod", context.Request.Method),
+                    new PropertyEnricher("Request path", context.Request.Path),
+                    new PropertyEnricher("Request parameters", context.Request.QueryString),
+                    new PropertyEnricher("Request body", requestBody)))
+                {
+                    await next(context);
+                }
             }
-
-            await next(context);
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+using Serilog.Formatting.Compact;
 using Wholesaler.Backend.Api;
 using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.Api.Factories.Interfaces;
@@ -31,10 +32,19 @@ var connection = builder.Configuration.GetConnectionString("DBConnection");
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<WholesalerContext>(opt => opt.UseSqlServer(connection));
+builder.Services.AddDbContext<WholesalerContext>(
+    opt => opt
+        .UseSqlServer(connection)
+        .LogTo(l => {
+            if(l.Contains("CommandExecuting"))
+                Log.Logger.Information(l);
+        }, new List<string>
+        {
+            DbLoggerCategory.Database.Command.Name
+        }));
 
 builder.Host.UseSerilog((context, configuration) => configuration
-    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File(new CompactJsonFormatter(), "logs/log.txt", rollingInterval: RollingInterval.Day)
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
