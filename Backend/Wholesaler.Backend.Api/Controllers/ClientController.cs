@@ -15,35 +15,13 @@ namespace Wholesaler.Backend.Api.Controllers
         private readonly IClientService _clientService;
         private readonly IClientFactory _clientFactory;
         private readonly IClientRepository _clientRepository;
-        private readonly ILogger<ClientController> _logger;
 
-        public ClientController(IClientService clientService, IClientFactory clientFactory, IClientRepository clientRepository, ILogger<ClientController> logger)
+        public ClientController(IClientService clientService, IClientFactory clientFactory, IClientRepository clientRepository)
         {
             _clientService = clientService;
             _clientFactory = clientFactory;
             _clientRepository = clientRepository;
-            _logger = logger;
         }
-
-        [HttpGet]
-        [Route("test")]
-        public async Task<IActionResult> Dupa()
-        {
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:5050");
-
-            var test = new[] { 1, 2, 3, 4, 5, 6 };
-
-            var tasks = test.Select(async t =>
-            {
-                await httpClient.GetAsync("/clients");
-            });
-
-            await Task.WhenAll(tasks);
-
-            return Ok();
-        }
-
 
         [HttpPost]
         public async Task<ActionResult<ClientDto>> Add([FromBody] AddClientRequestModel addClientRequest)
