@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+using Serilog.Formatting.Compact;
 using Wholesaler.Backend.Api;
 using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.Api.Factories.Interfaces;
@@ -31,7 +32,24 @@ var connection = builder.Configuration.GetConnectionString("DBConnection");
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<WholesalerContext>(opt => opt.UseSqlServer(connection));
+builder.Services.AddDbContext<WholesalerContext>(
+    opt => opt
+        .UseSqlServer(connection)
+        .LogTo(l => {
+            if(l.Contains("CommandExecuting"))
+                Log.Logger.Information(l);
+        }, new List<string>
+        {
+            DbLoggerCategory.Database.Command.Name
+        }));
+
+builder.Host.UseSerilog((context, configuration) => configuration
+    .WriteTo.File(new CompactJsonFormatter(), "logs/log.txt", rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext());
+
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 builder.Services.AddTransient<IWorkdayRepository, WorkdayRepository>();
@@ -68,6 +86,7 @@ builder.Services.AddTransient<IDeliveryFactory, DeliveryFactory>();
 builder.Services.AddTransient<ITimeProvider, TimeProvider>();
 builder.Services.AddScoped<ITransaction, Transaction>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
+builder.Services.AddTransient<RequestLoggingMiddleware>();
 builder.Services.AddHostedService<TimedHostedService>();
 
 var app = builder.Build();
@@ -78,9 +97,9 @@ app.UseSwaggerUI();
 app.UseDatabase();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();
-
 app.Run();
 
 public partial class Program
