@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 using Wholesaler.Backend.Api;
 using Wholesaler.Backend.Api.Factories;
 using Wholesaler.Backend.Api.Factories.Interfaces;
@@ -27,6 +29,13 @@ var connection = builder.Configuration.GetConnectionString("DBConnection");
 
 // Add services to the container.
 
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .Enrich.WithCorrelationIdHeader("correlation-id"));
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WholesalerContext>(opt => opt.UseSqlServer(connection));
@@ -68,10 +77,17 @@ builder.Services.AddScoped<ITransaction, Transaction>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
 builder.Services.AddHostedService<TimedHostedService>();
 
+builder.Services.AddHeaderPropagation(options => options.Headers.Add("correlation-id"));
+builder.Services
+      .AddHttpClient("PropagateHeaders")
+      .AddHeaderPropagation();
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseHeaderPropagation();
 
 app.UseDatabase();
 
