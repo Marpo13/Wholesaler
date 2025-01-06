@@ -104,5 +104,21 @@ namespace Wholesaler.Backend.Api.Controllers
 
             return requirementsDto;
         }
+
+        [HttpGet]
+        [Route("byCustomFilters")]
+        public async Task<ActionResult<List<RequirementDto>>> GetByCustomFilters([FromQuery] Dictionary<string, string> customFilters)
+        {
+            var (requirements, errors) = await _requirementRepository.GetByCustomFiltersAsync(customFilters);
+
+            if (errors.Any())
+            {
+                return BadRequest(errors);
+            }
+
+            return requirements
+                .Select(r => _factory.Create(r))
+                .ToList();
+        }
     }
 }
