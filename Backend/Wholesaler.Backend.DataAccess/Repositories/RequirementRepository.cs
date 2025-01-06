@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Linq.Dynamic.Core;
 using Wholesaler.Backend.DataAccess.Factories;
 using Wholesaler.Backend.Domain.Entities;
@@ -119,65 +118,20 @@ namespace Wholesaler.Backend.DataAccess.Repositories
                 .ToList();
         }
 
-        public async Task<(List<Requirement>, List<string>)> GetByCustomFiltersAsync(Dictionary<string, string> customFilters)
+        public async Task<List<Requirement>> GetByCustomFiltersAsync(Dictionary<string, string> customFilters)
         {
             var query = _context.Requirements
                 .AsQueryable();
 
-            var errors = new List<string>();
-
             foreach (var filter in customFilters)
             {
-                var property = typeof(Requirement).GetProperty(filter.Key);
-
-                if (property == null)
-                {
-                    errors.Add($"Name {filter.Key} is invalid.");
-                    continue;
-                }
-
-                var convertionValid = TryParseValue(filter.Value, property.PropertyType);
-                if (!convertionValid)
-                {
-                    errors.Add($"Value {filter.Value} for property {filter.Key} is invalid.");
-                    continue;
-                }
-
                 query = query
                     .Where($"{filter.Key} == @0", filter.Value);
             }
 
-            var requirements = await query
+            return await query
                 .Select(requirementDb => _factory.Create(requirementDb))
                 .ToListAsync();
-
-            return (requirements, errors);
-        }
-
-        private bool TryParseValue(string valueToConvert, Type propertyType)
-        {
-            if (propertyType == typeof(int))
-            {
-                return int.TryParse(valueToConvert, out var parsed);
-            }
-
-            if (propertyType == typeof(Guid))
-            {
-                return Guid.TryParse(valueToConvert, out var parsed);
-            }
-
-            if (propertyType == typeof(DateTime))
-            {
-                return DateTime.TryParse(valueToConvert, out var parsed);
-            }
-
-            if (propertyType == typeof(Status))
-            {
-                var statusName = PrepareStatusName(valueToConvert);
-                return Enum.TryParse(statusName, out Status requirementStatus);
-            }
-
-            return false;
         }
 
         private static string PrepareStatusName(string status)

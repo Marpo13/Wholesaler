@@ -10,6 +10,6 @@ namespace Wholesaler.Backend.Domain.Repositories
         List<Requirement> GetAll();
         List<Requirement> Get(Guid storageId);
         List<Requirement> GetByStatus(string status);
-        Task<(List<Requirement>, List<string>)> GetByCustomFiltersAsync(Dictionary<string, string> customFilters);
+        Task<List<Requirement>> GetByCustomFiltersAsync(Dictionary<string, string> customFilters);
     }
 }
