@@ -2,20 +2,17 @@
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Core.Dto.ResponseModels;
 
-namespace Wholesaler.Backend.Api.Factories
-{
-    public class ClientFactory : IClientFactory
-    {
-        public ClientDto Create(Client client)
-        {
-            var clientDto = new ClientDto()
-            {
-                Id = client.Id,
-                Name = client.Name,
-                Surname = client.Surname,
-            };
+namespace Wholesaler.Backend.Api.Factories;
 
-            return clientDto;
-        }
+public class ClientFactory : IClientFactory
+{
+    public ClientDto Create(Client client)
+    {
+        return new()
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Surname = client.Surname
+        };
     }
 }

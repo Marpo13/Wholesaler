@@ -4,89 +4,75 @@ using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using StorageDb = Wholesaler.Backend.DataAccess.Models.Storage;
 
-namespace Wholesaler.Backend.DataAccess.Repositories
+namespace Wholesaler.Backend.DataAccess.Repositories;
+
+public class StorageRepository : IStorageRepository
 {
-    public class StorageRepository : IStorageRepository
+    private readonly WholesalerContext _context;
+    private readonly IStorageDbFactory _storageDbFactory;
+
+    public StorageRepository(WholesalerContext context, IStorageDbFactory storageDbFactory)
     {
-        private readonly WholesalerContext _context;
-        private readonly IStorageDbFactory _storageDbFactory;
+        _context = context;
+        _storageDbFactory = storageDbFactory;
+    }
 
-        public StorageRepository(WholesalerContext context, IStorageDbFactory storageDbFactory)
+    public Storage Add(Storage storage)
+    {
+        var storageDb = new StorageDb()
         {
-            _context = context;
-            _storageDbFactory = storageDbFactory;
-        }
+            Id = storage.Id,
+            Name = storage.Name,
+            State = storage.State
+        };
 
-        public Storage Add(Storage storage)
-        {
-            var storageDb = new StorageDb()
-            {
-                Id = storage.Id,
-                Name = storage.Name,
-                State = storage.State
-            };
+        _context.Storages.Add(storageDb);
+        _context.SaveChanges();
 
-            _context.Storages.Add(storageDb);
-            _context.SaveChanges();
+        return storage;
+    }
 
-            return storage;
-        }
+    public Storage? GetOrDefault(Guid storageId)
+    {
+        var storageDb = _context.Storages
+            .FirstOrDefault(s => s.Id == storageId);
 
-        public Storage? GetOrDefault(Guid storageId)
-        {
-            var storageDb = _context.Storages
-                .FirstOrDefault(s => s.Id == storageId);
+        if (storageDb == null)
+            return default;
 
-            if (storageDb == null)
-                return default;
+        var storage = _storageDbFactory.Create(storageDb);
 
-            var storage = _storageDbFactory.Create(storageDb);
+        return storage;
+    }
 
-            return storage;
-        }
+    public List<Storage> GetAll()
+    {
+        var storagesDb = _context.Storages
+            .ToList()
+            ?? new();
 
-        public List<Storage> GetAll()
-        {
-            var storagesDb = _context.Storages
-                .ToList();
+        return storagesDb.ConvertAll(storageDb =>
+            _storageDbFactory.Create(storageDb));
+    }
 
-            if (storagesDb == null)
-                return new List<Storage>();
+    public Storage UpdateState(Storage storage)
+    {
+        var storageDb = _context.Storages
+            .FirstOrDefault(s => s.Id == storage.Id)
+            ?? throw new InvalidProcedureException($"There is no storage with id: {storage.Id}");
 
-            var storages = storagesDb.Select(storageDb =>
-            {
-                return _storageDbFactory.Create(storageDb);
+        storageDb.State = storage.State;
+        _context.SaveChanges();
 
-            }).ToList();
+        return storage;
+    }
 
-            return storages;
-        }
+    public Storage Get(Guid storageId)
+    {
+        var storageDb = _context.Storages
+            .FirstOrDefault(s => s.Id == storageId)
+            ?? throw new EntityNotFoundException($"There is no storage with id {storageId}.");
 
-        public Storage UpdateState(Storage storage)
-        {
-            var storageDb = _context.Storages
-                .FirstOrDefault(s => s.Id == storage.Id);
-
-            if (storageDb == null)
-                throw new InvalidProcedureException($"There is no storage with id: {storage.Id}");
-
-            storageDb.State = storage.State;
-            _context.SaveChanges();
-
-            return storage;
-        }
-
-        public Storage Get(Guid storageId)
-        {
-            var storageDb = _context.Storages
-                .FirstOrDefault(s => s.Id == storageId);
-
-            if (storageDb == null)
-                throw new EntityNotFoundException($"There is no storage with id {storageId}.");
-
-            var storage = _storageDbFactory.Create(storageDb);
-
-            return storage;
-        }
+        return _storageDbFactory.Create(storageDb);
     }
 }

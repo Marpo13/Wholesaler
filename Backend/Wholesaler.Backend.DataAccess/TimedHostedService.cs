@@ -2,56 +2,54 @@
 using Microsoft.Extensions.Hosting;
 using Wholesaler.Backend.DataAccess.Models;
 
-namespace Wholesaler.Backend.DataAccess
+namespace Wholesaler.Backend.DataAccess;
+
+public class TimedHostedService : IHostedService, IDisposable
 {
-    public class TimedHostedService : IHostedService, IDisposable
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private Timer? _timer = null;
+
+    public TimedHostedService(IServiceScopeFactory serviceScopeFactory)
     {
-        private Timer? _timer = null;
+        _serviceScopeFactory = serviceScopeFactory;
+    }
 
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        _timer = new(Update, null, 0, 30000);
+    }
 
-        public TimedHostedService(IServiceScopeFactory serviceScopeFactory)
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _timer?.Change(Timeout.Infinite, 0);
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+
+    private void Update(object? state)
+    {
+        var random = new Random();
+        var quantity = random.Next(10, 100);
+
+        var requirement = new Requirement()
         {
-            _serviceScopeFactory = serviceScopeFactory;
-        }
+            Id = Guid.NewGuid(),
+            Quantity = quantity,
+            ClientId = new("F1E6AC41-701E-4050-AAAE-5AB32E644A3D"),
+            StorageId = new("60DE6110-39FA-45EB-91FA-11AC2B543941"),
+            Status = 0,
+            DeliveryDate = null
+        };
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        using (var scope = _serviceScopeFactory.CreateScope())
         {
-            _timer = new Timer(Update, null, 0, 30000);
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _timer?.Change(Timeout.Infinite, 0);
-            return Task.CompletedTask;
-        }
-
-        private void Update(object? state)
-        {           
-            var random = new Random();
-            var quantity = random.Next(10, 100);
-
-            var requirement = new Requirement()
-            {
-                Id = Guid.NewGuid(),
-                Quantity = quantity,
-                ClientId = new Guid("F1E6AC41-701E-4050-AAAE-5AB32E644A3D"),
-                StorageId = new Guid("60DE6110-39FA-45EB-91FA-11AC2B543941"),
-                Status = 0,
-                DeliveryDate = null,
-            };
-
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<WholesalerContext>(); 
-                context.Requirements.Add(requirement);
-                context.SaveChanges();
-            }            
-        }
-
-        public void Dispose()
-        {
-            _timer?.Dispose();
+            var context = scope.ServiceProvider.GetRequiredService<WholesalerContext>();
+            context.Requirements.Add(requirement);
+            context.SaveChanges();
         }
     }
 }

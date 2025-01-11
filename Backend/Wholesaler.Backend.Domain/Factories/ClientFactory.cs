@@ -3,34 +3,31 @@ using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Factories.Interfaces;
 using Wholesaler.Backend.Domain.Requests.People;
 
-namespace Wholesaler.Backend.Domain.Factories
+namespace Wholesaler.Backend.Domain.Factories;
+
+public class ClientFactory : IClientFactory
 {
-    public class ClientFactory : IClientFactory
+    public Client Create(CreateClientRequest request)
     {
-        public Client Create(CreateClientRequest request)
+        if (string.IsNullOrEmpty(request.Name))
+            throw new InvalidDataProvidedException("You need to provide name.");
+        if (string.IsNullOrEmpty(request.Surname))
+            throw new InvalidDataProvidedException("You need to provide surname.");
+
+        foreach (var letter in request.Name)
         {
-            if(request.Name == null || request.Name == string.Empty || request.Name.Contains(" "))
-                throw new InvalidDataProvidedException("You need to provide name.");
-            if(request.Surname == null || request.Surname == string.Empty || request.Surname.Contains(" "))
-                throw new InvalidDataProvidedException("You need to provide surname.");
-
-            foreach (char letter in request.Name)
-            {
-                if (char.IsDigit(letter))
-                    throw new InvalidDataProvidedException("You provided an invalid value.");                
-            }
-
-            foreach (char letter in request.Surname)
-            {
-                if (char.IsDigit(letter))
-                    throw new InvalidDataProvidedException("You provided an invalid value.");
-            }
-
-            var client = new Client(
-                request.Name,
-                request.Surname);
-
-            return client;
+            if (char.IsDigit(letter))
+                throw new InvalidDataProvidedException("You provided an invalid value.");
         }
+
+        foreach (var letter in request.Surname)
+        {
+            if (char.IsDigit(letter))
+                throw new InvalidDataProvidedException("You provided an invalid value.");
+        }
+
+        return new(
+            request.Name,
+            request.Surname);
     }
 }

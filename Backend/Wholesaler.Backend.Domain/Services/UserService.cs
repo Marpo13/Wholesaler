@@ -6,88 +6,78 @@ using Wholesaler.Backend.Domain.Providers.Interfaces;
 using Wholesaler.Backend.Domain.Repositories;
 using Wholesaler.Backend.Domain.Requests.People;
 
-namespace Wholesaler.Backend.Domain.Services
+namespace Wholesaler.Backend.Domain.Services;
+
+public class UserService : IUserService
 {
-    public class UserService : IUserService
+    private readonly IUsersRepository _usersRepository;
+    private readonly IWorkdayRepository _workdayRepository;
+    private readonly IPersonFactory _personFactory;
+    private readonly ITimeProvider _timeProvider;
+
+    public UserService(
+        IUsersRepository usersRepository,
+        IWorkdayRepository workdayRepository,
+        ITimeProvider timeProvider,
+        IPersonFactory personFactory)
     {
-        private readonly IUsersRepository _usersRepository;
-        private readonly IWorkdayRepository _workdayRepository;
-        private readonly IPersonFactory _personFactory;
-        private readonly ITimeProvider _timeProvider;
+        _timeProvider = timeProvider;
+        _usersRepository = usersRepository;
+        _workdayRepository = workdayRepository;
+        _personFactory = personFactory;
+    }
 
-        public UserService(
-            IUsersRepository usersRepository,
-            IWorkdayRepository workdayRepository,
-            ITimeProvider timeProvider,
-            IPersonFactory personFactory)
-        {
-            _timeProvider = timeProvider;
-            _usersRepository = usersRepository;
-            _workdayRepository = workdayRepository;
-            _personFactory = personFactory;
-        }
+    public Person Login(string username, string password)
+    {
+        var user = _usersRepository.GetOrDefault(username)
+            ?? throw new InvalidDataProvidedException($"There is no person with login: {username}.");
 
-        public Person Login(string loginFromUser, string passwordFromUser)
-        {
-            var user = _usersRepository.GetOrDefault(loginFromUser);
+        return user.Password != password 
+            ? throw new InvalidDataProvidedException("You have entered an invalid password.") : user;
+    }
 
-            if (user == null)
-                throw new InvalidDataProvidedException($"There is no person with login: {loginFromUser}.");
+    public Workday StartWorkday(Guid userId)
+    {
+        var person = _usersRepository.GetOrDefault(userId);
+        var time = _timeProvider.Now();
 
-            if (user.Password != passwordFromUser)
-                throw new InvalidDataProvidedException("You have entered an invalid password.");
+        if (person == null)
+            throw new InvalidDataProvidedException($"There is no person with id: {userId}");
 
-            return user;
-        }
+        if (person.Role != Role.Employee)
+            throw new InvalidDataProvidedException($"You can not create a workday for role: {person.Role}. You have to be an Employee.");
 
-        public Workday StartWorkday(Guid userId)
-        {
-            var person = _usersRepository.GetOrDefault(userId);
-            var time = _timeProvider.Now();
+        var activeWorkday = _workdayRepository.GetActiveByPersonOrDefault(userId);
 
-            if (person == null)
-                throw new InvalidDataProvidedException($"There is no person with id: {userId}");
+        if (activeWorkday != null)
+            throw new InvalidDataProvidedException($"You can not start another workday, because you started workday with Id: {activeWorkday.Id}");
 
-            if (person.Role != Role.Employee)
-                throw new InvalidDataProvidedException($"You can not create a workday for role: {person.Role}. You have to be an Employee.");
+        var workday = new Workday(time, person);
+        return _workdayRepository.Add(workday);
+    }
 
-            var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
+    public Workday FinishWorkday(Guid userId)
+    {
+        var person = _usersRepository.GetOrDefault(userId);
+        var time = _timeProvider.Now();
 
-            if (activeWorkday != null)
-                throw new InvalidDataProvidedException($"You can not start another workday, because you started workday with Id: {activeWorkday.Id}");
+        if (person == null)
+            throw new InvalidDataProvidedException($"There is no person with id: {userId}");
 
-            var workday = new Workday(time, person);
-            var createdWorkday = _workdayRepository.Add(workday);
+        var activeWorkday = _workdayRepository.GetActiveByPersonOrDefault(userId)
+            ?? throw new InvalidDataProvidedException($"There is no started workdays for person with id: {userId}");
 
-            return createdWorkday;
-        }
+        activeWorkday.StopWorkday(time);
+        _workdayRepository.UpdateWorkday(activeWorkday);
 
+        return activeWorkday;
+    }
 
-        public Workday FinishWorkday(Guid userId)
-        {
-            var person = _usersRepository.GetOrDefault(userId);
-            var time = _timeProvider.Now();
+    public Person Add(CreatePersonRequest request)
+    {
+        var person = _personFactory.Create(request);
+        _usersRepository.AddPerson(person);
 
-            if (person == null)
-                throw new InvalidDataProvidedException($"There is no person with id: {userId}");
-
-            var activeWorkday = _workdayRepository.GetActiveByPersonOrDefaultAsync(userId);
-
-            if (activeWorkday == null)
-                throw new InvalidDataProvidedException($"There is no started workdays for person with id: {userId}");
-
-            activeWorkday.StopWorkday(time);
-            _workdayRepository.UpdateWorkday(activeWorkday);
-
-            return activeWorkday;
-        }
-
-        public Person Add(CreatePersonRequest request)
-        {
-            var person = _personFactory.Create(request);
-            _usersRepository.AddPerson(person);
-
-            return person;
-        }
+        return person;
     }
 }

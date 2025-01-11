@@ -1,12 +1,11 @@
-﻿namespace Wholesaler.Backend.Domain.Requests.WorkTasks
-{
-    public class CreateWorkTaskRequest
-    {
-        public int Row { get; }
+﻿namespace Wholesaler.Backend.Domain.Requests.WorkTasks;
 
-        public CreateWorkTaskRequest(int row)
-        {
-            Row = row;
-        }
+public class CreateWorkTaskRequest
+{
+    public CreateWorkTaskRequest(int row)
+    {
+        Row = row;
     }
+
+    public int Row { get; }
 }

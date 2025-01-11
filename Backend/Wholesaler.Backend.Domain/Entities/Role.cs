@@ -1,9 +1,8 @@
-﻿namespace Wholesaler.Backend.Domain.Entities
+﻿namespace Wholesaler.Backend.Domain.Entities;
+
+public enum Role
 {
-    public enum Role
-    {
-        Employee = 0,
-        Manager = 1,
-        Owner = 2,
-    }
+    Employee = 0,
+    Manager = 1,
+    Owner = 2
 }
