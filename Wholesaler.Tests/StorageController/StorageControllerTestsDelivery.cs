@@ -1,121 +1,111 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
 using Wholesaler.Tests.Helpers;
 using Xunit;
 
-namespace Wholesaler.Tests.StorageController
+namespace Wholesaler.Tests.StorageController;
+
+public class StorageControllerTestsDelivery : WholesalerWebTest
 {
-    public class StorageControllerTestsDelivery : WholesalerWebTest
+    private readonly StorageBuilder _storageBuilder;
+
+    public StorageControllerTestsDelivery(WebApplicationFactory<Program> factory)
+        : base(factory)
     {
-        private readonly StorageBuilder _storageBuilder;
+        _storageBuilder = new();
+    }
 
-        public StorageControllerTestsDelivery(WebApplicationFactory<Program> factory) : base(factory)
+    [Theory]
+    [InlineData(15)]
+    [InlineData(20)]
+    [InlineData(100)]
+    [InlineData(215)]
+    [InlineData(600)]
+    public async Task Deliver_WithValidModel_ReturnsStorageDtoAsync(int quantity)
+    {
+        //Arrange
+        var storage = _storageBuilder.Build();
+        Seed(storage);
+
+        var updateStorageRequestModel = new UpdateStorageRequestModel()
         {
-            _storageBuilder = new StorageBuilder();
-        }
+            Quantity = quantity
+        };
 
-        [Theory]
-        [InlineData(15)]
-        [InlineData(20)]
-        [InlineData(100)]
-        [InlineData(215)]
-        [InlineData(600)]
-        public async Task Deliver_WithValidModel_ReturnsStorageDto(int quantity)
+        var id = storage.Id;
+
+        var httpContent = updateStorageRequestModel.ToJsonHttpContent();
+
+        //Act
+        var response = await _client.PatchAsync($"storages/{id}/actions/deliver", httpContent);
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var storageDto = await JsonDeserializeHelper.DeserializeAsync<StorageDto>(response);
+        var storageDb = _dbContext.Storages.First(s => s.Id == storage.Id);
+
+        storageDto.State.Should().Be(100 + quantity);
+    }
+
+    [Theory]
+    [InlineData(15)]
+    [InlineData(20)]
+    [InlineData(100)]
+    [InlineData(215)]
+    [InlineData(600)]
+    public async Task Deliver_WithInvalidStorageId_ReturnsNotFoundAsync(int quantity)
+    {
+        //Arrange
+        var storage = _storageBuilder.Build();
+        Seed(storage);
+
+        var updateStorageRequestModel = new UpdateStorageRequestModel()
         {
-            //Arrange
+            Quantity = quantity
+        };
 
-            var storage = _storageBuilder.Build();
-            Seed(storage);
-            
-            var updateStorageRequestModel = new UpdateStorageRequestModel()
-            {
-                Quantity = quantity
-            };
+        var id = Guid.NewGuid();
 
-            var id = storage.Id;
+        var httpContent = updateStorageRequestModel.ToJsonHttpContent();
 
-            var httpContent = updateStorageRequestModel.ToJsonHttpContent();
+        //Act
+        var response = await _client.PatchAsync($"storages/{id}/actions/deliver", httpContent);
 
-            //Act
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
 
-            var response = await _client.PatchAsync($"storages/{id}/actions/deliver", httpContent);
+    [Theory]
+    [InlineData(-15)]
+    [InlineData(-20)]
+    [InlineData(-100)]
+    [InlineData(-215)]
+    [InlineData(-600)]
+    [InlineData(0)]
+    [InlineData(0.2)]
+    public async Task Deliver_WithInvalidQuantity_ReturnsBadRequestAsync(int quantity)
+    {
+        //Arrange
+        var storage = _storageBuilder.Build();
+        Seed(storage);
 
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var storageDto = await JsonDeserializeHelper.DeserializeAsync<StorageDto>(response);
-            var storageDb = _dbContext.Storages.First(s => s.Id == storage.Id);
-
-            storageDto.State.Should().Be(100 + quantity);
-        }
-
-        [Theory]
-        [InlineData(15)]
-        [InlineData(20)]
-        [InlineData(100)]
-        [InlineData(215)]
-        [InlineData(600)]
-        public async Task Deliver_WithInvalidStorageId_ReturnsNotFound(int quantity)
+        var updateStorageRequestModel = new UpdateStorageRequestModel()
         {
-            //Arrange
+            Quantity = quantity
+        };
 
-            var storage = _storageBuilder.Build();
-            Seed(storage);
+        var id = storage.Id;
 
-            var updateStorageRequestModel = new UpdateStorageRequestModel()
-            {
-                Quantity = quantity
-            };
+        var httpContent = updateStorageRequestModel.ToJsonHttpContent();
 
-            var id = Guid.NewGuid();
+        //Act
+        var response = await _client.PatchAsync($"storages/{id}/actions/deliver", httpContent);
 
-            var httpContent = updateStorageRequestModel.ToJsonHttpContent();
-
-            //Act
-
-            var response = await _client.PatchAsync($"storages/{id}/actions/deliver", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
-
-        [Theory]
-        [InlineData(-15)]
-        [InlineData(-20)]
-        [InlineData(-100)]
-        [InlineData(-215)]
-        [InlineData(-600)]
-        [InlineData(0)]
-        [InlineData(0.2)]
-        public async Task Deliver_WithInvalidQuantity_ReturnsBadRequest(int quantity)
-        {
-            //Arrange
-
-            var storage = _storageBuilder.Build();
-            Seed(storage);
-
-            var updateStorageRequestModel = new UpdateStorageRequestModel()
-            {
-                Quantity = quantity
-            };
-
-            var id = storage.Id;
-
-            var httpContent = updateStorageRequestModel.ToJsonHttpContent();
-
-            //Act
-
-            var response = await _client.PatchAsync($"storages/{id}/actions/deliver", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

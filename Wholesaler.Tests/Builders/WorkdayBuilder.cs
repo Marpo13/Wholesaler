@@ -1,51 +1,48 @@
 ﻿using Wholesaler.Backend.DataAccess.Models;
 
-namespace Wholesaler.Tests.Builders
+namespace Wholesaler.Tests.Builders;
+
+public class WorkdayBuilder
 {
-    public class WorkdayBuilder
+    private readonly Guid _id;
+    private DateTime _start;
+    private DateTime? _stop;
+    private Guid _personId;
+
+    public WorkdayBuilder()
     {
-        private Guid _id;
-        private DateTime _start;
-        private DateTime? _stop;
-        private Guid _personId;
+        _id = Guid.NewGuid();
+        _start = new(2023, 02, 13, 12, 0, 0);
+        _stop = null;
+        _personId = Guid.NewGuid();
+    }
 
-        public WorkdayBuilder()
+    public Workday Build()
+    {
+        return new()
         {
-            _id = Guid.NewGuid();
-            _start = new(2023, 02, 13, 12, 0, 0);
-            _stop = null;
-            _personId = Guid.NewGuid();
-        }
+            Id = _id,
+            Start = _start,
+            Stop = _stop,
+            PersonId = _personId
+        };
+    }
 
-        public Workday Build()
-        {
-            var workday = new Workday()
-            {
-                Id = _id,
-                Start = _start,
-                Stop = _stop,
-                PersonId = _personId
-            };
+    public WorkdayBuilder WithStartTime(DateTime time)
+    {
+        _start = time;
+        return this;
+    }
 
-            return workday;
-        }
+    public WorkdayBuilder WithStopTime(DateTime time)
+    {
+        _stop = time;
+        return this;
+    }
 
-        public WorkdayBuilder WithStartTime(DateTime time)
-        {
-            _start = time;
-            return this;
-        }
-
-        public WorkdayBuilder WithStopTime(DateTime time)
-        {
-            _stop = time;
-            return this;
-        }
-
-        public WorkdayBuilder WithPersonId(Guid personId)
-        {
-            _personId = personId;
-            return this;
-        }
+    public WorkdayBuilder WithPersonId(Guid personId)
+    {
+        _personId = personId;
+        return this;
     }
 }

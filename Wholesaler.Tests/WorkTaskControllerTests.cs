@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
@@ -8,522 +8,477 @@ using Wholesaler.Tests.Helpers;
 using Xunit;
 using Role = Wholesaler.Backend.Domain.Entities.Role;
 
-namespace Wholesaler.Tests
+namespace Wholesaler.Tests;
+
+public class WorkTaskControllerTests : WholesalerWebTest
 {
-    public class WorkTaskControllerTests : WholesalerWebTest
+    private readonly PersonBuilder _personBuilder;
+    private readonly WorkTaskBuilder _workTaskBuilder;
+    private readonly WorkdayBuilder _workdayBuilder;
+    private readonly DateTime _defaultDate = new(2023, 02, 13, 12, 0, 0);
+
+    public WorkTaskControllerTests(WebApplicationFactory<Program> factory)
+        : base(factory)
     {
-        private readonly PersonBuilder _personBuilder;
-        private readonly WorkTaskBuilder _workTaskBuilder;
-        private readonly WorkdayBuilder _workdayBuilder;
-        private readonly DateTime _defaultDate = new(2023, 02, 13, 12, 0, 0);
+        _personBuilder = new();
+        _workTaskBuilder = new();
+        _workdayBuilder = new();
 
-        public WorkTaskControllerTests(WebApplicationFactory<Program> factory) : base(factory)
+        _timeProviderMock
+            .Setup(m => m.Now())
+            .Returns(_defaultDate);
+    }
+
+    [Theory]
+    [InlineData(5)]
+    [InlineData(8)]
+    [InlineData(12)]
+    [InlineData(50)]
+    [InlineData(125)]
+    public async Task Add_WithValidModel_ReturnsWorkTaskIdAsync(int rowNumber)
+    {
+        //Arrange
+        var workTaskRequestModel = new AddTaskRequestModel()
         {
-            _personBuilder = new PersonBuilder();
-            _workTaskBuilder = new WorkTaskBuilder();
-            _workdayBuilder = new WorkdayBuilder();
+            Row = rowNumber
+        };
 
-            _timeProviderMock
-                .Setup(m => m.Now())
-                .Returns(_defaultDate);
-        }
+        var httpContent = workTaskRequestModel.ToJsonHttpContent();
 
-        [Theory]
-        [InlineData(5)]
-        [InlineData(8)]
-        [InlineData(12)]
-        [InlineData(50)]
-        [InlineData(125)]
-        public async Task Add_WithValidModel_ReturnsWorkTaskId(int rowNumber)
+        //Act
+        var response = await _client.PostAsync("worktasks", httpContent);
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workTaskId = await JsonDeserializeHelper.DeserializeAsync<Guid>(response);
+
+        var workTask = _dbContext.WorkTasks.First(w => w.Row == rowNumber);
+        workTask.Id.Should().Be(workTaskId);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-5)]
+    [InlineData(-100)]
+    public async Task Add_WithInvalidModel_ReturnsBadRequestAsync(int row)
+    {
+        //Arrange
+        var workTaskRequestModel = new AddTaskRequestModel()
         {
-            //Arrange
+            Row = row
+        };
 
-            var workTaskRequestModel = new AddTaskRequestModel()
-            {
-                Row = rowNumber
-            };
+        var httpContent = workTaskRequestModel.ToJsonHttpContent();
 
-            var httpContent = workTaskRequestModel.ToJsonHttpContent();
+        //Act
+        var response = await _client.PostAsync("worktasks", httpContent);
 
-            //Act
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var response = await _client.PostAsync("worktasks", httpContent);
+    [Fact]
+    public async Task Assign_WithValidModel_ReturnsWorkTaskDtoAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            //Assert
+        var workTask = _workTaskBuilder
+            .WithRow(2)
+            .Build();
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workTaskId = await JsonDeserializeHelper.DeserializeAsync<Guid>(response);
+        Seed(person);
+        Seed(workTask);
 
-            var workTask = _dbContext.WorkTasks.First(w => w.Row == rowNumber);
-            workTask.Id.Should().Be(workTaskId);
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-5)]
-        [InlineData(-100)]
-        public async Task Add_WithInvalidModel_ReturnsBadRequest(int row)
+        var assignTaskRequestModel = new AssignTaskRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var workTaskRequestModel = new AddTaskRequestModel()
-            {
-                Row = row
-            };
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var httpContent = workTaskRequestModel.ToJsonHttpContent();
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
 
-            //Act
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
+        workTaskDto.Row.Should().Be(workTask.Row);
+        workTaskDto.IsStarted.Should().Be(workTask.IsStarted);
+        workTaskDto.IsFinished.Should().Be(workTask.IsFinished);
+        workTaskDto.UserId.Should().Be(workTask.PersonId);
 
-            var response = await _client.PostAsync("worktasks", httpContent);
+        var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
+        workTaskDb.Row.Should().Be(workTask.Row);
+        workTaskDb.IsStarted.Should().Be(workTask.IsStarted);
+        workTaskDb.IsFinished.Should().Be(workTask.IsFinished);
+        workTaskDb.PersonId.Should().Be(workTask.PersonId);
+    }
 
-            //Assert
+    [Fact]
+    public async Task Assign_WithAssignedTaskTOTheSamePerson_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
+        var workTask = _workTaskBuilder
+            .WithRow(3)
+            .WithPersonId(person.Id)
+            .Build();
 
-        [Fact]
-        public async Task Assign_WithValidModel_ReturnsWorkTaskDto()
+        Seed(person);
+        Seed(workTask);
+
+        var assignTaskRequestModel = new AssignTaskRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var workTask = _workTaskBuilder
-                .WithRow(2)
-                .Build();
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
 
-            Seed(person);
-            Seed(workTask);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var assignTaskRequestModel = new AssignTaskRequestModel()
-            {
-                UserId = person.Id
-            };
+    [Fact]
+    public async Task Assign_WithManagerRole_ReturnsForbiddenAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Manager)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var workTask = _workTaskBuilder
+            .WithRow(4)
+            .Build();
 
-            //Act
+        Seed(person);
+        Seed(workTask);
 
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
-            workTaskDto.Row.Should().Be(workTask.Row);
-            workTaskDto.IsStarted.Should().Be(workTask.IsStarted);
-            workTaskDto.IsFinished.Should().Be(workTask.IsFinished);
-            workTaskDto.UserId.Should().Be(workTask.PersonId);
-
-            var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
-            workTaskDb.Row.Should().Be(workTask.Row);
-            workTaskDb.IsStarted.Should().Be(workTask.IsStarted);
-            workTaskDb.IsFinished.Should().Be(workTask.IsFinished);
-            workTaskDb.PersonId.Should().Be(workTask.PersonId);
-        }
-
-        [Fact]
-        public async Task Assign_WithAssignedTaskTOTheSamePerson_ReturnsBadRequest()
+        var assignTaskRequestModel = new AssignTaskRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var workTask = _workTaskBuilder
-                .WithRow(3)
-                .WithPersonId(person.Id)
-                .Build();
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
 
-            Seed(person);
-            Seed(workTask);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 
-            var assignTaskRequestModel = new AssignTaskRequestModel()
-            {
-                UserId = person.Id
-            };
+    [Fact]
+    public async Task Assign_WithOwnerRole_ReturnsForbiddenAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Owner)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var workTask = _workTaskBuilder
+            .WithRow(5)
+            .Build();
 
-            //Act
+        Seed(person);
+        Seed(workTask);
 
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task Assign_WithManagerRole_ReturnsForbidden()
+        var assignTaskRequestModel = new AssignTaskRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Manager)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var workTask = _workTaskBuilder
-                .WithRow(4)
-                .Build();
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
 
-            Seed(person);
-            Seed(workTask);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 
-            var assignTaskRequestModel = new AssignTaskRequestModel()
-            {
-                UserId = person.Id
-            };
+    [Fact]
+    public async Task Assign_WithInvalidWorkTask_ReturnsNotFoundAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        Seed(person);
 
-            //Act
-
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
-
-        [Fact]
-        public async Task Assign_WithOwnerRole_ReturnsForbidden()
+        var assignTaskRequestModel = new AssignTaskRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Owner)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var workTask = _workTaskBuilder
-                .WithRow(5)
-                .Build();
+        //Act
+        var response = await _client.PostAsync($"worktasks/{Guid.NewGuid()}/actions/assign", httpContent);
 
-            Seed(person);
-            Seed(workTask);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
 
-            var assignTaskRequestModel = new AssignTaskRequestModel()
-            {
-                UserId = person.Id
-            };
+    [Fact]
+    public async Task ChangeOwner_WithValidData_ReturnsWorkTaskDtoAsync()
+    {
+        //Arrange
+        var person1 = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var person2 = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            //Act
+        var workTask = _workTaskBuilder
+            .WithRow(6)
+            .WithPersonId(person1.Id)
+            .Build();
 
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/assign", httpContent);
+        Seed(person1);
+        Seed(person2);
+        Seed(workTask);
 
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
-
-        [Fact]
-        public async Task Assign_WithInvalidWorkTask_ReturnsNotFound()
+        var assignTaskRequestModel = new ChangeOwnerRequestModel()
         {
-            //Arrange
+            NewOwnerId = person2.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            Seed(person);
+        //Act
+        var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
 
-            var assignTaskRequestModel = new AssignTaskRequestModel()
-            {
-                UserId = person.Id
-            };
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
+        workTaskDto.UserId.Should().Be(person2.Id);
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
+        workTaskDb.PersonId.Should().Be(person2.Id);
+    }
 
-            //Act
+    [Fact]
+    public async Task ChangeOwner_WithValidModel_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var person1 = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var response = await _client.PostAsync($"worktasks/{Guid.NewGuid()}/actions/assign", httpContent);
+        var person2 = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            //Assert
+        var workTask = _workTaskBuilder
+            .WithRow(7)
+            .WithPersonId(person1.Id)
+            .Build();
 
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
+        Seed(person1);
+        Seed(person2);
+        Seed(workTask);
 
-        [Fact]
-        public async Task ChangeOwner_WithValidData_ReturnsWorkTaskDto()
+        var assignTaskRequestModel = new ChangeOwnerRequestModel()
         {
-            //Arrange
+            NewOwnerId = person2.Id
+        };
 
-            var person1 = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var person2 = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        //Act
+        var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
 
-            var workTask = _workTaskBuilder
-                .WithRow(6)
-                .WithPersonId(person1.Id)
-                .Build();
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
+        workTaskDto.UserId.Should().Be(person2.Id);
 
-            Seed(person1);
-            Seed(person2);
-            Seed(workTask);
+        var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
+        workTaskDb.PersonId.Should().Be(person2.Id);
+    }
 
-            var assignTaskRequestModel = new ChangeOwnerRequestModel()
-            {
-                NewOwnerId = person2.Id
-            };
+    [Fact]
+    public async Task ChangeOwner_WithNotAssignedTask_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var person2 = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var workTask = _workTaskBuilder
+            .WithRow(8)
+            .Build();
 
-            //Act
+        Seed(person2);
+        Seed(workTask);
 
-            var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
-            workTaskDto.UserId.Should().Be(person2.Id);
-
-            var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
-            workTaskDb.PersonId.Should().Be(person2.Id);
-        }
-
-        [Fact]
-        public async Task ChangeOwner_WithValidModel_ReturnsBadRequest()
+        var assignTaskRequestModel = new ChangeOwnerRequestModel()
         {
-            //Arrange
+            NewOwnerId = person2.Id
+        };
 
-            var person1 = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var person2 = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        //Act
+        var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
 
-            var workTask = _workTaskBuilder
-                .WithRow(7)
-                .WithPersonId(person1.Id)
-                .Build();
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            Seed(person1);
-            Seed(person2);
-            Seed(workTask);
+    [Fact]
+    public async Task ChangeOwner_WithInvalidRoleOfPerson_ReturnsForbiddenAsync()
+    {
+        //Arrange
+        var person1 = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var assignTaskRequestModel = new ChangeOwnerRequestModel()
-            {
-                NewOwnerId = person2.Id
-            };
+        var person2 = _personBuilder
+            .WithRole(Role.Manager)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var workTask = _workTaskBuilder
+            .WithRow(9)
+            .WithPersonId(person1.Id)
+            .Build();
 
-            //Act
+        Seed(person1);
+        Seed(person2);
+        Seed(workTask);
 
-            var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
-            workTaskDto.UserId.Should().Be(person2.Id);
-
-            var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
-            workTaskDb.PersonId.Should().Be(person2.Id);
-        }
-
-        [Fact]
-        public async Task ChangeOwner_WithNotAssignedTask_ReturnsBadRequest()
+        var assignTaskRequestModel = new ChangeOwnerRequestModel()
         {
-            //Arrange
+            NewOwnerId = person2.Id
+        };
 
-            var person2 = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = assignTaskRequestModel.ToJsonHttpContent();
 
-            var workTask = _workTaskBuilder
-                .WithRow(8)
-                .Build();
+        //Act
+        var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
 
-            Seed(person2);
-            Seed(workTask);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 
-            var assignTaskRequestModel = new ChangeOwnerRequestModel()
-            {
-                NewOwnerId = person2.Id
-            };
+    [Fact]
+    public async Task StartWorkTask_WithValidModel_ReturnsWorkTaskDtoAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+        var workTask = _workTaskBuilder
+            .WithRow(10)
+            .WithPersonId(person.Id)
+            .Build();
 
-            //Act
+        var workday = _workdayBuilder
+            .WithStartTime(_defaultDate)
+            .WithPersonId(person.Id)
+            .Build();
 
-            var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
+        Seed(person);
+        Seed(workTask);
+        Seed(workday);
 
-            //Assert
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
+        workTaskDto.UserId.Should().Be(person.Id);
+        workTaskDto.IsStarted.Should().Be(true);
+        workTaskDto.IsFinished.Should().Be(false);
 
-        [Fact]
-        public async Task ChangeOwner_WithInvalidRoleOfPerson_ReturnsForbidden()
-        {
-            //Arrange
+        var activityDb = _dbContext.Activities.First(a => a.WorkTaskId == workTask.Id);
+        activityDb.Start.Should().Be(_defaultDate);
+        activityDb.Stop.Should().Be(null);
+        activityDb.PersonId.Should().Be(person.Id);
 
-            var person1 = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
+        workTaskDb.PersonId.Should().Be(person.Id);
+        workTaskDb.IsStarted.Should().Be(true);
+        workTaskDb.IsFinished.Should().Be(false);
+        workTaskDb.Activities.Should().HaveCount(1);
+    }
 
-            var person2 = _personBuilder
-                .WithRole(Role.Manager)
-                .Build();
+    [Fact]
+    public async Task StartWorkTask_WithNotAssignedTask_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var workTask = _workTaskBuilder
+            .WithRow(11)
+            .Build();
 
-            var workTask = _workTaskBuilder
-                .WithRow(9)
-                .WithPersonId(person1.Id)
-                .Build();
+        Seed(workTask);
 
-            Seed(person1);
-            Seed(person2);
-            Seed(workTask);
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
 
-            var assignTaskRequestModel = new ChangeOwnerRequestModel()
-            {
-                NewOwnerId = person2.Id
-            };
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var httpContent = assignTaskRequestModel.ToJsonHttpContent();
+    [Fact]
+    public async Task StartWorkTask_WithStartedTask_ReturnsForbiddenAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+           .WithRole(Role.Employee)
+           .Build();
 
-            //Act
+        var workTask = _workTaskBuilder
+            .WithRow(12)
+            .WithPersonId(person.Id)
+            .WithStartedStatus()
+            .Build();
 
-            var response = await _client.PatchAsync($"worktasks/{workTask.Id}/actions/changeOwner", httpContent);
+        Seed(person);
+        Seed(workTask);
 
-            //Assert
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
-                
-        [Fact]
-        public async Task StartWorkTask_WithValidModel_ReturnsWorkTaskDto()
-        {
-            //Arrange
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+    [Fact]
+    public async Task StartWorkTask_WithNotStartedWork_ReturnsForbiddenAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+           .WithRole(Role.Employee)
+           .Build();
 
-            var workTask = _workTaskBuilder
-                .WithRow(10)
-                .WithPersonId(person.Id)
-                .Build();
+        var workTask = _workTaskBuilder
+            .WithRow(13)
+            .WithPersonId(person.Id)
+            .WithStartedStatus()
+            .Build();
 
-            var workday = _workdayBuilder
-                .WithStartTime(_defaultDate)
-                .WithPersonId(person.Id)
-                .Build();
+        Seed(person);
+        Seed(workTask);
 
-            Seed(person);
-            Seed(workTask);
-            Seed(workday);
+        //Act
+        var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
 
-            //Act
-
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workTaskDto = await JsonDeserializeHelper.DeserializeAsync<WorkTaskDto>(response);
-            workTaskDto.UserId.Should().Be(person.Id);
-            workTaskDto.IsStarted.Should().Be(true);
-            workTaskDto.IsFinished.Should().Be(false);
-
-            var activityDb = _dbContext.Activities.First(a => a.WorkTaskId == workTask.Id);
-            activityDb.Start.Should().Be(_defaultDate);
-            activityDb.Stop.Should().Be(null);
-            activityDb.PersonId.Should().Be(person.Id);
-
-            var workTaskDb = _dbContext.WorkTasks.First(w => w.Id == workTask.Id);
-            workTaskDb.PersonId.Should().Be(person.Id);
-            workTaskDb.IsStarted.Should().Be(true);
-            workTaskDb.IsFinished.Should().Be(false);
-            workTaskDb.Activities.Should().HaveCount(1);
-        }
-
-        [Fact]
-        public async Task StartWorkTask_WithNotAssignedTask_ReturnsBadRequest()
-        {
-            //Arrange
-
-            var workTask = _workTaskBuilder
-                .WithRow(11)
-                .Build();
-
-            Seed(workTask);
-
-            //Act
-
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task StartWorkTask_WithStartedTask_ReturnsForbidden()
-        {
-            //Arrange
-
-            var person = _personBuilder
-               .WithRole(Role.Employee)
-               .Build();
-
-            var workTask = _workTaskBuilder
-                .WithRow(12)
-                .WithPersonId(person.Id)
-                .WithStartedStatus()
-                .Build();
-
-            Seed(person);
-            Seed(workTask);
-
-            //Act
-
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
-
-        [Fact]
-        public async Task StartWorkTask_WithNotStartedWork_ReturnsForbidden()
-        {
-            //Arrange
-
-            var person = _personBuilder
-               .WithRole(Role.Employee)
-               .Build();
-
-            var workTask = _workTaskBuilder
-                .WithRow(13)
-                .WithPersonId(person.Id)
-                .WithStartedStatus()
-                .Build();
-
-            Seed(person);
-            Seed(workTask);
-
-            //Act
-
-            var response = await _client.PostAsync($"worktasks/{workTask.Id}/actions/start", null);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        }
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }

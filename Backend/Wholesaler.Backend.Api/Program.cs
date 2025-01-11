@@ -29,21 +29,23 @@ var builder = WebApplication.CreateBuilder(args);
 var connection = builder.Configuration.GetConnectionString("DBConnection");
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WholesalerContext>(
     opt => opt
         .UseSqlServer(connection)
-        .LogTo(l => {
-            if(l.Contains("CommandExecuting"))
-                Log.Logger.Information(l);
-        }, new List<string>
-        {
-            DbLoggerCategory.Database.Command.Name
-        }));
+        .LogTo(
+            l =>
+            {
+                if (l.Contains("CommandExecuting"))
+                    Log.Logger.Information(l);
+            },
+            new List<string>
+            {
+                DbLoggerCategory.Database.Command.Name
+            }));
 
-builder.Host.UseSerilog((context, configuration) => configuration
+builder.Host.UseSerilog((_, configuration) => configuration
     .WriteTo.File(new CompactJsonFormatter(), "logs/log.txt", rollingInterval: RollingInterval.Day)
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -104,5 +106,4 @@ app.Run();
 
 public partial class Program
 {
-
 }

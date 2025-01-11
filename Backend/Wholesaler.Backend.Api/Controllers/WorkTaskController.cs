@@ -6,150 +6,124 @@ using Wholesaler.Backend.Domain.Requests.WorkTasks;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 
-namespace Wholesaler.Backend.Api.Controllers
+namespace Wholesaler.Backend.Api.Controllers;
+
+[ApiController]
+[Route("worktasks")]
+public class WorkTaskController : ControllerBase
 {
-    [ApiController]
-    [Route("worktasks")]
-    public class WorkTaskController : ControllerBase
+    private readonly IWorkTaskRepository _workTaskRepository;
+    private readonly IWorkTaskService _workTaskService;
+    private readonly IWorkTaskDtoFactory _workTaskFactory;
+
+    public WorkTaskController(IWorkTaskRepository workTaskRepository, IWorkTaskService workTaskService, IWorkTaskDtoFactory workTaskFactory)
     {
-        private readonly IWorkTaskRepository _workTaskRepository;
-        private readonly IWorkTaskService _workTaskService;
-        private readonly IWorkTaskDtoFactory _workTaskFactory;
+        _workTaskRepository = workTaskRepository;
+        _workTaskService = workTaskService;
+        _workTaskFactory = workTaskFactory;
+    }
 
-        public WorkTaskController(IWorkTaskRepository workTaskRepository, IWorkTaskService workTaskService, IWorkTaskDtoFactory workTaskFactory)
-        {
-            _workTaskRepository = workTaskRepository;
-            _workTaskService = workTaskService;
-            _workTaskFactory = workTaskFactory;
-        }
+    [HttpPost]
+    public async Task<ActionResult<Guid>> AddAsync([FromBody] AddTaskRequestModel addTask)
+    {
+        var request = new CreateWorkTaskRequest(addTask.Row);
+        var workTask = _workTaskService.Add(request);
 
-        [HttpPost]
-        public async Task<ActionResult<Guid>> Add([FromBody] AddTaskRequestModel addTask)
-        {
-            var request = new CreateWorkTaskRequest(addTask.Row);
-            var workTask = _workTaskService.Add(request);
+        return workTask.Id;
+    }
 
-            return workTask.Id;
-        }
+    [HttpPost]
+    [Route("{id}/actions/assign")]
+    public async Task<ActionResult<WorkTaskDto>> AssignAsync(Guid id, [FromBody] AssignTaskRequestModel assignTask)
+    {
+        var workTask = _workTaskService.Assign(id, assignTask.UserId);
 
-        [HttpPost]
-        [Route("{id}/actions/assign")]
-        public async Task<ActionResult<WorkTaskDto>> Assign(Guid id, [FromBody] AssignTaskRequestModel assignTask)
-        {
-            var workTask = _workTaskService.Assign(id, assignTask.UserId);
+        return _workTaskFactory.Create(workTask);
+    }
 
-            var workTaskDto = _workTaskFactory.Create(workTask);
+    [HttpPatch]
+    [Route("{workTaskId}/actions/changeOwner")]
+    public async Task<ActionResult<WorkTaskDto>> ChangeOwnerOfWorkTaskAsync(Guid workTaskId, [FromBody] ChangeOwnerRequestModel changeOwner)
+    {
+        var workTask = _workTaskService.ChangeOwner(workTaskId, changeOwner.NewOwnerId);
 
-            return workTaskDto;
-        }
+        return _workTaskFactory.Create(workTask);
+    }
 
-        [HttpPatch]
-        [Route("{workTaskId}/actions/changeOwner")]
-        public async Task<ActionResult<WorkTaskDto>> ChangeOwnerOfWorkTask(Guid workTaskId, [FromBody] ChangeOwnerRequestModel changeOwner)
-        {
-            var workTask = _workTaskService.ChangeOwner(workTaskId, changeOwner.NewOwnerId);
+    [HttpPost]
+    [Route("{workTaskId}/actions/start")]
+    public async Task<ActionResult<WorkTaskDto>> StartWorkTaskAsync(Guid workTaskId)
+    {
+        var workTask = _workTaskService.Start(workTaskId);
 
-            var workTaskDto = _workTaskFactory.Create(workTask);
+        return _workTaskFactory.Create(workTask);
+    }
 
-            return workTaskDto;
-        }
+    [HttpPost]
+    [Route("{workTaskId}/actions/stop")]
+    public async Task<ActionResult<WorkTaskDto>> StopWorkTaskAsync(Guid workTaskId)
+    {
+        var workTask = _workTaskService.Stop(workTaskId);
 
-        [HttpPost]
-        [Route("{workTaskId}/actions/start")]
-        public async Task<ActionResult<WorkTaskDto>> StartWorkTask(Guid workTaskId)
-        {
-            var workTask = _workTaskService.Start(workTaskId);
+        return _workTaskFactory.Create(workTask);
+    }
 
-            var workTaskDto = _workTaskFactory.Create(workTask);
+    [HttpPost]
+    [Route("{workTaskId}/actions/finish")]
+    public async Task<ActionResult<WorkTaskDto>> FinishWorkTaskAsync(Guid workTaskId)
+    {
+        var workTask = _workTaskService.Finish(workTaskId);
 
-            return workTaskDto;
-        }
+        return _workTaskFactory.Create(workTask);
+    }
 
-        [HttpPost]
-        [Route("{workTaskId}/actions/stop")]
-        public async Task<ActionResult<WorkTaskDto>> StopWorkTask(Guid workTaskId)
-        {
-            var workTask = _workTaskService.Stop(workTaskId);
+    [HttpGet]
+    [Route("unassigned")]
+    public async Task<ActionResult<List<WorkTaskDto>>> GetNotAssignWorktasksAsync()
+    {
+        var workday = _workTaskRepository.GetNotAssign();
 
-            var workTaskDto = _workTaskFactory.Create(workTask);
+        return workday
+            .ConvertAll(w => _workTaskFactory.Create(w));
+    }
 
-            return workTaskDto;
-        }
+    [HttpGet]
+    [Route("assigned")]
+    public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedWorktasksAsync()
+    {
+        var workday = _workTaskRepository.GetAssigned();
 
-        [HttpPost]
-        [Route("{workTaskId}/actions/finish")]
-        public async Task<ActionResult<WorkTaskDto>> FinishWorkTask(Guid workTaskId)
-        {
-            var workTask = _workTaskService.Finish(workTaskId);
+        return workday
+            .ConvertAll(w => _workTaskFactory.Create(w));
+    }
 
-            var workTaskDto = _workTaskFactory.Create(workTask);
+    [HttpGet]
+    [Route("assignedToAnEmployee")]
+    public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployeeAsync(Guid userId)
+    {
+        var workTasks = _workTaskRepository.GetAssigned(userId);
 
-            return workTaskDto;
-        }
+        return workTasks
+            .ConvertAll(w => _workTaskFactory.Create(w));
+    }
 
-        [HttpGet]
-        [Route("unassigned")]
-        public async Task<ActionResult<List<WorkTaskDto>>> GetNotAssignWorktasks()
-        {
-            var workday = _workTaskRepository.GetNotAssign();
+    [HttpGet]
+    [Route("started")]
+    public async Task<ActionResult<List<WorkTaskDto>>> GetStartedWorkTasksAsync()
+    {
+        var workTasks = _workTaskRepository.GetStarted();
 
-            var listOfWorkTasks = workday
-                .Select(w => _workTaskFactory.Create(w))
-                .ToList();
+        return workTasks
+            .ConvertAll(w => _workTaskFactory.Create(w));
+    }
 
-            return listOfWorkTasks;
-        }
+    [HttpGet]
+    [Route("finished")]
+    public async Task<ActionResult<List<WorkTaskDto>>> GetFinishedWorkTasksAsync()
+    {
+        var workTasks = _workTaskRepository.GetFinished();
 
-        [HttpGet]
-        [Route("assigned")]
-        public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedWorktasks()
-        {
-            var workday = _workTaskRepository.GetAssigned();
-
-            var listOfWorkTasks = workday
-                .Select(w => _workTaskFactory.Create(w))
-                .ToList();
-
-            return listOfWorkTasks;
-        }
-
-        [HttpGet]
-        [Route("assignedToAnEmployee")]
-        public async Task<ActionResult<List<WorkTaskDto>>> GetAssignedToAnEmployee(Guid userId)
-        {
-            var workTasks = _workTaskRepository.GetAssigned(userId);
-
-            var listOfWorktasksDto = workTasks
-                .Select(w => _workTaskFactory.Create(w))
-                .ToList();
-
-            return listOfWorktasksDto;
-        }
-
-        [HttpGet]
-        [Route("started")]
-        public async Task<ActionResult<List<WorkTaskDto>>> GetStartedWorkTasks()
-        {
-            var workTasks = _workTaskRepository.GetStarted();
-
-            var listOfWorktasksDto = workTasks
-                .Select(w => _workTaskFactory.Create(w))
-                .ToList(); ;
-
-            return listOfWorktasksDto;
-        }
-
-        [HttpGet]
-        [Route("finished")]
-        public async Task<ActionResult<List<WorkTaskDto>>> GetFinishedWorkTasks()
-        {
-            var workTasks = _workTaskRepository.GetFinished();
-
-            var listOfWorktasksDto = workTasks
-                .Select(w => _workTaskFactory.Create(w))
-                .ToList();
-
-            return listOfWorktasksDto;
-        }
+        return workTasks
+            .ConvertAll(w => _workTaskFactory.Create(w));
     }
 }

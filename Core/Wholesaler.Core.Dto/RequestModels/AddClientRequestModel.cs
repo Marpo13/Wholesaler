@@ -1,8 +1,7 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class AddClientRequestModel
 {
-    public class AddClientRequestModel
-    {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-    }
+    public string Name { get; set; }
+    public string Surname { get; set; }
 }

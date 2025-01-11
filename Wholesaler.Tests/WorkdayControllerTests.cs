@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
@@ -8,274 +8,248 @@ using Wholesaler.Tests.Helpers;
 using Xunit;
 using Role = Wholesaler.Backend.Domain.Entities.Role;
 
-namespace Wholesaler.Tests
+namespace Wholesaler.Tests;
+
+public class WorkdayControllerTests : WholesalerWebTest
 {
-    public class WorkdayControllerTests : WholesalerWebTest
+    private readonly PersonBuilder _personBuilder;
+    private readonly WorkdayBuilder _workdayBuilder;
+    private readonly DateTime _defaultDate = new(2023, 02, 13, 12, 0, 0);
+
+    public WorkdayControllerTests(WebApplicationFactory<Program> factory)
+        : base(factory)
     {
-        private readonly PersonBuilder _personBuilder;
-        private readonly WorkdayBuilder _workdayBuilder;
-        private readonly DateTime _defaultDate = new(2023, 02, 13, 12, 0, 0);
+        _personBuilder = new();
+        _workdayBuilder = new();
 
-        public WorkdayControllerTests(WebApplicationFactory<Program> factory) : base(factory)
-        {            
-            _personBuilder = new PersonBuilder();
-            _workdayBuilder = new WorkdayBuilder();
+        _timeProviderMock
+            .Setup(m => m.Now())
+            .Returns(_defaultDate);
+    }
 
-            _timeProviderMock
-                .Setup(m => m.Now())
-                .Returns(_defaultDate);
-        }
+    [Fact]
+    public async Task StartWorkday_WithValidData_ReturnsWorkdayDtoAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-        [Fact]
-        public async Task StartWorkday_WithValidData_ReturnsWorkdayDto()
+        Seed(person);
+
+        var requestModel = new StartWorkdayRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            Seed(person);
+        //Act
+        var response = await _client.PostAsync("workdays/actions/start", httpContent);
 
-            var requestModel = new StartWorkdayRequestModel()
-            {
-                UserId = person.Id,
-            };
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
+        var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
 
-            var httpContent = requestModel.ToJsonHttpContent();
+        workdayDto.Start.Should().Be(_defaultDate);
+        workdayDto.Stop.Should().Be(null);
 
-            //Act
+        workdayDb.Id.Should().Be(workdayDto.Id);
+        workdayDb.Start.Should().Be(workdayDto.Start);
+        workdayDb.Stop.Should().Be(workdayDto.Stop);
+        workdayDb.PersonId.Should().Be(person.Id);
+    }
 
-            var response = await _client.PostAsync("workdays/actions/start", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
-            var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
-
-            workdayDto.Start.Should().Be(_defaultDate);
-            workdayDto.Stop.Should().Be(null);
-
-            workdayDb.Id.Should().Be(workdayDto.Id);
-            workdayDb.Start.Should().Be(workdayDto.Start);
-            workdayDb.Stop.Should().Be(workdayDto.Stop);
-            workdayDb.PersonId.Should().Be(person.Id);
-        }
-
-        [Fact]
-        public async Task StartWorkday_WithInvalidId_ReturnsBadRequest()
+    [Fact]
+    public async Task StartWorkday_WithInvalidId_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var requestModel = new StartWorkdayRequestModel()
         {
-            //Arrange
+            UserId = Guid.NewGuid()
+        };
 
-            var requestModel = new StartWorkdayRequestModel()
-            {
-                UserId = Guid.NewGuid(),
-            };
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            var httpContent = requestModel.ToJsonHttpContent();
+        //Act
+        var response = await _client.PostAsync("workdays/actions/start", httpContent);
 
-            //Act
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var response = await _client.PostAsync("workdays/actions/start", httpContent);
+    [Fact]
+    public async Task StartWorkday_WithInvalidRole_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Manager)
+            .Build();
 
-            //Assert
+        Seed(person);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task StartWorkday_WithInvalidRole_ReturnsBadRequest()
+        var requestModel = new StartWorkdayRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Manager)
-                .Build();
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            Seed(person);
+        //Act
+        var response = await _client.PostAsync("workdays/actions/start", httpContent);
 
-            var requestModel = new StartWorkdayRequestModel()
-            {
-                UserId = person.Id,
-            };
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var httpContent = requestModel.ToJsonHttpContent();
+    [Fact]
+    public async Task StartWorkday_WithPersonWithActiveWorkday_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            //Act
+        var workday = _workdayBuilder
+            .WithPersonId(person.Id)
+            .Build();
 
-            var response = await _client.PostAsync("workdays/actions/start", httpContent);
+        Seed(person);
+        Seed(workday);
 
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task StartWorkday_WithPersonWithActiveWorkday_ReturnsBadRequest()
+        var requestModel = new StartWorkdayRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            var workday = _workdayBuilder
-                .WithPersonId(person.Id)
-                .Build();
-            
-            Seed(person);
-            Seed(workday);
+        //Act
+        var response = await _client.PostAsync("workdays/actions/start", httpContent);
 
-            var requestModel = new StartWorkdayRequestModel()
-            {
-                UserId = person.Id,
-            };
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var httpContent = requestModel.ToJsonHttpContent();
+    [Fact]
+    public async Task FinishWorkday_WithValidData_ReturnsWorkdayDtoAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            //Act
+        var workday = _workdayBuilder
+            .WithStartTime(_defaultDate)
+            .WithPersonId(person.Id)
+            .Build();
 
-            var response = await _client.PostAsync("workdays/actions/start", httpContent);
+        Seed(person);
+        Seed(workday);
 
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task FinishWorkday_WithValidData_ReturnsWorkdayDto()
+        var requestModel = new FinishWorkdayRequestModel()
         {
-            //Arrange
+            UserId = person.Id
+        };
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            var workday = _workdayBuilder
-                .WithStartTime(_defaultDate)
-                .WithPersonId(person.Id)
-                .Build();
+        //Act
+        var response = await _client.PostAsync("workdays/actions/finish", httpContent);
 
-            Seed(person);
-            Seed(workday);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
+        var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
 
-            var requestModel = new FinishWorkdayRequestModel()
-            {
-                UserId = person.Id,
-            };
+        workdayDto.Start.Should().Be(_defaultDate);
+        workdayDto.Stop.Should().Be(_defaultDate);
 
-            var httpContent = requestModel.ToJsonHttpContent();
+        workdayDb.Id.Should().Be(workdayDto.Id);
+        workdayDb.Start.Should().Be(workdayDto.Start);
+        workdayDb.Stop.Should().Be(workdayDto.Stop);
+        workdayDb.PersonId.Should().Be(person.Id);
+    }
 
-            //Act
-
-            var response = await _client.PostAsync("workdays/actions/finish", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
-            var workdayDb = _dbContext.Workdays.First(w => w.Id == workdayDto.Id);
-
-            workdayDto.Start.Should().Be(_defaultDate);
-            workdayDto.Stop.Should().Be(_defaultDate);
-
-            workdayDb.Id.Should().Be(workdayDto.Id);
-            workdayDb.Start.Should().Be(workdayDto.Start);
-            workdayDb.Stop.Should().Be(workdayDto.Stop);
-            workdayDb.PersonId.Should().Be(person.Id);
-        }
-
-        [Fact]
-        public async Task FinishWorkday_WithInvalidId_ReturnsBadRequest()
+    [Fact]
+    public async Task FinishWorkday_WithInvalidId_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var requestModel = new FinishWorkdayRequestModel()
         {
-            //Arrange
-            
-            var requestModel = new FinishWorkdayRequestModel()
-            {
-                UserId = Guid.NewGuid(),
-            };
+            UserId = Guid.NewGuid()
+        };
 
-            var httpContent = requestModel.ToJsonHttpContent();
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            //Act
+        //Act
+        var response = await _client.PostAsync("workdays/actions/finish", httpContent);
 
-            var response = await _client.PostAsync("workdays/actions/finish", httpContent);
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            //Assert
+    [Fact]
+    public async Task FinishWorkday_WithNoStartedWorkday_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
+        Seed(person);
 
-        [Fact]
-        public async Task FinishWorkday_WithNoStartedWorkday_ReturnsBadRequest()
+        var requestModel = new FinishWorkdayRequestModel()
         {
-            //Arrange
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+            UserId = person.Id
+        };
 
-            Seed(person);
+        var httpContent = requestModel.ToJsonHttpContent();
 
-            var requestModel = new FinishWorkdayRequestModel()
-            {
-                UserId = person.Id,
-            };
+        //Act
+        var response = await _client.PostAsync("workdays/actions/finish", httpContent);
 
-            var httpContent = requestModel.ToJsonHttpContent();
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            //Act
+    [Fact]
+    public async Task GetWorkday_ForValidId_ReturnsWorkdayDtoAsync()
+    {
+        //Arrange
+        var person = _personBuilder
+            .WithRole(Role.Employee)
+            .Build();
 
-            var response = await _client.PostAsync("workdays/actions/finish", httpContent);
+        var workday = _workdayBuilder
+            .WithPersonId(person.Id)
+            .WithStartTime(_defaultDate)
+            .Build();
 
-            //Assert
+        Seed(person);
+        Seed(workday);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
+        //Act
+        var response = await _client.GetAsync($"workdays/{workday.Id}");
 
-        [Fact]
-        public async Task GetWorkday_ForValidId_ReturnsWorkdayDto()
-        {
-            //Arrange
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
+        workdayDto.Start.Should().Be(_defaultDate);
+        workdayDto.Stop.Should().Be(null);
+    }
 
-            var person = _personBuilder
-                .WithRole(Role.Employee)
-                .Build();
+    [Fact]
+    public async Task GetWorkday_ForInvalidId_ReturnsNotFoundAsync()
+    {
+        //Arrange
+        var id = Guid.NewGuid();
 
-            var workday = _workdayBuilder
-                .WithPersonId(person.Id)
-                .WithStartTime(_defaultDate)
-                .Build();
+        //Act
+        var response = await _client.GetAsync($"workdays/{id}");
 
-            Seed(person);
-            Seed(workday);
-
-            //Act
-
-            var response = await _client.GetAsync($"workdays/{workday.Id}");
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var workdayDto = await JsonDeserializeHelper.DeserializeAsync<WorkdayDto>(response);
-            workdayDto.Start.Should().Be(_defaultDate);
-            workdayDto.Stop.Should().Be(null);
-        }
-
-        [Fact]
-        public async Task GetWorkday_ForInvalidId_ReturnsNotFound()
-        {
-            //Arrange
-
-            var id = Guid.NewGuid();
-
-            //Act
-
-            var response = await _client.GetAsync($"workdays/{id}");
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

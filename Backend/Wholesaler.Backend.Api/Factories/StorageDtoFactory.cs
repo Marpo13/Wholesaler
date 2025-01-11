@@ -2,18 +2,17 @@
 using Wholesaler.Backend.Domain.Entities;
 using Wholesaler.Core.Dto.ResponseModels;
 
-namespace Wholesaler.Backend.Api.Factories
+namespace Wholesaler.Backend.Api.Factories;
+
+public class StorageDtoFactory : IStorageDtoFactory
 {
-    public class StorageDtoFactory : IStorageDtoFactory
+    public StorageDto Create(Storage storage)
     {
-        public StorageDto Create(Storage storage)
+        return new()
         {
-            return new StorageDto()
-            {
-                Id = storage.Id,
-                Name = storage.Name,
-                State = storage.State,
-            };
-        }
+            Id = storage.Id,
+            Name = storage.Name,
+            State = storage.State
+        };
     }
 }

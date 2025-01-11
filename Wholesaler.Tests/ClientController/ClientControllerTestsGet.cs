@@ -1,63 +1,57 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
 using Wholesaler.Core.Dto.ResponseModels;
 using Wholesaler.Tests.Builders;
 using Wholesaler.Tests.Helpers;
 using Xunit;
 
-namespace Wholesaler.Tests.ClientController
+namespace Wholesaler.Tests.ClientController;
+
+public class ClientControllerTestsGet : WholesalerWebTest
 {
-    public class ClientControllerTestsGet : WholesalerWebTest
+    private readonly ClientBuilder _clientBuilder;
+
+    public ClientControllerTestsGet(WebApplicationFactory<Program> factory)
+        : base(factory)
     {
-        private readonly ClientBuilder _clientBuilder;
+        _clientBuilder = new();
+    }
 
-        public ClientControllerTestsGet(WebApplicationFactory<Program> factory) : base(factory)
-        {
-            _clientBuilder = new ClientBuilder();
-        }
+    [Fact]
+    public async Task GetClient_WithValidId_ReturnsClientDtoAsync()
+    {
+        //Arrange
+        var client = _clientBuilder.Build();
+        Seed(client);
 
-        [Fact]
-        public async Task GetClient_WithValidId_ReturnsClientDto()
-        {
-            //Arrange
+        var id = client.Id;
 
-            var client = _clientBuilder.Build();
-            Seed(client);
+        //Act
+        var response = await _client.GetAsync($"clients/{id}");
 
-            var id = client.Id;
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var clientDto = await JsonDeserializeHelper.DeserializeAsync<ClientDto>(response);
 
-            //Act
+        clientDto.Id.Should().Be(client.Id);
+        clientDto.Name.Should().Be(client.Name);
+        clientDto.Surname.Should().Be(client.Surname);
+    }
 
-            var response = await _client.GetAsync($"clients/{id}");
+    [Fact]
+    public async Task GetClient_WithInvalidId_ReturnsNotFoundAsync()
+    {
+        //Arrange
+        var client = _clientBuilder.Build();
+        Seed(client);
 
-            //Assert
+        var id = Guid.NewGuid();
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var clientDto = await JsonDeserializeHelper.DeserializeAsync<ClientDto>(response);
+        //Act
+        var response = await _client.GetAsync($"clients/{id}");
 
-            clientDto.Id.Should().Be(client.Id);
-            clientDto.Name.Should().Be(client.Name);
-            clientDto.Surname.Should().Be(client.Surname);
-        }
-
-        [Fact]
-        public async Task GetClient_WithInvalidId_ReturnsNotFound()
-        {
-            //Arrange
-
-            var client = _clientBuilder.Build();
-            Seed(client);
-
-            var id = Guid.NewGuid();
-
-            //Act
-
-            var response = await _client.GetAsync($"clients/{id}");
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

@@ -1,59 +1,53 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
 using Wholesaler.Tests.Builders;
 using Xunit;
 
-namespace Wholesaler.Tests.ClientController
+namespace Wholesaler.Tests.ClientController;
+
+public class ClientControllerTestsDelete : WholesalerWebTest
 {
-    public class ClientControllerTestsDelete : WholesalerWebTest
+    private readonly ClientBuilder _clientBuilder;
+
+    public ClientControllerTestsDelete(WebApplicationFactory<Program> factory)
+        : base(factory)
     {
-        private readonly ClientBuilder _clientBuilder;
+        _clientBuilder = new();
+    }
 
-        public ClientControllerTestsDelete(WebApplicationFactory<Program> factory) : base(factory)
-        {
-            _clientBuilder = new ClientBuilder();
-        }
+    [Fact]
+    public async Task DeleteClient_WithValidId_ReturnsNoContentAsync()
+    {
+        //Arrange
+        var client = _clientBuilder.Build();
+        Seed(client);
 
-        [Fact]
-        public async Task DeleteClient_WithValidId_ReturnsNoContent()
-        {
-            //Arrange
+        var id = client.Id;
 
-            var client = _clientBuilder.Build();
-            Seed(client);
+        //Act
+        var response = await _client.DeleteAsync($"clients/{id}");
 
-            var id = client.Id;
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        var deletedClient = _dbContext.Clients.FirstOrDefault(c => c.Id == client.Id);
+        deletedClient.Should().BeNull();
+    }
 
-            //Act
+    public async Task DeleteClient_WithInvalidId_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var client = _clientBuilder.Build();
+        Seed(client);
 
-            var response = await _client.DeleteAsync($"clients/{id}");
+        var id = Guid.NewGuid();
 
-            //Assert
+        //Act
+        var response = await _client.DeleteAsync($"clients/{id}");
 
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            var deletedClient = _dbContext.Clients.FirstOrDefault(c => c.Id == client.Id);
-            deletedClient.Should().BeNull();
-        }
-
-        public async Task DeleteClient_WithInvalidId_ReturnsBadRequest()
-        {
-            //Arrange
-
-            var client = _clientBuilder.Build();
-            Seed(client);
-
-            var id = Guid.NewGuid();
-
-            //Act
-
-            var response = await _client.DeleteAsync($"clients/{id}");
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            var notDeletedClient = _dbContext.Clients.FirstOrDefault(c => c.Id == client.Id);
-            notDeletedClient.Should().NotBeNull();
-        }
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var notDeletedClient = _dbContext.Clients.FirstOrDefault(c => c.Id == client.Id);
+        notDeletedClient.Should().NotBeNull();
     }
 }

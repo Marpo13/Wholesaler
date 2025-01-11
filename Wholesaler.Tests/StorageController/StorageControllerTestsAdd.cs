@@ -1,92 +1,79 @@
-﻿using FluentAssertions;
+﻿using System.Net;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
-using Wholesaler.Tests.Builders;
 using Wholesaler.Tests.Helpers;
 using Xunit;
 
-namespace Wholesaler.Tests.StorageController
+namespace Wholesaler.Tests.StorageController;
+
+public class StorageControllerTestsAdd : WholesalerWebTest
 {
-    public class StorageControllerTestsAdd : WholesalerWebTest
-    {        
-        public StorageControllerTestsAdd(WebApplicationFactory<Program> factory) : base(factory)
+    public StorageControllerTestsAdd(WebApplicationFactory<Program> factory)
+        : base(factory)
+    {
+    }
+
+    [Fact]
+    public async Task Add_WithValidModel_ReturnsStorageDtoAsync()
+    {
+        //Arrange
+        var storageRequestModel = new AddStorageRequestModel()
         {
-        }
+            Name = "Storage1"
+        };
 
-        [Fact]
-        public async Task Add_WithValidModel_ReturnsStorageDto()
+        var httpContent = storageRequestModel.ToJsonHttpContent();
+
+        //Act
+        var response = await _client.PostAsync("storages", httpContent);
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var storageDto = await JsonDeserializeHelper.DeserializeAsync<StorageDto>(response);
+        var storage = _dbContext.Storages.First(s => s.Name == storageRequestModel.Name);
+
+        storageDto.Name.Should().Be(storageRequestModel.Name);
+
+        storageDto.Name.Should().Be(storage.Name);
+        storageDto.Id.Should().Be(storage.Id);
+        storageDto.State.Should().Be(storage.State);
+    }
+
+    [Fact]
+    public async Task Add_WithInvalidModel_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var storageRequestModel = new AddStorageRequestModel()
         {
-            //Arrange
+            Name = string.Empty
+        };
 
-            var storageRequestModel = new AddStorageRequestModel()
-            {
-                Name = "Storage1"
-            };
+        var httpContent = storageRequestModel.ToJsonHttpContent();
 
-            var httpContent = storageRequestModel.ToJsonHttpContent();
+        //Act
+        var response = await _client.PostAsync("storages", httpContent);
 
-            //Act
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-            var response = await _client.PostAsync("storages", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var storageDto = await JsonDeserializeHelper.DeserializeAsync<StorageDto>(response);
-            var storage = _dbContext.Storages.First(s => s.Name == storageRequestModel.Name);
-
-            storageDto.Name.Should().Be(storageRequestModel.Name);
-
-            storageDto.Name.Should().Be(storage.Name);
-            storageDto.Id.Should().Be(storage.Id);
-            storageDto.State.Should().Be(storage.State);
-        }
-
-
-        [Fact]
-        public async Task Add_WithInvalidModel_ReturnsBadRequest()
+    [Fact]
+    public async Task Add_WithEmptyName_ReturnsBadRequestAsync()
+    {
+        //Arrange
+        var storageRequestModel = new AddStorageRequestModel()
         {
-            //Arrange
+            Name = " "
+        };
 
-            var storageRequestModel = new AddStorageRequestModel()
-            {
-                Name = ""
-            };
+        var httpContent = storageRequestModel.ToJsonHttpContent();
 
-            var httpContent = storageRequestModel.ToJsonHttpContent();
+        //Act
+        var response = await _client.PostAsync("storages", httpContent);
 
-            //Act
-
-            var response = await _client.PostAsync("storages", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task Add_WithEmptyName_ReturnsBadRequest()
-        {
-            //Arrange
-
-            var storageRequestModel = new AddStorageRequestModel()
-            {
-                Name = " "
-            };
-
-            var httpContent = storageRequestModel.ToJsonHttpContent();
-
-            //Act
-
-            var response = await _client.PostAsync("storages", httpContent);
-
-            //Assert
-
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

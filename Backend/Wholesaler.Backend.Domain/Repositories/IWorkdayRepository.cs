@@ -1,18 +1,14 @@
 ﻿using Wholesaler.Backend.Domain.Entities;
 
-namespace Wholesaler.Backend.Domain.Repositories
+namespace Wholesaler.Backend.Domain.Repositories;
+
+public interface IWorkdayRepository
 {
-    public interface IWorkdayRepository
-    {
-        Workday Add(Workday workday);      
+    Workday Add(Workday workday);
 
-        Workday Get(Guid id);
+    Workday Get(Guid id);
 
-        List<Workday> GetByPersonAsync(Guid personId);
+    Workday? GetActiveByPersonOrDefault(Guid personId);
 
-        Workday? GetActiveByPersonOrDefaultAsync(Guid personId);
-
-        Workday UpdateWorkday(Workday workday);
-        
-    }
+    Workday UpdateWorkday(Workday workday);
 }

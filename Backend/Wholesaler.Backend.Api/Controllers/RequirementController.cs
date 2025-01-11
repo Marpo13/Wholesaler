@@ -6,119 +6,99 @@ using Wholesaler.Backend.Domain.Requests.Requirements;
 using Wholesaler.Core.Dto.RequestModels;
 using Wholesaler.Core.Dto.ResponseModels;
 
-namespace Wholesaler.Backend.Api.Controllers
+namespace Wholesaler.Backend.Api.Controllers;
+
+[ApiController]
+[Route("requirements")]
+public class RequirementController : ControllerBase
 {
-    [ApiController]
-    [Route("requirements")]
-    public class RequirementController : ControllerBase
+    private readonly IRequirementService _service;
+    private readonly IRequirementDtoFactory _factory;
+    private readonly IRequirementRepository _requirementRepository;
+    private readonly IClientRepository _clientRepository;
+    private readonly IStorageRepository _storageRepository;
+
+    public RequirementController(
+        IRequirementService service,
+        IRequirementDtoFactory factory,
+        IRequirementRepository requirementRepository,
+        IClientRepository clientRepository,
+        IStorageRepository storageRepository)
     {
-        private readonly IRequirementService _service;
-        private readonly IRequirementDtoFactory _factory;
-        private readonly IRequirementRepository _requirementRepository;
-        private readonly IClientRepository _clientRepository;
-        private readonly IStorageRepository _storageRepository;
+        _service = service;
+        _factory = factory;
+        _requirementRepository = requirementRepository;
+        _clientRepository = clientRepository;
+        _storageRepository = storageRepository;
+    }
 
-        public RequirementController(IRequirementService service, 
-            IRequirementDtoFactory factory, 
-            IRequirementRepository requirementRepository, 
-            IClientRepository clientRepository, 
-            IStorageRepository storageRepository)
-        {
-            _service = service;
-            _factory = factory;
-            _requirementRepository = requirementRepository;
-            _clientRepository = clientRepository;
-            _storageRepository = storageRepository;
-        }
+    [HttpPost]
+    public async Task<ActionResult<RequirementDto>> AddAsync([FromBody] AddRequirementRequestModel addRequirementRequest)
+    {
+        var client = _clientRepository.Get(addRequirementRequest.ClientId);
+        var storage = _storageRepository.Get(addRequirementRequest.StorageId);
 
-        [HttpPost]
-        public async Task<ActionResult<RequirementDto>> Add([FromBody] AddRequirementRequestModel addRequirementRequest)
-        {
-            var client = _clientRepository.Get(addRequirementRequest.ClientId);
-            var storage = _storageRepository.Get(addRequirementRequest.StorageId);
+        var request = new CreateRequirementRequest(
+            addRequirementRequest.Quantity,
+            client.Id,
+            storage.Id);
 
-            var request = new CreateRequirementRequest(
-                addRequirementRequest.Quantity,
-                client.Id,
-                storage.Id);
+        var requirement = _service.Add(request);
 
-            var requirement = _service.Add(request);
+        return _factory.Create(requirement);
+    }
 
-            var requirementDto = _factory.Create(requirement);
+    [HttpPatch]
+    [Route("{id}")]
+    public async Task<ActionResult<RequirementDto>> EditQuantityAsync(Guid id, [FromBody] UdpateRequirementRequestModel updateRequirementRequest)
+    {
+        var editedRequirement = _service.EditQuantity(id, updateRequirementRequest.Quantity);
+        return _factory.Create(editedRequirement);
+    }
 
-            return requirementDto;
-        }
+    [HttpPatch]
+    [Route("{id}/actions/complete")]
+    public async Task<ActionResult<RequirementDto>> CompleteAsync(Guid id)
+    {
+        var completedRequirement = _service.Complete(id);
+        return _factory.Create(completedRequirement);
+    }
 
-        [HttpPatch]
-        [Route("{id}")]
-        public async Task<ActionResult<RequirementDto>> EditQuantity(Guid id, [FromBody] UdpateRequirementRequestModel updateRequirementRequest)
-        {
-            var editedRequirement = _service.EditQuantity(id, updateRequirementRequest.Quantity);
-            var editedRequirementDto = _factory.Create(editedRequirement);
+    [HttpGet]
+    public async Task<ActionResult<List<RequirementDto>>> GetAllAsync()
+    {
+        var requirements = _requirementRepository.GetAll();
+        return requirements
+            .ConvertAll(r => _factory.Create(r));
+    }
 
-            return editedRequirementDto;
-        }
+    [HttpGet]
+    [Route("withStorageId")]
+    public async Task<ActionResult<List<RequirementDto>>> GetAsync([FromQuery] Guid storageId)
+    {
+        var requirements = _requirementRepository.Get(storageId);
+        return requirements
+            .ConvertAll(r => _factory.Create(r));
+    }
 
+    [HttpGet]
+    [Route("byStatus")]
+    public async Task<ActionResult<List<RequirementDto>>> GetByStatusAsync([FromQuery] string status)
+    {
+        var requirements = _requirementRepository.GetByStatus(status);
+        return requirements
+            .ConvertAll(r => _factory.Create(r));
+    }
 
-        [HttpPatch]
-        [Route("{id}/actions/complete")]
-        public async Task<ActionResult<RequirementDto>> Complete(Guid id)
-        {
-            var completedRequirement = _service.Complete(id);
-            var completedRequirementDto = _factory.Create(completedRequirement);
+    [HttpGet]
+    [Route("byCustomFilters")]
+    public async Task<ActionResult<List<RequirementDto>>> GetByCustomFiltersAsync([FromQuery] Dictionary<string, string> customFilters)
+    {
+        var response = await _service.GetByCustomFiltersAsync(customFilters);
 
-            return completedRequirementDto;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<List<RequirementDto>>> GetAll()
-        {
-            var requirements = _requirementRepository.GetAll();
-            var requirementsDto = requirements
-                .Select(r => _factory.Create(r))
-                .ToList();
-
-            return requirementsDto;
-        }
-
-        [HttpGet]
-        [Route("withStorageId")]
-        public async Task<ActionResult<List<RequirementDto>>> Get([FromQuery] Guid storageId)
-        {
-            var requirements = _requirementRepository.Get(storageId);
-            var requirementsDto = requirements
-                .Select(r => _factory.Create(r))
-                .ToList();
-
-            return requirementsDto;
-        }
-
-        [HttpGet]
-        [Route("byStatus")]
-        public async Task<ActionResult<List<RequirementDto>>> GetByStatus([FromQuery] string status)
-        {
-            var requirements = _requirementRepository.GetByStatus(status);
-            var requirementsDto = requirements
-                .Select(r => _factory.Create(r))
-                .ToList();
-
-            return requirementsDto;
-        }
-
-        [HttpGet]
-        [Route("byCustomFilters")]
-        public async Task<ActionResult<List<RequirementDto>>> GetByCustomFilters([FromQuery] Dictionary<string, string> customFilters)
-        {
-            var response = await _service.GetByCustomFiltersAsync(customFilters);
-
-            if (response.Errors.Any())
-            {
-                return BadRequest(response.Errors);
-            }
-
-            return response.Requirements
-                .Select(r => _factory.Create(r))
-                .ToList();
-        }
+        return response.Errors.Count != 0
+            ? BadRequest(response.Errors)
+            : response.Requirements
+            .ConvertAll(r => _factory.Create(r));
     }
 }

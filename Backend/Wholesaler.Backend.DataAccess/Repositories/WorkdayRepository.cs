@@ -5,105 +5,94 @@ using Wholesaler.Backend.Domain.Exceptions;
 using Wholesaler.Backend.Domain.Repositories;
 using WorkdayDb = Wholesaler.Backend.DataAccess.Models.Workday;
 
-namespace Wholesaler.Backend.DataAccess.Repositories
+namespace Wholesaler.Backend.DataAccess.Repositories;
+
+public class WorkdayRepository : IWorkdayRepository
 {
-    public class WorkdayRepository : IWorkdayRepository
+    private readonly WholesalerContext _context;
+    private readonly IWorkdayFactory _workdayFactory;
+
+    public WorkdayRepository(WholesalerContext context, IWorkdayFactory workdayFactory)
     {
-        private readonly WholesalerContext _context;
-        private readonly IWorkdayFactory _workdayFactory;
+        _context = context;
+        _workdayFactory = workdayFactory;
+    }
 
-        public WorkdayRepository(WholesalerContext context, IWorkdayFactory workdayFactory)
+    public Workday Get(Guid id)
+    {
+        var workdayDb = _context.Workdays
+            .Include(w => w.Person)
+            .Where(w => w.Id == id)
+            .FirstOrDefault()
+            ?? throw new EntityNotFoundException($"There is no workday with {id}");
+
+        return _workdayFactory.Create(workdayDb);
+    }
+
+    public List<Workday> GetByPerson(Guid personId)
+    {
+        var workdayDbList = _context.Workdays
+                        .Include(w => w.Person)
+                        .Where(w => w.PersonId == personId)
+                        .ToList();
+
+        var listOfWorkdays = workdayDbList.Select(workdayDb =>
         {
-            _context = context;
-            _workdayFactory = workdayFactory;
-        }
+            var person = new Person(
+            workdayDb.Person.Id,
+            workdayDb.Person.Login,
+            workdayDb.Person.Password,
+            workdayDb.Person.Role,
+            workdayDb.Person.Name,
+            workdayDb.Person.Surname);
 
-        public Workday Get(Guid id)
-        {
-            var workdayDb = _context.Workdays
-                .Include(w => w.Person)
-                .Where(w => w.Id == id)                
-                .FirstOrDefault();
-
-            if (workdayDb == null)
-                throw new EntityNotFoundException($"There is no workday with {id}");
-
-            var workday = _workdayFactory.Create(workdayDb);
-
+            var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
             return workday;
-        }
+        });
 
-        public List<Workday> GetByPersonAsync(Guid personId)
+        return listOfWorkdays.ToList();
+    }
+
+    public Workday? GetActiveByPersonOrDefault(Guid personId)
+    {
+        var workdayDb = _context.Workdays
+                        .Include(w => w.Person)
+                        .Where(w => w.PersonId == personId)
+                        .Where(w => w.Stop == null)
+                        .FirstOrDefault();
+
+        return workdayDb == null
+            ? default
+            : _workdayFactory.Create(workdayDb);
+    }
+
+    public Workday Add(Workday workday)
+    {
+        var workdayDb = new WorkdayDb
         {
-            var workdayDbList = _context.Workdays
-                            .Include(w => w.Person)
-                            .Where(w => w.PersonId == personId)
-                            .ToList();
+            Id = workday.Id,
+            PersonId = workday.Person.Id,
+            Start = workday.Start,
+            Stop = workday.Stop
+        };
 
-            var listOfWorkdays = workdayDbList.Select(workdayDb =>
-            {
-                var person = new Person(
-                workdayDb.Person.Id,
-                workdayDb.Person.Login,
-                workdayDb.Person.Password,
-                workdayDb.Person.Role,
-                workdayDb.Person.Name,
-                workdayDb.Person.Surname);
+        _context.Workdays.Add(workdayDb);
+        _context.SaveChanges();
 
-                var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
-                return workday;
-            });
+        return workday;
+    }
 
-            return listOfWorkdays.ToList();
-        }
+    public Workday UpdateWorkday(Workday workday)
+    {
+        var workdayDb = _context.Workdays
+            .Where(w => w.Id == workday.Id)
+            .FirstOrDefault()
+            ?? throw new InvalidProcedureException($"There is no workday with id: {workday.Id}");
 
-        public Workday? GetActiveByPersonOrDefaultAsync(Guid personId)
-        {
-            var workdayDb = _context.Workdays
-                            .Include(w => w.Person)
-                            .Where(w => w.PersonId == personId)
-                            .Where(w => w.Stop == null)
-                            .FirstOrDefault();
+        workdayDb.Stop = workday.Stop;
 
-            if (workdayDb == null)
-                return default;
+        _context.SaveChanges();
 
-            var workday = _workdayFactory.Create(workdayDb);
-
-            return workday;
-        }
-
-        public Workday Add(Workday workday)
-        {
-            var workdayDb = new WorkdayDb
-            {
-                Id = workday.Id,
-                PersonId = workday.Person.Id,
-                Start = workday.Start,
-                Stop = workday.Stop,                
-            };
-
-            _context.Workdays.Add(workdayDb);
-            _context.SaveChanges();
-
-            return workday;
-        }
-
-        public Workday UpdateWorkday(Workday workday)
-        {
-            var workdayDb = _context.Workdays
-                .Where(w => w.Id == workday.Id)
-                .FirstOrDefault();
-
-            if (workdayDb == null)
-                throw new InvalidProcedureException($"There is no workday with id: {workday.Id}");
-
-            workdayDb.Stop = workday.Stop;
-
-            _context.SaveChanges();
-
-            return workday;
-        }     
-
+        return workday;
     }
 }
