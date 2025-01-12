@@ -1,9 +1,8 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class AddRequirementRequestModel
 {
-    public class AddRequirementRequestModel
-    {
-        public int Quantity { get; set; }
-        public Guid ClientId { get; set; }
-        public Guid StorageId { get; set; }
-    }
+    public int Quantity { get; set; }
+    public Guid ClientId { get; set; }
+    public Guid StorageId { get; set; }
 }

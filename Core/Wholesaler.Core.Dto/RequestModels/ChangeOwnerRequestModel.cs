@@ -1,7 +1,6 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class ChangeOwnerRequestModel
 {
-    public class ChangeOwnerRequestModel
-    {        
-        public Guid NewOwnerId { get; set; }
-    }
+    public Guid NewOwnerId { get; set; }
 }

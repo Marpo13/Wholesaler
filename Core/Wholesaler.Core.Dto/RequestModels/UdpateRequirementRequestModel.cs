@@ -1,7 +1,6 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class UdpateRequirementRequestModel
 {
-    public class UdpateRequirementRequestModel
-    {
-        public int Quantity { get; set; }
-    }
+    public int Quantity { get; set; }
 }

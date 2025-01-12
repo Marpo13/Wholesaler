@@ -26,8 +26,11 @@ public class ClientController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ClientDto>> AddAsync([FromBody] AddClientRequestModel addClientRequest)
     {
+        if (addClientRequest is null)
+            return BadRequest("Request id invalid");
+
         var request = new CreateClientRequest(
-            addClientRequest.Name, 
+            addClientRequest.Name,
             addClientRequest.Surname);
 
         var client = _clientService.Add(request);

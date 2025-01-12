@@ -10,11 +10,13 @@ public class UsersRepository : IUsersRepository
 {
     private readonly WholesalerContext _context;
     private readonly IPersonDbFactory _personFactory;
+    private readonly IRoleInfoFactory _roleFactory;
 
-    public UsersRepository(WholesalerContext context, IPersonDbFactory personFactory)
+    public UsersRepository(WholesalerContext context, IPersonDbFactory personFactory, IRoleInfoFactory roleFactory)
     {
         _context = context;
         _personFactory = personFactory;
+        _roleFactory = roleFactory;
     }
 
     public Person Get(Guid id)
@@ -58,7 +60,8 @@ public class UsersRepository : IUsersRepository
             Login = person.Login,
             Password = person.Password,
             Name = person.Name,
-            Surname = person.Surname
+            Surname = person.Surname,
+            RoleInfo = _roleFactory.Create(person.RoleInfo)
         };
 
         _context.People.Add(personDb);
@@ -73,7 +76,7 @@ public class UsersRepository : IUsersRepository
             .Where(p => p.Role == Role.Employee)
             .ToList();
 
-        var listOfEmployees = employees.Select(employeeDb =>
+        return employees.ConvertAll(employeeDb =>
         {
             return new Person(
                 employeeDb.Id,
@@ -83,7 +86,5 @@ public class UsersRepository : IUsersRepository
                 employeeDb.Name,
                 employeeDb.Surname);
         });
-
-        return listOfEmployees.ToList();
     }
 }
