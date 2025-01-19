@@ -39,10 +39,6 @@ builder.Services.AddDbContext<WholesalerContext>(
             {
                 if (l.Contains("CommandExecuting"))
                     Log.Logger.Information(l);
-            },
-            new List<string>
-            {
-                DbLoggerCategory.Database.Command.Name
             }));
 
 builder.Host.UseSerilog((_, configuration) => configuration
@@ -90,7 +86,7 @@ builder.Services.AddTransient<ITimeProvider, TimeProvider>();
 builder.Services.AddScoped<ITransaction, Transaction>();
 builder.Services.AddTransient<ErrorHandlingMiddleware>();
 builder.Services.AddTransient<RequestLoggingMiddleware>();
-builder.Services.AddHostedService<TimedHostedService>();
+//builder.Services.AddHostedService<TimedHostedService>();
 
 var app = builder.Build();
 

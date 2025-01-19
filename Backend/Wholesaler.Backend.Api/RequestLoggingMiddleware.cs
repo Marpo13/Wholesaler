@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Serilog.Context;
 using Serilog.Core.Enrichers;
 
@@ -14,8 +15,9 @@ public class RequestLoggingMiddleware : IMiddleware
             var traceId = activity.TraceId;
 
             var requestBody = string.Empty;
-            using (var reader = new StreamReader(context.Request.Body))
-                requestBody = await reader.ReadToEndAsync();
+
+            //using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, leaveOpen: true))
+            //    requestBody = await reader.ReadToEndAsync();
 
             using (LogContext.Push(
                 new PropertyEnricher("TraceId", Guid.NewGuid()),
