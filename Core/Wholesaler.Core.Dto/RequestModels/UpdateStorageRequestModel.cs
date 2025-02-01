@@ -1,8 +1,7 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class UpdateStorageRequestModel
 {
-    public class UpdateStorageRequestModel
-    {
-        public int Quantity { get; set; }
-        public Guid PersonId { get; set; }
-    }
+    public int Quantity { get; set; }
+    public Guid PersonId { get; set; }
 }

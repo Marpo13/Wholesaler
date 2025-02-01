@@ -16,18 +16,18 @@ namespace Wholesaler.Frontend.DataAccess
         IStorageRepository,
         IDeliveryRepository
     {
-        private const string apiPath = $"http://localhost:5050";
+        private const string ApiPath = "http://localhost:5050";
 
         public async Task<ExecutionResultGeneric<UserDto>> TryLoginWithDataFromUserAsync(string loginFromUser, string passwordFromUser)
         {
             var request = new Request<LoginUserRequestModel, UserDto>()
             {
-                Path = $"{apiPath}/users/actions/login",
+                Path = $"{ApiPath}/users/actions/login",
                 Method = HttpMethod.Post,
-                Content = new LoginUserRequestModel
+                Content = new()
                 {
                     Login = loginFromUser,
-                    Password = passwordFromUser,
+                    Password = passwordFromUser
                 }
             };
 
@@ -38,7 +38,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<StartWorkdayRequestModel, WorkdayDto>()
             {
-                Path = $"{apiPath}/workdays/actions/start",
+                Path = $"{ApiPath}/workdays/actions/start",
                 Method = HttpMethod.Post,
                 Content = new StartWorkdayRequestModel()
                 {
@@ -53,7 +53,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, WorkdayDto>()
             {
-                Path = $"{apiPath}/workdays/{workdayid}",
+                Path = $"{ApiPath}/workdays/{workdayid}",
                 Method = HttpMethod.Get,
             };
 
@@ -64,7 +64,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<FinishWorkdayRequestModel, WorkdayDto>()
             {
-                Path = $"{apiPath}/workdays/actions/finish",
+                Path = $"{ApiPath}/workdays/actions/finish",
                 Method = HttpMethod.Post,
                 Content = new FinishWorkdayRequestModel()
                 {
@@ -79,7 +79,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<AssignTaskRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktasks/{workTaskId}/actions/assign",
+                Path = $"{ApiPath}/worktasks/{workTaskId}/actions/assign",
                 Method = HttpMethod.Post,
                 Content = new AssignTaskRequestModel()
                 {
@@ -94,7 +94,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/unassigned",
+                Path = $"{ApiPath}/worktasks/unassigned",
                 Method = HttpMethod.Get,
             };
 
@@ -105,7 +105,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/assigned",
+                Path = $"{ApiPath}/worktasks/assigned",
                 Method = HttpMethod.Get,
             };
 
@@ -116,7 +116,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<UserDto>>()
             {
-                Path = $"{apiPath}/employees",
+                Path = $"{ApiPath}/employees",
                 Method = HttpMethod.Get,
             };
 
@@ -127,7 +127,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/assignedToAnEmployee?userId={userId}",
+                Path = $"{ApiPath}/worktasks/assignedToAnEmployee?userId={userId}",
                 Method = HttpMethod.Get,
             };
 
@@ -138,7 +138,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<ChangeOwnerRequestModel, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktasks/{workTaskId}/actions/changeOwner",
+                Path = $"{ApiPath}/worktasks/{workTaskId}/actions/changeOwner",
                 Method = HttpMethod.Patch,
                 Content = new ChangeOwnerRequestModel()
                 {
@@ -153,7 +153,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<Guid, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktasks/{workTaskId}/actions/start",
+                Path = $"{ApiPath}/worktasks/{workTaskId}/actions/start",
                 Method = HttpMethod.Post,
             };
 
@@ -164,7 +164,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<Guid, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktasks/{workTaskId}/actions/stop",
+                Path = $"{ApiPath}/worktasks/{workTaskId}/actions/stop",
                 Method = HttpMethod.Post,
             };
 
@@ -175,7 +175,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<Guid, WorkTaskDto>()
             {
-                Path = $"{apiPath}/worktasks/{workTaskId}/actions/finish",
+                Path = $"{ApiPath}/worktasks/{workTaskId}/actions/finish",
                 Method = HttpMethod.Post,
             };
 
@@ -186,7 +186,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/started",
+                Path = $"{ApiPath}/worktasks/started",
                 Method = HttpMethod.Get,
             };
 
@@ -197,7 +197,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<WorkTaskDto>>()
             {
-                Path = $"{apiPath}/worktasks/finished",
+                Path = $"{ApiPath}/worktasks/finished",
                 Method = HttpMethod.Get,
             };
 
@@ -208,7 +208,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<AddRequirementRequestModel, RequirementDto>()
             {
-                Path = $"{apiPath}/requirements",
+                Path = $"{ApiPath}/requirements",
                 Method = HttpMethod.Post,
                 Content = new AddRequirementRequestModel()
                 {
@@ -225,7 +225,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<UdpateRequirementRequestModel, RequirementDto>()
             {
-                Path = $"{apiPath}/requirements/{id}",
+                Path = $"{ApiPath}/requirements/{id}",
                 Method = HttpMethod.Patch,
                 Content = new UdpateRequirementRequestModel()
                 {
@@ -239,7 +239,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<RequirementDto>>()
             {
-                Path = $"{apiPath}/requirements",
+                Path = $"{ApiPath}/requirements",
                 Method = HttpMethod.Get
             };
 
@@ -250,7 +250,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<RequirementDto>>()
             {
-                Path = $"{apiPath}/requirements/withStorageId?storageId={storageId}",
+                Path = $"{ApiPath}/requirements/withStorageId?storageId={storageId}",
                 Method = HttpMethod.Get
             };
 
@@ -261,7 +261,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<RequirementDto>>()
             {
-                Path = $"{apiPath}/requirements/byStatus?status={status}",
+                Path = $"{ApiPath}/requirements/byStatus?status={status}",
                 Method = HttpMethod.Get
             };
 
@@ -272,7 +272,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<Guid, RequirementDto>()
             {
-                Path = $"{apiPath}/requirements/{id}/actions/complete",
+                Path = $"{ApiPath}/requirements/{id}/actions/complete",
                 Method = HttpMethod.Patch
             };
 
@@ -283,7 +283,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<ClientDto>>()
             {
-                Path = $"{apiPath}/clients",
+                Path = $"{ApiPath}/clients",
                 Method = HttpMethod.Get
             };
 
@@ -294,7 +294,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<AddStorageRequestModel, StorageDto>()
             {
-                Path = $"{apiPath}/storages",
+                Path = $"{ApiPath}/storages",
                 Method = HttpMethod.Post,
                 Content = new AddStorageRequestModel()
                 {
@@ -309,7 +309,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, List<StorageDto>>()
             {
-                Path = $"{apiPath}/storages",
+                Path = $"{ApiPath}/storages",
                 Method = HttpMethod.Get
             };
 
@@ -320,7 +320,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<UpdateStorageRequestModel, StorageDto>()
             {
-                Path = $"{apiPath}/storages/{id}/actions/deliver",
+                Path = $"{ApiPath}/storages/{id}/actions/deliver",
                 Method = HttpMethod.Patch,
                 Content = new UpdateStorageRequestModel()
                 {
@@ -336,7 +336,7 @@ namespace Wholesaler.Frontend.DataAccess
         {
             var request = new Request<HttpRequestMessage, float>()
             {
-                Path = $"{apiPath}/raports/costs?from={from}&to={to}",
+                Path = $"{ApiPath}/raports/costs?from={from}&to={to}",
                 Method = HttpMethod.Get
             };
 

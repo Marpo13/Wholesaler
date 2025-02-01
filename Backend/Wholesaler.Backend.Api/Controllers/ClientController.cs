@@ -27,7 +27,7 @@ public class ClientController : ControllerBase
     public async Task<ActionResult<ClientDto>> AddAsync([FromBody] AddClientRequestModel addClientRequest)
     {
         var request = new CreateClientRequest(
-            addClientRequest.Name, 
+            addClientRequest.Name,
             addClientRequest.Surname);
 
         var client = _clientService.Add(request);

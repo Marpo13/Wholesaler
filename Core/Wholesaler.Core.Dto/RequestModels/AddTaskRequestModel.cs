@@ -1,7 +1,6 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class AddTaskRequestModel
 {
-    public class AddTaskRequestModel
-    {
-        public int Row { get; set; }       
-    }
+    public int Row { get; set; }
 }

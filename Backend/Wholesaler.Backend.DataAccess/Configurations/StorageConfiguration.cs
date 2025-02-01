@@ -2,22 +2,21 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wholesaler.Backend.DataAccess.Models;
 
-namespace Wholesaler.Backend.DataAccess.Configurations
+namespace Wholesaler.Backend.DataAccess.Configurations;
+
+public class StorageConfiguration : IEntityTypeConfiguration<Storage>
 {
-    public class StorageConfiguration : IEntityTypeConfiguration<Storage>
+    public void Configure(EntityTypeBuilder<Storage> builder)
     {
-        public void Configure(EntityTypeBuilder<Storage> builder)
-        {
-            builder
-                .HasKey(x => x.Id);
+        builder
+            .HasKey(x => x.Id);
 
-            builder
-                .Property(s => s.Name)
-                .IsRequired();
+        builder
+            .Property(s => s.Name)
+            .IsRequired();
 
-            builder
-                .HasMany(s => s.Requirements)
-                .WithOne(s => s.Storage);
-        }
+        builder
+            .HasMany(s => s.Requirements)
+            .WithOne(s => s.Storage);
     }
 }

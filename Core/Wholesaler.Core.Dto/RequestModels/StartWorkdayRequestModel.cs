@@ -1,7 +1,6 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class StartWorkdayRequestModel
 {
-    public class StartWorkdayRequestModel
-    {
-        public Guid UserId { get; set; }
-    }
+    public Guid UserId { get; set; }
 }

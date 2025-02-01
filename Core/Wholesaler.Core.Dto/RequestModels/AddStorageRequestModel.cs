@@ -1,7 +1,6 @@
-﻿namespace Wholesaler.Core.Dto.RequestModels
+﻿namespace Wholesaler.Core.Dto.RequestModels;
+
+public class AddStorageRequestModel
 {
-    public class AddStorageRequestModel
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

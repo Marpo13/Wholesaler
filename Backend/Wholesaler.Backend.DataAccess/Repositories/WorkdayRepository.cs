@@ -46,8 +46,7 @@ public class WorkdayRepository : IWorkdayRepository
             workdayDb.Person.Name,
             workdayDb.Person.Surname);
 
-            var workday = new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
-            return workday;
+            return new Workday(workdayDb.Id, workdayDb.Start, workdayDb.Stop, person);
         });
 
         return listOfWorkdays.ToList();
