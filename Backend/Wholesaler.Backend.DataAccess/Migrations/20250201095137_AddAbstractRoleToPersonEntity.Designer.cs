@@ -12,8 +12,8 @@ using Wholesaler.Backend.DataAccess;
 namespace Wholesaler.Backend.DataAccess.Migrations
 {
     [DbContext(typeof(WholesalerContext))]
-    [Migration("20250112202150_AddRoleInfoToPeople")]
-    partial class AddRoleInfoToPeople
+    [Migration("20250201095137_AddAbstractRoleToPersonEntity")]
+    partial class AddAbstractRoleToPersonEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

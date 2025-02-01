@@ -4,7 +4,7 @@
 
 namespace Wholesaler.Backend.DataAccess.Migrations;
 
-public partial class AddRoleInfoToPeople : Migration
+public partial class AddAbstractRoleToPersonEntity : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
     {
@@ -16,19 +16,14 @@ public partial class AddRoleInfoToPeople : Migration
             defaultValue: string.Empty);
 
         migrationBuilder.Sql(@"
-        UPDATE People
-        SET RoleInfo = JSON_QUERY('{
-            ""Type"": ' + 
-                CASE 
-                    WHEN Role = 0 THEN '""Employee""'
-                    WHEN Role = 1 THEN '""Manager""'
-                    WHEN Role = 2 THEN '""Owner""'
-                    ELSE '""""' 
-                END + ',
-            ""Name"": ' + '""' + Name + '""' + ',
-            ""Surname"": ' + '""' + Surname + '""' + '
-        }');
-        ");
+            UPDATE People
+            SET RoleInfo = JSON_QUERY('{""Type"": ' + 
+                    CASE 
+                        WHEN Role = 0 THEN '""Employee""'
+                        WHEN Role = 1 THEN '""Manager""'
+                        WHEN Role = 2 THEN '""Owner""'
+                        ELSE '""""' 
+                    END + ', ""Name"": ' + '""' + Name + '""' + ', ""Surname"": ' + '""' + Surname + '""' + '}');");
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
