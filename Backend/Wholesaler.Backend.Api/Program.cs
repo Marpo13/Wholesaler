@@ -91,8 +91,13 @@ builder.Services.AddTransient<RequestLoggingMiddleware>();
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/openapi.json", "Wholesaler API v1");
+    c.RoutePrefix = "swagger";
+});
 
+app.UseStaticFiles();
 app.UseDatabase();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();

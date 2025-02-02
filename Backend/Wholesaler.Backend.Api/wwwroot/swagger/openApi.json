@@ -1,0 +1,1895 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Wholesaler API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/clients": {
+            "post": {
+                "summary": "Add new client",
+                "tags": [
+                    "Client"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddClientRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddClientRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddClientRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "New client was added",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get list of clients",
+                "tags": [
+                    "Client"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of clients was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ClientDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ClientDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ClientDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clients/{id}": {
+            "delete": {
+                "summary": "Delete specific client",
+                "tags": [
+                    "Client"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of client which will be deleted",
+                            "example": "C4AC852D-3FF1-448B-8233-33513327F41B",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Client was deleted"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get specific client",
+                "tags": [
+                    "Client"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of specific client",
+                            "example": "512C2BCA-6E7A-4585-87F0-4A1C1798ACA6",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Client was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employees": {
+            "get": {
+                "summary": "Get all employees",
+                "tags": [
+                    "EmployeesControler"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of employees was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/raports/costs": {
+            "get": {
+                "summary": "Get  report of costs in a specific time frame",
+                "tags": [
+                    "Raport"
+                ],
+                "parameters": [
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "description": "Initial date for the report",
+                            "example": "1695427200000",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "description": "Final date for the report",
+                            "example": "1706784000000",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Raport of costs was returned",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "number",
+                                    "format": "float"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "number",
+                                    "format": "float"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "number",
+                                    "format": "float"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/requirements": {
+            "post": {
+                "summary": "Add new requirement",
+                "tags": [
+                    "Requirement"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddRequirementRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddRequirementRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddRequirementRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Requirement was added",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get all requirements",
+                "tags": [
+                    "Requirement"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of requirements was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/requirements/{id}": {
+            "patch": {
+                "summary": "Change quantity of a specific requirement",
+                "tags": [
+                    "Requirement"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of requirement which quantity will be updated",
+                            "example": "7B37D005-CE9E-4A6E-82F8-0019D1A4CB5B",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UdpateRequirementRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UdpateRequirementRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UdpateRequirementRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Requirement quantity was updated",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/requirements/{id}/actions/complete": {
+            "patch": {
+                "summary": "Complete specific requirement",
+                "tags": [
+                    "Requirement"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of requirement which will be complete",
+                            "example": "7B37D005-CE9E-4A6E-82F8-0019D1A4CB5B",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Requirement was completed",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequirementDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/requirements/withStorageId": {
+            "get": {
+                "summary": "Get requirement with specific storage id",
+                "tags": [
+                    "Requirement"
+                ],
+                "parameters": [
+                    {
+                        "name": "storageId",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of storage requirement",
+                            "example": "964CB384-4730-4F2C-B1DB-B64508493683",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Requirements with specific storageId were found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/requirements/byStatus": {
+            "get": {
+                "summary": "Get requirement with specific status",
+                "tags": [
+                    "Requirement"
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "description": "Requirement status name",
+                            "example": "Ongoing / Completed",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Requirements with specific status were found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/requirements/byCustomFilters": {
+            "get": {
+                "summary": "Get requirement by specific property",
+                "tags": [
+                    "Requirement"
+                ],
+                "parameters": [
+                    {
+                        "name": "customFilters",
+                        "in": "query",
+                        "schema": {
+                            "type": "object",
+                            "description": "Declare name of requirement property and specific value",
+                            "example": {
+                                "Id": "ab8c0092-d3b4-4ebc-8233-02584299c9f9",
+                                "Quantity": 11,
+                                "ClientId": "f1e6ac41-701e-4050-aaae-5ab32e644a3d",
+                                "StorageId": "60de6110-39fa-45eb-91fa-11ac2b543941",
+                                "Status": "Ongoing"
+                            },
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of requirements with specific properties values was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequirementDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/storages": {
+            "post": {
+                "summary": "Add new storage",
+                "tags": [
+                    "Storage"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddStorageRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddStorageRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddStorageRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Storage was added",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get all storages",
+                "tags": [
+                    "Storage"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of storages was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StorageDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StorageDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StorageDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/storages/{id}/actions/deliver": {
+            "patch": {
+                "summary": "Deliver specific mushrooms quantity to a specific storage",
+                "tags": [
+                    "Storage"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of storage where mushrooms will be delivered",
+                            "example": "964CB384-4730-4F2C-B1DB-B64508493683",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateStorageRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateStorageRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateStorageRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mushrooms was delivered",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StorageDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/actions/login": {
+            "post": {
+                "summary": "Login",
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginUserRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginUserRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginUserRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User was logged in",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "summary": "Add new person",
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddPersonReqestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddPersonReqestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddPersonReqestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Person was added",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/workdays/actions/start": {
+            "post": {
+                "summary": "Start workday",
+                "tags": [
+                    "Workday"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartWorkdayRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartWorkdayRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StartWorkdayRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Workday was started",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/workdays/{id}": {
+            "get": {
+                "summary": "Get specific workday",
+                "tags": [
+                    "Workday"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of specific workday",
+                            "example": "8720F833-9118-4729-8BD3-2DDE82053EE9",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Specific workday was returned",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/workdays/actions/finish": {
+            "post": {
+                "summary": "Finish workday",
+                "tags": [
+                    "Workday"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FinishWorkdayRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FinishWorkdayRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FinishWorkdayRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Workday was finished",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkdayDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks": {
+            "post": {
+                "summary": "Add new worktask",
+                "tags": [
+                    "WorkTask"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddTaskRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddTaskRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddTaskRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Worktask was added",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/{id}/actions/assign": {
+            "post": {
+                "summary": "Assign specific worktask",
+                "tags": [
+                    "WorkTask"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of worktask which will be assign to a specific person",
+                            "example": "45D5D3DF-B311-46DD-A3F1-88023C3273E4",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssignTaskRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssignTaskRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssignTaskRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Worktask was assigned to a person",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/{workTaskId}/actions/changeOwner": {
+            "patch": {
+                "summary": "Change person assigned to a specific worktask",
+                "tags": [
+                    "WorkTask"
+                ],
+                "parameters": [
+                    {
+                        "name": "workTaskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of worktask which assigned person will change",
+                            "example": "45D5D3DF-B311-46DD-A3F1-88023C3273E4",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangeOwnerRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangeOwnerRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangeOwnerRequestModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Person assigned to a worktask was changed",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/{workTaskId}/actions/start": {
+            "post": {
+                "summary": "Start specific worktask",
+                "tags": [
+                    "WorkTask"
+                ],
+                "parameters": [
+                    {
+                        "name": "workTaskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of worktask which will be started",
+                            "example": "45D5D3DF-B311-46DD-A3F1-88023C3273E4",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Worktask was started",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/{workTaskId}/actions/stop": {
+            "post": {
+                "summary": "Stop specific worktask",
+                "tags": [
+                    "WorkTask"
+                ],
+                "parameters": [
+                    {
+                        "name": "workTaskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of worktask which will be stopped",
+                            "example": "45D5D3DF-B311-46DD-A3F1-88023C3273E4",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Worktask was stopped",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/{workTaskId}/actions/finish": {
+            "post": {
+                "summary": "Finish specific worktask",
+                "tags": [
+                    "WorkTask"
+                ],
+                "parameters": [
+                    {
+                        "name": "workTaskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of worktask which will be finished",
+                            "example": "45D5D3DF-B311-46DD-A3F1-88023C3273E4",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Worktask was finished",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkTaskDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/unassigned": {
+            "get": {
+                "summary": "Get all unassigned worktasks",
+                "tags": [
+                    "WorkTask"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of worktasks which are not assigned to employees",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/assigned": {
+            "get": {
+                "summary": "Get all assigned worktasks",
+                "tags": [
+                    "WorkTask"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of worktasks which are assigned to employees",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/assignedToAnEmployee": {
+            "get": {
+                "summary": "Get all worktasks assigned to a specific employee",
+                "tags": [
+                    "WorkTask"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "description": "Id of user who is assigned to a task",
+                            "example": "C32D8360-538B-460F-8F6F-13A8E962FDA0",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of worktasks assigned to specific employee was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/started": {
+            "get": {
+                "summary": "Get all started worktasks",
+                "tags": [
+                    "WorkTask"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of started worktasks was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/worktasks/finished": {
+            "get": {
+                "summary": "Get all finished worktasks",
+                "tags": [
+                    "WorkTask"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of finished worktasks was found",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/WorkTaskDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AddClientRequestModel": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "New client name",
+                        "example": "Adam",
+                        "nullable": true
+                    },
+                    "surname": {
+                        "type": "string",
+                        "description": "New client surname",
+                        "example": "Malysz",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AddPersonReqestModel": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "New person name",
+                        "example": "Janina",
+                        "nullable": true
+                    },
+                    "surname": {
+                        "type": "string",
+                        "description": "New person surname",
+                        "example": "Konina",
+                        "nullable": true
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "New person role",
+                        "example": "Owner / Manager / Employee",
+                        "nullable": true
+                    },
+                    "login": {
+                        "type": "string",
+                        "description": "New person login",
+                        "example": "Login",
+                        "nullable": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "New person password",
+                        "example": "Password123",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AddRequirementRequestModel": {
+                "type": "object",
+                "properties": {
+                    "quantity": {
+                        "type": "integer",
+                        "description": "New requirement quantity",
+                        "example": "15",
+                        "format": "int32"
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "Identifier of client who needs specific quantity of mushrooms",
+                        "example": "46D6E424-B86A-4AC6-8A13-41A22F985C22",
+                        "format": "uuid"
+                    },
+                    "storageId": {
+                        "type": "string",
+                        "description": "Identifier of storage from which the requirement will be taken",
+                        "example": "60DE6110-39FA-45EB-91FA-11AC2B543941",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AddStorageRequestModel": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "New storage name",
+                        "example": "The best storage name",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AddTaskRequestModel": {
+                "type": "object",
+                "properties": {
+                    "row": {
+                        "type": "integer",
+                        "description": "Mushrooms row which will be assigned to worktask",
+                        "example": "13",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "AssignTaskRequestModel": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "Id of employee who wants to be assigned to a task",
+                        "example": "C32D8360-538B-460F-8F6F-13A8E962FDA0",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ChangeOwnerRequestModel": {
+                "type": "object",
+                "properties": {
+                    "newOwnerId": {
+                        "type": "string",
+                        "description": "Id of employee who wants to be assigned to a task instead of current employee",
+                        "example": "C32D8360-538B-460F-8F6F-13A8E962FDA0",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ClientDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Client identifier",
+                        "example": "F1E6AC41-701E-4050-AAAE-5AB32E644A3D",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Client name",
+                        "example": "The best client name",
+                        "nullable": true
+                    },
+                    "surname": {
+                        "type": "string",
+                        "description": "Client surname",
+                        "example": "The best client surname",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "FinishWorkdayRequestModel": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "Idenitifier of user who wants to finish workday",
+                        "example": "C32D8360-538B-460F-8F6F-13A8E962FDA0",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "LoginUserRequestModel": {
+                "type": "object",
+                "properties": {
+                    "login": {
+                        "type": "string",
+                        "description": "User login",
+                        "example": "Login",
+                        "nullable": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User password",
+                        "example": "Very difficult password",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "RequirementDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Requirement identifier",
+                        "example": "DD59ABA5-90E6-4608-BF19-02168DADF7A8",
+                        "format": "uuid"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "description": "Requirement quantity",
+                        "example": "15",
+                        "format": "int32"
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "Identifier of client who needs specific quantity of mushrooms",
+                        "example": "C4AC852D-3FF1-448B-8233-33513327F41B",
+                        "format": "uuid"
+                    },
+                    "storageId": {
+                        "type": "string",
+                        "description": "Identifier of storage from which the requirement will be taken",
+                        "example": "512C2BCA-6E7A-4585-87F0-4A1C1798ACA6",
+                        "format": "uuid"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Status of the requirement",
+                        "example": "Ongoing / Completed",
+                        "nullable": true
+                    },
+                    "deliveryDate": {
+                        "type": "string",
+                        "description": "Defines date when delivery was taken",
+                        "example": "2025-01-01 08:01:01",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "StartWorkdayRequestModel": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "Person started worktask identifier",
+                        "example": "DD59ABA5-90E6-4608-BF19-02168DADF7A8",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "StorageDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Storage identifier",
+                        "example": "DD59ABA5-90E6-4608-BF19-02168DADF7A8",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Storage name",
+                        "example": "The best storage name",
+                        "nullable": true
+                    },
+                    "state": {
+                        "type": "integer",
+                        "description": "Actual storage state",
+                        "example": "6789",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "UdpateRequirementRequestModel": {
+                "type": "object",
+                "properties": {
+                    "quantity": {
+                        "type": "integer",
+                        "description": "Requirement quantity to be increased",
+                        "example": "1234",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "UpdateStorageRequestModel": {
+                "type": "object",
+                "properties": {
+                    "quantity": {
+                        "type": "integer",
+                        "description": "Storage quantity to be increased",
+                        "example": "1300",
+                        "format": "int32"
+                    },
+                    "personId": {
+                        "type": "string",
+                        "description": "Identifier of person who updates state",
+                        "example": "DD59ABA5-90E6-4608-BF19-02168DADF7A8",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "UserDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "User identifier",
+                        "example": "22ED887A-50F4-49A3-88D4-A83E5C7D8C26",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "User name",
+                        "example": "Jacek",
+                        "nullable": true
+                    },
+                    "surname": {
+                        "type": "string",
+                        "description": "User surname",
+                        "example": "Placek",
+                        "nullable": true
+                    },
+                    "login": {
+                        "type": "string",
+                        "description": "User login",
+                        "example": "Login",
+                        "nullable": true
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "User role",
+                        "example": "Owner / Manager / Employee",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "WorkTaskDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Worktask identifier",
+                        "example": "FCAEFCFA-A170-4F1F-91F7-C1897841BBF9",
+                        "format": "uuid"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "description": "User assigned to worktask identifier",
+                        "example": "22ED887A-50F4-49A3-88D4-A83E5C7D8C26",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "row": {
+                        "type": "integer",
+                        "description": "Mushrooms row which is assigned to a worktask",
+                        "example": "13",
+                        "format": "int32"
+                    },
+                    "isStarted": {
+                        "type": "boolean",
+                        "description": "Defines if worktask is started",
+                        "example": "true"
+                    },
+                    "isFinished": {
+                        "type": "boolean",
+                        "description": "Defines if worktask is finished",
+                        "example": "false"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "WorkdayDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Workday identifier",
+                        "example": "FCAEFCFA-A170-4F1F-91F7-C1897841BBF9",
+                        "format": "uuid"
+                    },
+                    "start": {
+                        "type": "string",
+                        "description": "Workday started time",
+                        "example": "2025-02-25 07:00:00",
+                        "format": "date-time"
+                    },
+                    "stop": {
+                        "type": "string",
+                        "description": "Workday finish time",
+                        "example": "2025-02-25 15:00:00",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    }
+}
