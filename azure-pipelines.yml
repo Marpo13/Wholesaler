@@ -14,7 +14,9 @@ stages:
             - task: DotNetCoreCLI@2
               inputs:
                 command: 'restore'
+                projects: 'Wholesaler.sln'
                 feedsToUse: 'select'
             - task: DotNetCoreCLI@2
               inputs:
                 command: 'build'
+                projects: 'Wholesaler.sln'
