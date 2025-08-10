@@ -1,4 +1,5 @@
 ﻿using Wholesaler.Backend.DataAccess.Models;
+using Wholesaler.Backend.DataAccess.Models.Helpers;
 using Role = Wholesaler.Backend.Domain.Entities.Role;
 
 namespace Wholesaler.Tests.Builders;
@@ -29,13 +30,16 @@ public class PersonBuilder
 
     public Person Build()
     {
+        var roleInfo = new Employee();
+
         var person = new Person()
         {
             Id = _id,
             Role = _role,
+            RoleInfo = roleInfo,
             Login = _login,
-            Name = _name,
             Password = _password,
+            Name = _name,
             Surname = _surname
         };
 
